@@ -1,0 +1,124 @@
+<html><head><title>Fitting Log-Linear Models by Message Passing</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>effloglin(gRim)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   effloglin">
+<param name="keyword" value=" Fitting Log-Linear Models by Message Passing">
+</object>
+
+
+<h2>Fitting Log-Linear Models by Message Passing</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Fit log-linear models to multidimensional contingency tables by
+Iterative Proportional Fitting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+effloglin(table, margin, fit = FALSE, eps = 0.01, iter=20, print = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>table</code></td>
+<td>
+A contingency table</td></tr>
+<tr valign="top"><td><code>margin</code></td>
+<td>
+A generating class for a hierarchical log&ndash;linear model</td></tr>
+<tr valign="top"><td><code>fit</code></td>
+<td>
+If TRUE, the fitted values are returned.</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+Convergence limit; see 'details' below.</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+Maximum number of iterations allowed</td></tr>
+<tr valign="top"><td><code>print</code></td>
+<td>
+If TRUE, iteration details are printed.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The function differs from
+<code>loglin</code> in that 1) data can be given in the form of a
+list of sufficient marginals and 2) the model is fitted only on the
+cliques of the triangulated interaction graph of the model. This means
+that the full table is not fitted, which means that <code>effloglin</code>
+is efficient (in terms of storage requirements). However
+<code>effloglin</code> is implemented entirely in R and is therefore slower
+than <code>loglin</code>.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A list with compnents
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>comp1 </code></td>
+<td>
+Description of 'comp1'</td></tr>
+<tr valign="top"><td><code>comp2 </code></td>
+<td>
+Description of 'comp2'</td></tr>
+</table>
+<p>
+
+...</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Søren Højsgaard, sorenh@agrsci.dk
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a onclick="findlink('stats', 'loglin.html')" style="text-decoration: underline; color: blue; cursor: hand">loglin</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(reinis)
+glist &lt;-list(c("smoke", "mental"), c("mental", "phys"), c("phys", "systol"
+), c("systol", "smoke"))
+
+stab &lt;- lapply(glist, function(gg) tableMargin(reinis, gg))
+fv3 &lt;- effloglin(stab, glist, print=FALSE)
+
+</pre>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>gRim</em> version 0.1.23 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,114 @@
+<html><head><title>Find edges in (or not in) a graph</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>findInEdges,findOutEdges(gRim)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   findInEdges">
+<param name="keyword" value="R:   findInEdges.default">
+<param name="keyword" value="R:   findInEdges.graphNEL">
+<param name="keyword" value="R:   findInEdges.imod">
+<param name="keyword" value="R:   findInEdges.list">
+<param name="keyword" value="R:   findOutEdges">
+<param name="keyword" value="R:   findOutEdges.default">
+<param name="keyword" value="R:   findOutEdges.graphNEL">
+<param name="keyword" value="R:   findOutEdges.imod">
+<param name="keyword" value="R:   findOutEdges.list">
+<param name="keyword" value=" Find edges in (or not in) a graph">
+</object>
+
+
+<h2>Find edges in (or not in) a graph</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Find edges in (or not in) a graph. It is possible to restrict the set
+of edges to be returned.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+findInEdges(x, type = "unrestricted", ...)
+findOutEdges(x, type = "unrestricted", ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+Either 1) An <code>imod</code> model object, 2) a list containing
+the generating class for a graph or 3) a graphNEL graph</td></tr>
+<tr valign="top"><td><code>type</code></td>
+<td>
+Either "unrestricted" or "decomposable"; see Section
+'details' below.</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Further arguments; currently not used.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+<code>findInEdges()</code>: If type is "decomposable", then the edges
+returned are as follows: An edge e in the graph is returned iff
+deleting e from the graph given by the object x gives a new graph
+which is decomposable. 
+</p>
+<p>
+<code>findOutEdges()</code>: If type is "decomposable", then the edges
+returned are as follows: An edge e not in the graph is returned iff
+adding e to the graph given by the object x gives a new graph
+which is decomposable.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A list of edges.</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Søren Højsgaard, sorenh@agrsci.dk
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="evalInEdges.html">evalInEdges</a></code>, <code><a href="evalInEdges.html">evalOutEdges</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## findInEdges
+##
+gg1 &lt;- ug(~a:b:c+a:c:d)
+## plot(gg1)
+findInEdges(gg1)
+findInEdges(gg1, type="decomposable")
+
+## findOutEdges
+##
+gg2 &lt;- ug(~a:b+b:c+c:d)
+## plot(gg2)
+findOutEdges(gg2)
+findOutEdges(gg2, type="decomposable")
+</pre>
+
+
+
+<hr><div align="center">[Package <em>gRim</em> version 0.1.22 <a href="00Index.html">Index]</a></div>
+
+</body></html>

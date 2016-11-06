@@ -1,0 +1,137 @@
+<html><head><title>Iterative proportional fitting of graphical Gaussian model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>ggmfit(gRim)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   ggmfit">
+<param name="keyword" value="R:   ggmfitr">
+<param name="keyword" value=" Iterative proportional fitting of graphical Gaussian model">
+</object>
+
+
+<h2>Iterative proportional fitting of graphical Gaussian model</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Fit graphical Gaussian model by iterative proportional fitting.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+ggmfit(S, nobs, glist, start = NULL, eps = 0.001, iter = 20,
+ print = 1,...)
+ggmfitr(S, nobs, glist, start = NULL, eps = 0.001, iter = 20,
+ print = 1,...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>S</code></td>
+<td>
+Empirical covariance matrix</td></tr>
+<tr valign="top"><td><code>nobs</code></td>
+<td>
+Number of observations</td></tr>
+<tr valign="top"><td><code>glist</code></td>
+<td>
+Generating class for model (a list)</td></tr>
+<tr valign="top"><td><code>start</code></td>
+<td>
+Initial value for concentration matrix</td></tr>
+<tr valign="top"><td><code>eps</code></td>
+<td>
+Convergence criterion</td></tr>
+<tr valign="top"><td><code>iter</code></td>
+<td>
+Maximum number of iterations</td></tr>
+<tr valign="top"><td><code>print</code></td>
+<td>
+If TRUE, details from the estimation are printed</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Optional arguments; currently not used</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+<code>ggmfit</code> is based on a C implementation.  
+<code>ggmfitr</code> is implemented purely in R (and is provided mainly as a
+benchmark for the C-version).
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A list with
+</p>
+<table summary="R argblock">
+<tr valign="top"><td><code>lrt</code></td>
+<td>
+Likelihood ratio statistic (-2logL)</td></tr>
+<tr valign="top"><td><code>df</code></td>
+<td>
+Degrees of freedom</td></tr>
+<tr valign="top"><td><code>logL</code></td>
+<td>
+log likelihood</td></tr>
+<tr valign="top"><td><code>K</code></td>
+<td>
+Estimated concentration matrix (inverse covariance matrix)</td></tr>
+</table>
+
+<h3>Author(s)</h3>
+
+<p>
+Søren Højsgaard, sorenh@agrsci.dk
+</p>
+
+
+<h3>References</h3>
+
+<p>
+FIXME
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a onclick="findlink('stats', 'loglin.html')" style="text-decoration: underline; color: blue; cursor: hand">loglin</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## FIXME: Output fra de to funktioner passer ikke helt med hinanden
+data(math)
+d &lt;- cov.wt(math, method="ML")
+glist &lt;- list(c("al","st","an"), c("me","ve","al"))
+ggmfit(d$cov, d$n.obs, glist)
+ggmfitr(d$cov, d$n.obs, glist)
+</pre>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>gRim</em> version 0.1.27 <a href="00Index.html">Index</a>]</div>
+
+</body></html>

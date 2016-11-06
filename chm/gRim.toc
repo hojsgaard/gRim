@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HEAD></HEAD><HTML><BODY>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package gRim:  Contents">
+<param name="Local" value="00Index.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package gRim:  R objects">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="backward">
+<param name="Local" value="stepwise.imod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="CImvn">
+<param name="Local" value="CItest.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="CItable">
+<param name="Local" value="CItest.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="CItest">
+<param name="Local" value="CItest.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="CItest.data.frame">
+<param name="Local" value="CItest.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="CItest.matrix">
+<param name="Local" value="CItest.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="CItest.table">
+<param name="Local" value="CItest.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="cmod">
+<param name="Local" value="cmod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="dmod">
+<param name="Local" value="dmod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="effloglin">
+<param name="Local" value="effloglin.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="evalInEdges">
+<param name="Local" value="evalInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="evalOutEdges">
+<param name="Local" value="evalInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findInEdges">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findInEdges.default">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findInEdges.graphNEL">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findInEdges.imod">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findInEdges.list">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findOutEdges">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findOutEdges.default">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findOutEdges.graphNEL">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findOutEdges.imod">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="findOutEdges.list">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="forward">
+<param name="Local" value="stepwise.imod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ggmfit">
+<param name="Local" value="ggmfit.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="ggmfitr">
+<param name="Local" value="ggmfit.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loglinDecDim">
+<param name="Local" value="loglinDim.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="loglinDim">
+<param name="Local" value="loglinDim.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="print.dmod">
+<param name="Local" value="dmod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="print.testadd">
+<param name="Local" value="testadd.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="print.testdelete">
+<param name="Local" value="testdelete.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="stepwise.imod">
+<param name="Local" value="stepwise.imod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="testadd">
+<param name="Local" value="testadd.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="testadd.imod">
+<param name="Local" value="testadd.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="testdelete">
+<param name="Local" value="testdelete.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="testdelete.imod">
+<param name="Local" value="testdelete.html">
+</OBJECT>
+</UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Package gRim:  Titles">
+</OBJECT>
+<UL>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Find edges in (or not in) a graph">
+<param name="Local" value="findInEdges.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Fitting Log-Linear Models by Message Passing">
+<param name="Local" value="effloglin.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Graphical Gaussian model">
+<param name="Local" value="cmod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Iterative proportional fitting of graphical Gaussian model">
+<param name="Local" value="ggmfit.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Log-linear model">
+<param name="Local" value="dmod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Return the dimension of a log-linear model">
+<param name="Local" value="loglinDim.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Stepwise model selection in (graphical) interaction models">
+<param name="Local" value="stepwise.imod.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Test addition of edge to graphical model">
+<param name="Local" value="testadd.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Test deletion of edge from an interaction model">
+<param name="Local" value="testdelete.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="Test for conditional independence">
+<param name="Local" value="CItest.html">
+</OBJECT>
+<LI> <OBJECT type="text/sitemap">
+<param name="Name" value="~~function to do ... ~~">
+<param name="Local" value="evalInEdges.html">
+</OBJECT>
+</UL>
+</UL>
+</BODY></HTML>

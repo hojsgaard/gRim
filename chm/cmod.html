@@ -1,0 +1,101 @@
+<html><head><title>Graphical Gaussian model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>cmod(gRim)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   cmod">
+<param name="keyword" value=" Graphical Gaussian model">
+</object>
+
+
+<h2>Graphical Gaussian model</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Specification of graphical Gaussian model. The 'c' in the name
+<code>cmod</code> refers to that it is a (graphical) model for 'c'ontinuous variables
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+cmod(formula, data = NULL, marginal, fit = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+Model specification in one of the following forms:
+1) a right-hand sided formula,
+2) as a list of generators,
+3) an undirected graph (represented either as a graphNEL object or as an adjacency
+matrix).
+Notice that there are certain model
+specification shortcuts, see Section 'details' below</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+Data in one of the following forms: 1) A dataframe or 2) a
+list with elements <code>cov</code> and <code>n.obs</code> (such as returned by
+the <code>cov.wt()</code> function.) </td></tr>
+<tr valign="top"><td><code>marginal</code></td>
+<td>
+Should only a subset of the variables be used in
+connection with the model specification shortcuts</td></tr>
+<tr valign="top"><td><code>fit</code></td>
+<td>
+Should the model be fitted.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The independence model can be specified as <code>~.^1</code> and the
+saturated model as <code>~.^.</code>. The <code>marginal</code>
+argument can be used for specifying the independence or saturated
+models for only a subset of the variables.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+An object of class <code>cmod</code> (a list)</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Søren Højsgaard, sorenh@agrsci.dk
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="dmod.html">dmod</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## Graphical Gaussian model
+data(carcass)
+cm1&lt;-cmod(~.^., carcass)
+cm2&lt;-backward(cm1,k=log(nrow(carcass)),
+   fixin=list(c("LMP","M11","M12","M13"),c("LMP","F11","F12","F13"))) 
+cm3&lt;-backward(cm1,k=log(nrow(carcass)))
+</pre>
+
+
+
+<hr><div align="center">[Package <em>gRim</em> version 0.1.22 <a href="00Index.html">Index]</a></div>
+
+</body></html>

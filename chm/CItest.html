@@ -1,0 +1,117 @@
+<html><head><title>Test for conditional independence</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>CItest(gRim)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   CItest">
+<param name="keyword" value="R:   CItest.data.frame">
+<param name="keyword" value="R:   CItest.matrix">
+<param name="keyword" value="R:   CItest.table">
+<param name="keyword" value="R:   CItable">
+<param name="keyword" value="R:   CImvn">
+<param name="keyword" value=" Test for conditional independence">
+</object>
+
+
+<h2>Test for conditional independence</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Tests for conditional independence of two variables u and v given a
+third set W. These tests can be made in a contingency table or in the
+multivariate normal distribution.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+CItest(x, set, statistic = "dev", method = "chisq", adjust = TRUE,
+   slice.info = TRUE, B = 2000, n) 
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+Either a contingency table (an array or a table) or an
+empirical covariance matrix. In the latter case the argument
+<code>n</code> must also be given</td></tr>
+<tr valign="top"><td><code>set</code></td>
+<td>
+A vector or a formula specifying (u,v,W) &ndash; the test being
+made is for u independent of v given W.</td></tr>
+<tr valign="top"><td><code>statistic</code></td>
+<td>
+~~Describe <code>statistic</code> here~~ </td></tr>
+<tr valign="top"><td><code>method</code></td>
+<td>
+~~Describe <code>method</code> here~~ </td></tr>
+<tr valign="top"><td><code>adjust</code></td>
+<td>
+~~Describe <code>adjust</code> here~~ </td></tr>
+<tr valign="top"><td><code>slice.info</code></td>
+<td>
+~~Describe <code>slice.info</code> here~~ </td></tr>
+<tr valign="top"><td><code>B</code></td>
+<td>
+~~Describe <code>B</code> here~~ </td></tr>
+<tr valign="top"><td><code>n</code></td>
+<td>
+The number of observations (for the empirical covariance matrix)</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+~~ If necessary, more details than the description above ~~
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+An object of class ci.test</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Søren Højsgaard, sorenh@agrsci.dk
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a onclick="findlink('stats', 'chisq.test.html')" style="text-decoration: underline; color: blue; cursor: hand">chisq.test</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+data(reinis)
+CItest(reinis, set=~smoke+systol+phys)
+
+</pre>
+
+<script Language="JScript">
+function findlink(pkg, fn) {
+var Y, link;
+Y = location.href.lastIndexOf("\\") + 1;
+link = location.href.substring(0, Y);
+link = link + "../../" + pkg + "/chtml/" + pkg + ".chm::/" + fn;
+location.href = link;
+}
+</script>
+
+
+<hr><div align="center">[Package <em>gRim</em> version 0.1.22 <a href="00Index.html">Index]</a></div>
+
+</body></html>

@@ -1,0 +1,70 @@
+useDynLib(gRim)
+
+exportPattern("^[^\\.]")
+import(methods)
+
+importFrom(Rcpp, evalCpp)
+
+import(gRbase)
+importFrom(gRain, propagateLS)
+
+importFrom(graph, edges, nodes)
+importMethodsFrom(graph, plot)
+
+importFrom(igraph, igraph.to.graphNEL, igraph.from.graphNEL, get.adjacency,
+           V, "V<-", E, is.directed, "E<-", layout.lgl, plot.igraph,
+           graph.adjacency, is.dag)
+
+importFrom("stats", "addmargins", "as.formula", "cov.wt", "fitted",
+           "formula", "ftable", "getCall", "logLik", "loglin",
+           "na.omit", "pchisq", "pf", "pnorm", "r2dtable", "terms",
+           "update", "update.formula", "xtabs")
+
+importFrom("utils", "combn", "str")
+
+
+S3method( CGstats,  data.frame                                             )
+S3method( ciTest,  data.frame                                              )
+S3method( ciTest,  list                                                    )
+S3method( ciTest,  table                                                   )
+S3method( coef,  mModel                                                    )
+S3method( compareModels,  iModel                                           )
+S3method( extractAIC,  iModel                                              )
+S3method( fit,  cModel                                                     )
+S3method( fit,  dModel                                                     )
+S3method( fit,  mModel                                                     )
+S3method( fitted,  dModel                                                  )
+S3method( formula,  iModel                                                 )
+S3method( getEdges,  graphNEL                                              )
+S3method( getEdges,  list                                                  )
+S3method( getEdges,  matrix                                                )
+S3method( iplot,  iModel                                                   )
+S3method( isDecomposable,  dModel                                          )
+S3method( isGraphical,  dModel                                             )
+S3method( logLik,  iModel                                                  )
+S3method( modelProperties,  dModel                                         )
+S3method( plot,  iModel                                                    )
+S3method( print,  CGstats                                                  )
+S3method( print,  MIfit                                                    )
+S3method( print,  MIparms                                                  )
+S3method( print,  citest                                                   )
+S3method( print,  compareiModels                                           )
+S3method( print,  dModel                                                   )
+S3method( print,  iModel                                                   )
+S3method( print,  iModelsummary                                            )
+S3method( print,  testadd                                                  )
+S3method( print,  testdelete                                               )
+S3method( residuals,  dModel                                               )
+S3method( stepwise,  iModel                                                )
+S3method( summary,  citest                                                 )
+S3method( summary,  iModel                                                 )
+S3method( summary,  mModel                                                 )
+S3method( terms,  iModel                                                   )
+S3method( testEdges,  iModel                                               )
+S3method( testadd,  iModel                                                 )
+S3method( testdelete,  iModel                                              )
+S3method( triangulate,  dModel                                             )
+S3method( update,  iModel                                                  )
+
+
+

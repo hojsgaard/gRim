@@ -1,0 +1,125 @@
+<html><head><title>Test addition of edge to graphical model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>testadd(gRim)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   testadd">
+<param name="keyword" value="R:   testadd.imod">
+<param name="keyword" value="R:   print.testadd">
+<param name="keyword" value=" Test addition of edge to graphical model">
+</object>
+
+
+<h2>Test addition of edge to graphical model</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Performs a test of addition of an edge to a graphical model (an
+<code>imod</code> object).
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+testadd(object, edge, k=2, details=1, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>object</code></td>
+<td>
+A model; an object of class <code>imod</code>.</td></tr>
+<tr valign="top"><td><code>edge</code></td>
+<td>
+An edge; either as a vector or as a right hand sided formula.</td></tr>
+<tr valign="top"><td><code>k</code></td>
+<td>
+Penalty parameter used when calculating change in AIC</td></tr>
+<tr valign="top"><td><code>details</code></td>
+<td>
+The amount of details to be printed; 0 surpresses all information</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Further arguments to be passed on to the underlying
+functions for testing; that is to CItable and CImvn</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+Let M0 be the model and e={u,v} be an edge and let M1 be the model
+obtained by adding e to M0. If M1 is decomposable AND e is contained
+in one clique C only of M1 then the test is carried out in the
+C-marginal model. In this case, and if the model is a log-linear model
+then the degrees of freedom is adjusted for sparsity.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+A list</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Søren Højsgaard, sorenh@agrsci.dk
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="testdelete.html">testdelete</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+## ## ## testadd
+## ## ## 
+
+## ## Discrete model
+## ## 
+data(reinis)
+## A decomposable model
+##
+mf &lt;- ~smoke:phys:mental+smoke:systol:mental
+object &lt;- dmod(mf, data=reinis)
+testadd(object,c("systol","phys"))
+
+## A non-decomposable model
+##
+mf &lt;- ~smoke:phys+phys:mental+smoke:systol+systol:mental
+object &lt;- dmod(mf, data=reinis)
+testadd(object,c("phys","systol"))
+
+## ## Continuous model
+## ## 
+data(math)
+## A decomposable model
+##
+mf &lt;- ~me:ve:al+al:an
+object &lt;- cmod(mf, data=math)
+testadd(object,c("me","an"))
+
+## A non-decomposable model
+##
+mf &lt;- ~me:ve+ve:al+al:an+an:me
+object &lt;- cmod(mf, data=math)
+testadd(object,c("me","al"))
+</pre>
+
+
+
+<hr><div align="center">[Package <em>gRim</em> version 0.1.27 <a href="00Index.html">Index</a>]</div>
+
+</body></html>

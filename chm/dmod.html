@@ -1,0 +1,122 @@
+<html><head><title>Log&ndash;linear model</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="Rchm.css">
+</head>
+<body>
+
+<table width="100%"><tr><td>dmod(gRim)</td><td align="right">R Documentation</td></tr></table><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e">
+<param name="keyword" value="R:   dmod">
+<param name="keyword" value="R:   print.dmod">
+<param name="keyword" value=" Log&ndash;linear model">
+</object>
+
+
+<h2>Log&ndash;linear model</h2>
+
+
+<h3>Description</h3>
+
+<p>
+Specification of log&ndash;linear (graphical) model. The 'd' in the name
+<code>dmod</code> refers to that it is a (graphical) model for 'd'iscrete variables
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+dmod(formula, data = NULL, marginal, context,
+ interactions=NULL, fit = TRUE)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>formula</code></td>
+<td>
+Model specification in one of the following forms:
+1) a right-hand sided formula,
+2) as a list of generators,
+3) an undirected graph (represented either as a graphNEL object or as an adjacency
+matrix).
+Notice that there are certain model
+specification shortcuts, see Section 'details' below.</td></tr>
+<tr valign="top"><td><code>data</code></td>
+<td>
+A table</td></tr>
+<tr valign="top"><td><code>context</code></td>
+<td>
+Restrict attention to a (multidimensional) slice of the
+table; the slide being given by specific levels of certain
+variables. See 'examples' below. </td></tr>
+<tr valign="top"><td><code>interactions</code></td>
+<td>
+A number given the highest order interactions in
+the model, see Section 'details' below.</td></tr>
+<tr valign="top"><td><code>marginal</code></td>
+<td>
+Should only a subset of the variables be used in
+connection with the model specification shortcuts</td></tr>
+<tr valign="top"><td><code>fit</code></td>
+<td>
+Should the model be fitted.</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+The independence model can be specified as <code>~.^1</code> and the
+saturated model as <code>~.^.</code>. The <code>marginal</code>
+argument can be used for specifying the independence or saturated
+models for only a subset of the variables.
+</p>
+<p>
+Setting e.g. <code>interactions=3</code> implies that there will be at most
+three factor interactions in the model.
+</p>
+
+
+<h3>Value</h3>
+
+<p>
+An object of class <code>dmod</code> (a list)</p>
+
+<h3>Author(s)</h3>
+
+<p>
+Søren Højsgaard, sorenh@agrsci.dk
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="cmod.html">cmod</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+
+## Graphical log-linear model
+data(reinis)
+dm1&lt;-dmod(~.^., reinis)
+dm2&lt;-backward(dm1, k=2)
+dm3&lt;-backward(dm1, k=2, fixin=list(c("family","phys","systol")))
+## At most 3-factor interactions
+dm1&lt;-dmod(~.^., data=reinis,interactions=3)
+
+## Define the independence model for only a subset of the variables
+## in a specific context. 
+dm1 &lt;- dmod(~.^., margin=c("smoke","mental","phys","systol"),
+data=reinis, context=list("family", "y"))
+
+</pre>
+
+
+
+<hr><div align="center">[Package <em>gRim</em> version 0.1.22 <a href="00Index.html">Index]</a></div>
+
+</body></html>
