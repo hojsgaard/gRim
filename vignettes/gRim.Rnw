@@ -11,11 +11,11 @@
 \usepackage[latin1]{inputenc}
 \usepackage{GMIR}
 \usepackage{Sweave,amsmath,amsfonts,bm,color}
-\usepackage[authoryear,round]{natbib}
+%%\usepackage[authoryear,round]{natbib}
 \bibliographystyle{plainnat}
 \usepackage{a4wide}
-\usepackage[inline,nomargin,draft]{fixme}
-\usepackage{natbib}
+%%\usepackage[inline,nomargin,draft]{fixme}
+%%\usepackage{natbib}
 \usepackage{boxedminipage}
 \usepackage{shortvrb}
 \MakeShortVerb|
@@ -192,7 +192,7 @@ A summary of a model is provided by the \comi{summary()} function:
 summary(dm1)
 @ %def
 
-\fxnote{The summary() method leaves a bit to be desired...}
+\footnote{The summary() method leaves a bit to be desired...}
 
 
 
@@ -266,7 +266,7 @@ cm1 <- cmod(~Fat11:Fat12 + Fat12:Fat13 + Fat11:Fat13, data=carcass)
 cm1
 @ %def
 
-\fxnote{Harmonize cmod() output with that of dmod()}
+\footnote{Harmonize cmod() output with that of dmod()}
 
 @
 <<fig=T>>=
@@ -283,7 +283,7 @@ mm1 <- mmod(~.^., data=milkcomp1)
 mm1
 @ %def
 
-\fxnote{Harmonize mmod() output with that of dmod()}
+\footnote{Harmonize mmod() output with that of dmod()}
 
 @
 <<fig=T>>=
@@ -512,7 +512,7 @@ difference in AIC between the candidate model and the original
 model. A negative value of AIC would have suggested that the candidate
 model is to be preferred.
 
-\fxnote{A function for testing addition / deletion of more general
+\footnote{A function for testing addition / deletion of more general
   terms is needed.}
 
 
@@ -728,7 +728,7 @@ the starting model already, they will remain in the final model.
 \subsection{Adjusting for sparsity}
 \label{sec:xxx}
 
-\fxnote{Comment on adjustment for sparsity in testadd() and testdelete()}
+\footnote{Comment on adjustment for sparsity in testadd() and testdelete()}
 
 
 % \subsection{Sparse Contingency Tables}
@@ -751,7 +751,7 @@ the starting model already, they will remain in the final model.
 % \subsection{A space--efficient implementation of IPS for contingency tables}
 % \label{sec:xxx}
 
-% \fxnote{effloglin() is not the best name. Perhaps loglineff() is a bit
+% \footnote{effloglin() is not the best name. Perhaps loglineff() is a bit
 %   better. Should start with loglin...}
 
 % Consider a hierarchical log--linear model with generating class $\calA
@@ -1098,9 +1098,9 @@ str(dm3[c("varNames","conNames","conLevels")])
 % getInEdges(cm1, type="decomposable")
 % @ %def
 
-% \fxnote{getInEdges/getOutEdges: type=''decomposable'' is a silly value for the argument}
+% \footnote{getInEdges/getOutEdges: type=''decomposable'' is a silly value for the argument}
 
-% \fxnote{getInEdges/getOutEdges: Should be possible to have edges as a
+% \footnote{getInEdges/getOutEdges: Should be possible to have edges as a
 %   matrix instead. Perhaps even as default.}
 
 % \subsection{\code{getOutEdges()}}
