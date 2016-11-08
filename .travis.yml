@@ -1,0 +1,30 @@
+language: R
+cache: packages
+sudo: required
+bioc_packages:
+- graph
+- RBGL
+- Rgraphviz
+os:
+- linux
+- osx
+before_install:
+- if [ "$TRAVIS_OS_NAME" == "linux" ]; then tlmgr install boxedminipage; fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo tlmgr install a4wide boxedminipage;
+  fi
+- if [ "$TRAVIS_OS_NAME" == "osx" ]; then curl -O http://r.research.att.com/libs/gfortran-4.8.2-darwin13.tar.bz2;
+  sudo tar fvxz gfortran-4.8.2-darwin13.tar.bz2 -C /; fi
+after_success:
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then rm gfortran-4.8.2-darwin13.tar.bz2; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then R CMD INSTALL --build $PKG_TARBALL; fi
+deploy:
+  provider: releases
+  api_key:
+    secure: ySlPJX/YxUy5Peluk+liMHlO4tGtEjhCFRRKPnBkdyqMmEQnULa9JQqT7pf6hsNvfQcgCVzS41pTZcOGY1Pt+b1Zd4jlvYjP5Ge4YCyruLCX7hFXGXeg9VBbh99e2r8rE4DJXV1aLIP+znCorPrkd4fO8rf0X6aJG387JlK6p8LZq8cPFQ4WL7CeNVyEDVCPnz4gp6TEF7SzstKeWRKufHqnpPgyJkjO4x+6/csMqMNDHOxmSQ+BKl1tge2fYihdvEiwvFHLHsgbz9/vzM5GGfzlcCyXhpoxEymqiqtI6E9UqkLLOk5I7bjC0Cjk7jOopNC2YbEvFVWlvxLn2ecvblMury9bCoND7c8GHEYdUWlWYyPiDjOzQ5M79cSmX8LFTNM0tJt9WXowTkJggeT9WgzIWbyrXuA11i3RkrVqS+mzneAz5dqIeIh2jbageUJCJjrlrl0JAtIAkJdjn9pjpu8XgoOsvts3I/ZTgPRwC91SITlwDQ/qM292A4J5gVvSO1CZFQiAWWyFZFaZgpWxJ6G6iPrZnqCDjo5Icr4ggU4yYXUSJ11taIbguUi3QAffKEGbd42ctw8OU9qI/L4lHG3kFaWBbr3oGq3QGkej4WGZE4q5FhIaTa/foWC2pE71oi4x5cmnbzmZh4WpAeq3lT5aGC+Jva3l0Q6mpnU+SEk=
+  skip_cleanup: true
+  file_glob: true
+  file: gRim_*.t*gz
+  on:
+    repo: hojsgaard/gRim
+    tags: true
+    condition: "$TRAVIS_OS_NAME == osx"
