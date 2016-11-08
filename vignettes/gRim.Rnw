@@ -997,7 +997,7 @@ str(dm3[c("varNames","conNames","conLevels")])
 
 
 
-\listoffixmes
+%%\listoffixmes
 
 
 \end{document}
