@@ -10,7 +10,7 @@
 #' @docType class
 #' @section Objects from the Class: A virtual Class: No objects may be created
 #' from it.
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @keywords classes
 #' @examples
 #' 

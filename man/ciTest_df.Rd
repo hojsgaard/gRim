@@ -9,9 +9,12 @@ ciTest_df(x, set = NULL, ...)
 \arguments{
 \item{x}{A dataframe.}
 
-\item{set}{}
+\item{set}{A specification of the test to be made. The tests are of the form u
+and v are independent condionally on S where u and v are variables and S
+is a set of variables. See 'details' for details about specification of
+\code{set}.}
 
-\item{\dots}{}
+\item{\dots}{Additional arguments.}
 }
 \value{
 An object of class 'citest' (which is a list).

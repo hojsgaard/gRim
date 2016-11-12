@@ -6,7 +6,7 @@
 
 #' @title Mixed interaction model.
 #' 
-#' @descripton A mixed interaction model is a model (often with conditional
+#' @description A mixed interaction model is a model (often with conditional
 #'     independence restrictions) for a combination of discrete and continuous
 #'     variables.
 #'
@@ -15,11 +15,12 @@
 #' @aliases mmod coef.mModel coefficients.mModel print.mModel summary.mModel
 #' mmod_dimension
 #' 
-#' @param formula
-#' @param data 
-#' @param marginal 
-#' @param fit 
-#' @param details
+#' @param formula A right hand sided formula specifying the model.
+#' @param data Data (a dataframe)
+#' @param marginal A possible subsets of columns of \code{data}; useful when
+#'     \code{formula} contains model specification shortcuts.
+#' @param fit Currently not used
+#' @param details For printing debugging information
 #' 
 #' @return An object of class \code{mModel} and the more general class
 #'     \code{iModel}.

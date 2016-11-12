@@ -9,13 +9,16 @@
 #' @description \code{CGstats} provides what corresponds to calling
 #'     \code{cow.wt} on different strata of data where the strata are defined by
 #'     the combinations of factors in data.
+#'
+#' @name CGstats
 #' 
 #' @aliases CGstats CGstats.data.frame CGstats_internal print.CGstats
 #' 
 #' @param object A dataframe.
 #' @param varnames Names of variables to be used.
 #' @param homogeneous Logical; if TRUE a common covariance matrix is reported.
-#' @param simplify Logical; if TRUE the result will be presented in a simpler form.
+#' @param simplify Logical; if TRUE the result will be presented in a simpler
+#'     form.
 #' @return A list whose form depends on the type of input data and the varnames.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{cov.wt}}
@@ -23,10 +26,10 @@
 #' @examples
 #' 
 #' data(milkcomp)
-#' % milkcomp <- subset(milkcomp, (treat %in% c("a","b")) & (lactime %in% c("t1", "t2")))
-#' % milkcomp <- milkcomp[,-1]
-#' % milkcomp$treat 		<- factor(milkcomp$treat)
-#' % milkcomp$lactime 	<- factor(milkcomp$lactime)
+#' # milkcomp <- subset(milkcomp, (treat %in% c("a","b")) & (lactime %in% c("t1", "t2")))
+#' # milkcomp <- milkcomp[,-1]
+#' # milkcomp$treat 		<- factor(milkcomp$treat)
+#' # milkcomp$lactime 	<- factor(milkcomp$lactime)
 #' 
 #' CGstats(milkcomp)
 #' CGstats(milkcomp, c(1,2))
@@ -70,6 +73,11 @@ CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify
 }
 
 ## October 2015: New implementation of CGstats_internal
+
+#' @rdname CGstats
+#'
+#' @param disc.names Vector of names of discrete variables
+#' @param cont.names Vector of names of continuous variables
 CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneous=TRUE, simplify=TRUE){
 
   if (length(cont.names)==0) {
@@ -97,9 +105,9 @@ CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneo
         }
     }
   c(ans, list(cont.names=cont.names, disc.names=disc.names, disc.levels=disc.levels))
-  #' res  <- c(ans, list(cont.names=cont.names, disc.names=disc.names, disc.levels=disc.levels))
-  #' ##class(res) <- "CGstats"
-  #' return(res)
+  # res  <- c(ans, list(cont.names=cont.names, disc.names=disc.names, disc.levels=disc.levels))
+  # ##class(res) <- "CGstats"
+  # return(res)
  }
 
 ## deprecated

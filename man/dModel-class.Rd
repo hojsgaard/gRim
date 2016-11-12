@@ -19,7 +19,7 @@ showClass("dModel")
 
 }
 \author{
-S<f8>ren H<f8>jsgaard, \email{sorenh@math.aau.dk}
+Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
 \keyword{classes}
 

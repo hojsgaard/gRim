@@ -17,15 +17,17 @@
 ###
 ##########################################################################
 
-
-
-#' Find edges in a graph and edges not in an undirected graph.
+#' @title Find edges in a graph and edges not in an undirected graph.
 #' 
-#' Returns the edges of a graph (or edges not in a graph) where the graph can
-#' be either a graphNEL object, a list of generators or an adjacency matrix.
-#' 
-#' When \code{ingraph=TRUE}: If type="decomposable" then \code{getEdges()}
-#' returns those edges e for which the graph with e removed is decomposable.
+#' @description Returns the edges of a graph (or edges not in a graph) where the
+#'     graph can be either a graphNEL object, a list of generators or an
+#'     adjacency matrix.
+#'
+#' @name getEdges
+#'
+#' @details When \code{ingraph=TRUE}: If type="decomposable" then
+#'     \code{getEdges()} returns those edges e for which the graph with e
+#'     removed is decomposable.
 #' 
 #' When \code{ingraph=FALSE}: Likewise, if type="decomposable" then
 #' \code{getEdges()} returns those edges e for which the graph with e added is
@@ -41,23 +43,22 @@
 #' \code{\link[gRbase]{mcsmarked}}.
 #' 
 #' @aliases getEdges getEdges.list getEdges.graphNEL getEdges.matrix getInEdges
-#' getOutEdges getInEdgesMAT getOutEdgesMAT
+#'     getOutEdges getInEdgesMAT getOutEdgesMAT
 #' @param object An object representing a graph; either a generator list, a
-#' graphNEL object or an adjacency matrix.
+#'     graphNEL object or an adjacency matrix.
 #' @param type Either "unrestricted" or "decomposable"
 #' @param ingraph If TRUE the result is the edges in the graph; if FALSE the
-#' result is the edges not in the graph.
+#'     result is the edges not in the graph.
 #' @param discrete This argument is relevant only if \code{object} specifies a
-#' marked graph in which some vertices represent discrete variables and some
-#' represent continuous variables.
+#'     marked graph in which some vertices represent discrete variables and some
+#'     represent continuous variables.
 #' @param \dots Additional arguments; currently not used.
-#' @param adjmat An adjacency matrix
 #' @return A p * 2 matrix with edges.
 #' @note These functions work on undirected graphs. The behaviour is
-#' undocumented for directed graphs.
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
+#'     undocumented for directed graphs.
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{edgeList}}, \code{\link{nonEdgeList}}
-#' \code{\link{mcsmarked}}
+#'     \code{\link{mcsmarked}}
 #' @keywords utilities
 #' @examples
 #' 

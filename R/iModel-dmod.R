@@ -6,17 +6,18 @@
 
 ## FIXME: Delete df from loglin() output.
 
-
-
-#' Log--linear model
+#' @title Log--linear model
+#'
+#' @name dmod
 #' 
-#' Specification of log--linear (graphical) model. The 'd' in the name
+#' @description Specification of log--linear (graphical) model. The 'd' in the name
 #' \code{dmod} refers to that it is a (graphical) model for 'd'iscrete
 #' variables
 #' 
-#' The independence model can be specified as \code{~.^1} and the saturated
-#' model as \code{~.^.}.  Setting e.g. \code{interactions=3} implies that there
-#' will be at most three factor interactions in the model.
+#' @details The independence model can be specified as \code{~.^1} and the
+#'     saturated model as \code{~.^.}.  Setting e.g. \code{interactions=3}
+#'     implies that there will be at most three factor interactions in the
+#'     model.
 #' 
 #' Data can be specified as a table of counts or as a dataframe. If data is a
 #' dataframe then it will be converted to a table (using \code{xtabs()}). This
@@ -34,47 +35,44 @@
 #' The \code{triangulate()} method for discrete models (dModel objects) will
 #' for a model look at the dependence graph for the model.
 #' 
-#' @aliases dmod print.dModel fitted.dModel residuals.dModel isGraphical.dModel
-#' isDecomposable.dModel modelProperties modelProperties.dModel
-#' triangulate.dModel
+#' @aliases dmod print.dModel fitted.dModel residuals.dModel 
+#'     triangulate.dModel
 #' @param formula Model specification in one of the following forms: 1) a
-#' right-hand sided formula, 2) as a list of generators, 3) an undirected graph
-#' (represented either as a graphNEL object or as an adjacency matrix).  Notice
-#' that there are certain model specification shortcuts, see Section 'details'
-#' below.
+#'     right-hand sided formula, 2) as a list of generators, 3) an undirected
+#'     graph (represented either as a graphNEL object or as an adjacency
+#'     matrix).  Notice that there are certain model specification shortcuts,
+#'     see Section 'details' below.
 #' @param data Either a table or a dataframe. In the latter case, the dataframe
-#' will be coerced to a table. See 'details' below.
+#'     will be coerced to a table. See 'details' below.
 #' @param interactions A number given the highest order interactions in the
-#' model, see Section 'details' below.
+#'     model, see Section 'details' below.
 #' @param marginal Should only a subset of the variables be used in connection
-#' with the model specification shortcuts
+#'     with the model specification shortcuts
 #' @param fit Should the model be fitted.
 #' @param details Control the amount of output; for debugging purposes.
-#' @param x,object A discrete model object (a dModel object)
 #' @param ... Additional arguments; currently no used.
 #' @return An object of class \code{dModel}.
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{cmod}} \code{\link{mmod}}
+#'
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
+#'
+#' @seealso \code{\link{cmod}}, \code{\link{mmod}}
 #' @keywords models
 #' @examples
-#' 
-#' 
+#'  
 #' ## Graphical log-linear model
 #' data(reinis)
-#' dm1<-dmod(~.^., reinis)
-#' dm2<-backward(dm1, k=2)
-#' dm3<-backward(dm1, k=2, fixin=list(c("family","phys","systol")))
+#' dm1 <- dmod(~ .^., reinis)
+#' dm2 <- backward(dm1, k=2)
+#' dm3 <- backward(dm1, k=2, fixin=list(c("family", "phys", "systol")))
 #' ## At most 3-factor interactions
-#' dm1<-dmod(~.^., data=reinis,interactions=3)
-#' 
+#' dm1<-dmod(~ .^., data=reinis, interactions=3)
 #' 
 #' @export dmod
 dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, details=0){
-
   if (!inherits(data, c("data.frame","table"))){
     stop("data must be either a dataframe or a table \n")
   }
-  if (inherits(data,"data.frame")){
+    if (inherits(data,"data.frame")){
     is_data.frame <- TRUE
     varNames <- names(data)
   } else {

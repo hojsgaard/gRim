@@ -3,10 +3,6 @@
 \name{dmod}
 \alias{dmod}
 \alias{fitted.dModel}
-\alias{isDecomposable.dModel}
-\alias{isGraphical.dModel}
-\alias{modelProperties}
-\alias{modelProperties.dModel}
 \alias{print.dModel}
 \alias{residuals.dModel}
 \alias{triangulate.dModel}
@@ -17,10 +13,10 @@ dmod(formula, data, marginal = NULL, interactions = NULL, fit = TRUE,
 }
 \arguments{
 \item{formula}{Model specification in one of the following forms: 1) a
-right-hand sided formula, 2) as a list of generators, 3) an undirected graph
-(represented either as a graphNEL object or as an adjacency matrix).  Notice
-that there are certain model specification shortcuts, see Section 'details'
-below.}
+right-hand sided formula, 2) as a list of generators, 3) an undirected
+graph (represented either as a graphNEL object or as an adjacency
+matrix).  Notice that there are certain model specification shortcuts,
+see Section 'details' below.}
 
 \item{data}{Either a table or a dataframe. In the latter case, the dataframe
 will be coerced to a table. See 'details' below.}
@@ -35,8 +31,6 @@ model, see Section 'details' below.}
 
 \item{details}{Control the amount of output; for debugging purposes.}
 
-\item{x, object}{A discrete model object (a dModel object)}
-
 \item{...}{Additional arguments; currently no used.}
 }
 \value{
@@ -48,9 +42,10 @@ Specification of log--linear (graphical) model. The 'd' in the name
 variables
 }
 \details{
-The independence model can be specified as \code{~.^1} and the saturated
-model as \code{~.^.}.  Setting e.g. \code{interactions=3} implies that there
-will be at most three factor interactions in the model.
+The independence model can be specified as \code{~.^1} and the
+    saturated model as \code{~.^.}.  Setting e.g. \code{interactions=3}
+    implies that there will be at most three factor interactions in the
+    model.
 
 Data can be specified as a table of counts or as a dataframe. If data is a
 dataframe then it will be converted to a table (using \code{xtabs()}). This
@@ -69,23 +64,21 @@ The \code{triangulate()} method for discrete models (dModel objects) will
 for a model look at the dependence graph for the model.
 }
 \examples{
-
-
+ 
 ## Graphical log-linear model
 data(reinis)
-dm1<-dmod(~.^., reinis)
-dm2<-backward(dm1, k=2)
-dm3<-backward(dm1, k=2, fixin=list(c("family","phys","systol")))
+dm1 <- dmod(~ .^., reinis)
+dm2 <- backward(dm1, k=2)
+dm3 <- backward(dm1, k=2, fixin=list(c("family", "phys", "systol")))
 ## At most 3-factor interactions
-dm1<-dmod(~.^., data=reinis,interactions=3)
-
+dm1<-dmod(~ .^., data=reinis, interactions=3)
 
 }
 \author{
-S<f8>ren H<f8>jsgaard, \email{sorenh@math.aau.dk}
+Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
 \seealso{
-\code{\link{cmod}} \code{\link{mmod}}
+\code{\link{cmod}}, \code{\link{mmod}}
 }
 \keyword{models}
 

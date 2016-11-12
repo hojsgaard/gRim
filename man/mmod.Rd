@@ -12,17 +12,25 @@
 mmod(formula, data, marginal = NULL, fit = TRUE, details = 0)
 }
 \arguments{
-\item{data}{}
+\item{formula}{A right hand sided formula specifying the model.}
 
-\item{marginal}{}
+\item{data}{Data (a dataframe)}
 
-\item{fit}{}
+\item{marginal}{A possible subsets of columns of \code{data}; useful when
+\code{formula} contains model specification shortcuts.}
 
-\item{details}{}
+\item{fit}{Currently not used}
+
+\item{details}{For printing debugging information}
 }
 \value{
 An object of class \code{mModel} and the more general class
     \code{iModel}.
+}
+\description{
+A mixed interaction model is a model (often with conditional
+    independence restrictions) for a combination of discrete and continuous
+    variables.
 }
 \examples{
 

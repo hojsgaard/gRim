@@ -8,6 +8,9 @@
 \title{Mean, covariance and counts for grouped data}
 \usage{
 CGstats(object, varnames = NULL, homogeneous = TRUE, simplify = TRUE)
+
+CGstats_internal(object, disc.names = NULL, cont.names = NULL,
+  homogeneous = TRUE, simplify = TRUE)
 }
 \arguments{
 \item{object}{A dataframe.}
@@ -16,7 +19,12 @@ CGstats(object, varnames = NULL, homogeneous = TRUE, simplify = TRUE)
 
 \item{homogeneous}{Logical; if TRUE a common covariance matrix is reported.}
 
-\item{simplify}{Logical; if TRUE the result will be presented in a simpler form.}
+\item{simplify}{Logical; if TRUE the result will be presented in a simpler
+form.}
+
+\item{disc.names}{Vector of names of discrete variables}
+
+\item{cont.names}{Vector of names of continuous variables}
 }
 \value{
 A list whose form depends on the type of input data and the varnames.
@@ -29,10 +37,10 @@ A list whose form depends on the type of input data and the varnames.
 \examples{
 
 data(milkcomp)
-\% milkcomp <- subset(milkcomp, (treat \%in\% c("a","b")) & (lactime \%in\% c("t1", "t2")))
-\% milkcomp <- milkcomp[,-1]
-\% milkcomp$treat 		<- factor(milkcomp$treat)
-\% milkcomp$lactime 	<- factor(milkcomp$lactime)
+# milkcomp <- subset(milkcomp, (treat \%in\% c("a","b")) & (lactime \%in\% c("t1", "t2")))
+# milkcomp <- milkcomp[,-1]
+# milkcomp$treat 		<- factor(milkcomp$treat)
+# milkcomp$lactime 	<- factor(milkcomp$lactime)
 
 CGstats(milkcomp)
 CGstats(milkcomp, c(1,2))

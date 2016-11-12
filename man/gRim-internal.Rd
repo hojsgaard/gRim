@@ -1,5 +1,6 @@
 \name{gRim-internal}
 
+\alias{updateA}
 \alias{ghk2pmsParms_}
 \alias{pms2ghkParms_}
 \alias{normalize_ghkParms_}
@@ -22,11 +23,8 @@
 
 
 %% iModel methods (some needs .Rd-files)
-\alias{logLik.iModel}
-\alias{summary.iModel}
-\alias{print.iModelsummary}
 \alias{update.iModel}
-\alias{extractAIC.iModel}
+
 
 %% Printing
 \alias{print.iModel}
@@ -46,8 +44,7 @@
 %% FIXME
 \alias{logLik.mModel} %% Bør erstattes med iModel metoden
 \alias{update.mModel} %% Bør erstattes med iModel metoden
-\alias{formula.iModel}
-\alias{terms.iModel}
+
 
 %% Needs .Rd files
 \alias{CItest.data.frame}
