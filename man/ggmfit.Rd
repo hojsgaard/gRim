@@ -27,15 +27,16 @@ ggmfit(S, n.obs, glist, start = NULL, eps = 1e-12, iter = 1000,
 }
 \value{
 A list with \item{lrt}{Likelihood ratio statistic (-2logL)}
-\item{df}{Degrees of freedom} \item{logL}{log likelihood} \item{K}{Estimated
-concentration matrix (inverse covariance matrix)}
+    \item{df}{Degrees of freedom} \item{logL}{log likelihood}
+    \item{K}{Estimated concentration matrix (inverse covariance matrix)}
 }
 \description{
 Fit graphical Gaussian model by iterative proportional fitting.
 }
 \details{
-\code{ggmfit} is based on a C implementation.  \code{ggmfitr} is implemented
-purely in R (and is provided mainly as a benchmark for the C-version).
+\code{ggmfit} is based on a C implementation.  \code{ggmfitr} is
+    implemented purely in R (and is provided mainly as a benchmark for the
+    C-version).
 }
 \examples{
 
@@ -51,12 +52,11 @@ ggmfitr(ddd$cov, ddd$n.obs, glist)
 
 
 }
-\author{
-S<f8>ren H<f8>jsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
 \code{\link{cmod}}, \code{\link{loglin}}
 }
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
+}
 \keyword{models}
 \keyword{multivariate}
-

@@ -199,13 +199,12 @@ phk2pmsParms<-function(parms){
 #' 
 #' 
 #' @aliases ghk2phkParms ghk2pmsParms phk2ghkParms phk2pmsParms pms2ghkParms
-#' pms2phkParms
+#'     pms2phkParms
 #' @param parms Parameters of a mixed interaction model
-#' @return Parameters of a mixed interaction model.  %% ~Describe the value
-#' returned %% If it is a LIST, use %% \item{comp1 }{Description of 'comp1'} %%
-#' \item{comp2 }{Description of 'comp2'} %% ...
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
+#' @return Parameters of a mixed interaction model.
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @keywords utilities
+#' 
 #' @export ghk2phkParms
 ghk2phkParms<-function(parms){
   ##parms <- unclass(parms)  

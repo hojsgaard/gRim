@@ -5,12 +5,9 @@
 \title{Modify generating class for a graphical/hierarchical model}
 \usage{
 modify_glist(glist, items, details = 0)
-
-modify_glist(glist, items, details = 0)
 }
 \arguments{
-\item{glist}{A list of vectors where each vector is a generator of the
-model.}
+\item{glist}{A list of vectors where each vector is a generator of the model.}
 
 \item{items}{A list with edges / terms to be added and deleted. See section
 'details' below.}
@@ -19,26 +16,11 @@ model.}
 }
 \value{
 A generating class for the modified model. The elements of the list
-are character vectors.
+    are character vectors.
 }
 \description{
-Modify generating class for a graphical/hierarchical model by 1) adding
-edges, 2) deleting edges, 3) adding terms and 4) deleting terms.
-
-e1 <- c(1,4)
-e2 <- c(2,4)
-e3 <- ~1:4
-e4 <- ~1:4+2:4
-e5 <- rbind(e1,e2)
-e6 <- as.data.frame(e5)
-e7 <- list(e1, e2)
-.doInput( e1 )
-.doInput( e2 )
-.doInput( e3 )
-.doInput( e4 )
-.doInput( e5 )
-.doInput( e6 )
-.doInput( e7 )
+Modify generating class for a graphical/hierarchical model by 1)
+    adding edges, 2) deleting edges, 3) adding terms and 4) deleting terms.
 }
 \details{
 The \code{items} is a list with named entries as \code{list(add.edge=,
@@ -68,7 +50,7 @@ modify_glist(glist, items=list(add.term=~1:4))
 ## Notice: Only the first term is added as the second is already 
 ## in the model.
 modify_glist(glist, items=list(add.term=list(c(1,4),c(1,3))))
-modify_glist(glist, items=list(add.term=~1:4+1:3))
+modify_glist(glist, items=list(add.term=~1:4 + 1:3))
 
 ## Notice: Operations are carried out in the order given in the
 ## items list and hence we get different results: 
@@ -76,11 +58,10 @@ modify_glist(glist, items=list(drop.edge=c(1,4), add.edge=c(1,4)))
 modify_glist(glist, items=list(add.edge=c(1,4), drop.edge=c(1,4)))
 
 }
-\author{
-S<f8>ren H<f8>jsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
-\code{\link{cmod}} \code{\link{dmod}} \code{\link{mmod}}
+\code{\link{cmod}}, \code{\link{dmod}}, \code{\link{mmod}}
+}
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
 \keyword{utilities}
-

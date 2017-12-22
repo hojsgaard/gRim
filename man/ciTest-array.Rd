@@ -88,13 +88,12 @@ ciTest(lizard, set=c("diam", "height", "species"), method="mc", B=400)
 ciTest(lizard, set=c("diam", "height", "species"), method="smc", B=400)
 
 }
-\author{
-Søren Højsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
 \code{\link{ciTest}}, \code{\link{ciTest.data.frame}},
     \code{\link{ciTest_df}}, \code{\link{ciTest.list}},
     \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 }
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
+}
 \keyword{htest}
-

@@ -4,15 +4,16 @@
 ###
 ###
 
-.getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss", "center")){
-    
-    switch(name,
-           "CGstats"=, "cgstats"={object$datainfo$CGstats},
-           "SSD"=,"ssd"={object$datainfo$CGstats$SSD},
-           "SS"=,"ss"={object$datainfo$CGstats$SS},
-           "center"={object$datainfo$CGstats$center},
-           )
-}
+##.getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss", "center")){
+##    
+##    switch(name,
+##           "CGstats"=, "cgstats"={object$datainfo$CGstats},
+##           "SSD"=,"ssd"={object$datainfo$CGstats$SSD},
+##           "SS"=,"ss"={object$datainfo$CGstats$SS},
+##           "center"={object$datainfo$CGstats$center},
+##           )
+##}
+##
 
 .fit222 <- function(object, method="general", details=0, eps.parm=1e-6, maxit=100,...){
   method <- match.arg(method, c("general", "stephalving"))

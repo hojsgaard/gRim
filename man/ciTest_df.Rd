@@ -9,9 +9,9 @@ ciTest_df(x, set = NULL, ...)
 \arguments{
 \item{x}{A dataframe.}
 
-\item{set}{A specification of the test to be made. The tests are of the form u
-and v are independent condionally on S where u and v are variables and S
-is a set of variables. See 'details' for details about specification of
+\item{set}{A specification of the test to be made. The tests are of the form
+u and v are independent condionally on S where u and v are variables and
+S is a set of variables. See 'details' for details about specification of
 \code{set}.}
 
 \item{\dots}{Additional arguments.}
@@ -44,23 +44,16 @@ then passed on to \code{ciTest_mvn()} which makes the test.
 \examples{
 
 data(milkcomp1)
-ciTest(milkcomp1, set=~tre+fat+pro)
-ciTest_df(milkcomp1, set=~tre+fat+pro)
+ciTest(milkcomp1, set=~tre + fat + pro)
+ciTest_df(milkcomp1, set=~tre + fat + pro)
 
+}
+\seealso{
+\code{\link{ciTest}}, \code{\link{ciTest.table}},
+    \code{\link{ciTest_table}}, \code{\link{ciTest.list}},
+    \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
-\seealso{
-\code{\link{ciTest}}
-
-\code{\link{ciTest.table}} \code{\link{ciTest_table}}
-
-% \code{\link{ciTest.data.frame}} % \code{\link{ciTest_df}}
-
-\code{\link{ciTest.list}} \code{\link{ciTest_mvn}}
-
-\code{\link{chisq.test}}
-}
 \keyword{htest}
-

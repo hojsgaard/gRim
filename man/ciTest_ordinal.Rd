@@ -3,39 +3,39 @@
 \name{ciTest_ordinal}
 \alias{ciTest_ordinal}
 \title{A function to compute Monte Carlo and asymptotic tests of conditional
-independence for ordinal and/or nominal variables.}
+    independence for ordinal and/or nominal variables.}
 \usage{
 ciTest_ordinal(x, set = NULL, statistic = "dev", N = 0, ...)
 }
 \arguments{
 \item{x}{A dataframe or table.}
 
-\item{set}{The variable set (u,v,S), given either as an integer vector of
-the column numbers of a dataframe or dimension numbers of a table, or as a
+\item{set}{The variable set (u,v,S), given either as an integer vector of the
+column numbers of a dataframe or dimension numbers of a table, or as a
 character vector with the corresponding variable or dimension names.}
 
 \item{statistic}{Either "deviance", "wilcoxon", "kruskal" or "jt".}
 
-\item{N}{The number of Monte Carlo samples. If N<=0 then Monte Carlo
-p-values are not computed.}
+\item{N}{The number of Monte Carlo samples. If N<=0 then Monte Carlo p-values
+are not computed.}
 
 \item{\dots}{Additional arguments, currently not used}
 }
 \value{
-A list including the test statistic, the asymptotic p-value and,
-when computed, the Monte Carlo p-value.  \item{P}{Asymptotic p-value}
-\item{montecarlo.P}{Monte Carlo p-value}
+A list including the test statistic, the asymptotic p-value and, when
+    computed, the Monte Carlo p-value.  \item{P}{Asymptotic p-value}
+    \item{montecarlo.P}{Monte Carlo p-value}
 }
 \description{
-The function computes tests of independence of two variables, say u and v,
-given a set of variables, say S. The deviance, Wilcoxon, Kruskal-Wallis and
-Jonkheere-Terpstra tests are supported.  Asymptotic and Monte Carlo p-values
-are computed.
+The function computes tests of independence of two variables,
+    say u and v, given a set of variables, say S. The deviance, Wilcoxon,
+    Kruskal-Wallis and Jonkheere-Terpstra tests are supported.  Asymptotic
+    and Monte Carlo p-values are computed.
 }
 \details{
-The deviance test is appropriate when u and v are nominal; Wilcoxon, when u
-is binary and v is ordinal; Kruskal-Wallis, when u is nominal and v is
-ordinal; Jonckheere-Terpstra, when both u and v are ordinal.
+The deviance test is appropriate when u and v are nominal; Wilcoxon,
+    when u is binary and v is ordinal; Kruskal-Wallis, when u is nominal and
+    v is ordinal; Jonckheere-Terpstra, when both u and v are ordinal.
 }
 \examples{
 
@@ -63,16 +63,15 @@ ciTest_ordinal(dumpDF, ~ Operation + Symptom + Centre, stat="jt", N=1000)
 
 
 }
-\author{
-Flaminia Musella, David Edwards, S<f8>ren H<f8>jsgaard,
-\email{sorenh@math.aau.dk}
-}
 \references{
-See Edwards D. (2000), "Introduction to Graphical Modelling",
-2nd ed., Springer-Verlag, pp. 130-153.
+See Edwards D. (2000), "Introduction to Graphical Modelling", 2nd
+    ed., Springer-Verlag, pp. 130-153.
 }
 \seealso{
 \code{\link{ciTest_table}}, \code{\link{ciTest}}
 }
+\author{
+Flaminia Musella, David Edwards, Søren Højsgaard,
+    \email{sorenh@math.aau.dk}
+}
 \keyword{htest}
-

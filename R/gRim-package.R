@@ -63,9 +63,9 @@ NULL
 #' @param steps Maximum number of steps.
 #' @param k Penalty term when \code{criterion="aic"}. Only k=2 gives genuine
 #' AIC.
-#' @param fixinMAT Matrix (p x 2) of edges. If those edges are in the model,
+#' @param fixin Matrix (p x 2) of edges. If those edges are in the model,
 #' they are not considered for removal.
-#' @param fixoutMAT Matrix (p x 2) of edges. If those edges are not in the
+#' @param fixout Matrix (p x 2) of edges. If those edges are not in the
 #' model, they are not considered for addition.
 #' @param direction Direction for model search. Either \code{"backward"} or
 #' \code{"forward"}.
@@ -74,7 +74,7 @@ NULL
 #' @param \dots Further arguments to be passed on to \code{testdelete} (for
 #' \code{testInEdges}) and \code{testadd} (for \code{testOutEdges}).
 #' @return An \code{iModel} model object.
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{cmod}} \code{\link{dmod}} \code{\link{mmod}}
 #' \code{\link{testInEdges}} \code{\link{testOutEdges}}
 #' @keywords models
@@ -127,7 +127,7 @@ NULL
 #' @param adjust Should model dimension be adjusted for sparsity of data (only
 #' available for decomposable models)
 #' @return A numeric.
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{dmod}}, \code{\link{glm}}, \code{\link{loglm}}
 #' @keywords models
 #' @examples
@@ -170,7 +170,7 @@ NULL
 #' @param \dots Further arguments to be passed on to \code{testdelete} (for
 #' \code{testInEdges}) and \code{testadd} (for \code{testOutEdges}).
 #' @return A matrix.
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{getEdges}}, \code{\link{testadd}},
 #' \code{\link{testdelete}}
 #' @keywords models htest

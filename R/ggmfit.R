@@ -6,15 +6,13 @@
 ##
 ##############################################################
 
-
-
-
-#' Iterative proportional fitting of graphical Gaussian model
+#' @title Iterative proportional fitting of graphical Gaussian model
 #' 
-#' Fit graphical Gaussian model by iterative proportional fitting.
+#' @description Fit graphical Gaussian model by iterative proportional fitting.
 #' 
-#' \code{ggmfit} is based on a C implementation.  \code{ggmfitr} is implemented
-#' purely in R (and is provided mainly as a benchmark for the C-version).
+#' @details \code{ggmfit} is based on a C implementation.  \code{ggmfitr} is
+#'     implemented purely in R (and is provided mainly as a benchmark for the
+#'     C-version).
 #' 
 #' @aliases ggmfit ggmfitr
 #' @param S Empirical covariance matrix
@@ -26,9 +24,9 @@
 #' @param details Controlling the amount of output.
 #' @param ... Optional arguments; currently not used
 #' @return A list with \item{lrt}{Likelihood ratio statistic (-2logL)}
-#' \item{df}{Degrees of freedom} \item{logL}{log likelihood} \item{K}{Estimated
-#' concentration matrix (inverse covariance matrix)}
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
+#'     \item{df}{Degrees of freedom} \item{logL}{log likelihood}
+#'     \item{K}{Estimated concentration matrix (inverse covariance matrix)}
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{cmod}}, \code{\link{loglin}}
 #' @keywords multivariate models
 #' @examples
@@ -55,7 +53,7 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
   data.vn    <- colnames(S)
 
   ## The used variables
-  usevar <- uniquePrim(unlist(glist))       
+  usevar <- unique.default(unlist(glist))       
 
   ## Check that the used variables are in S
   zzz <- match(usevar, data.vn)

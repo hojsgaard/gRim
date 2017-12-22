@@ -38,10 +38,10 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
     cl      <- match.call()
     data.names <- names(data)
     
-    if (!missing(marginal)) 
-      marginal <- intersectPrim(data.names, marginal)
+    if (!is.null(marginal)) 
+        marginal <- intersect(data.names, marginal)
     
-    flist <- .pFormula2(formula, data.names, marginal) 
+    flist <- .parse_gm_formula(formula, data.names, marginal) 
     ##v.sep = ":", g.sep = "+", ignore.power.value = FALSE)
     glist <- flist$glist
     
@@ -62,30 +62,31 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
     res[names(upd)] <- upd
     class(res) <- c("mModel","iModel")
 
-    if (fit){
-      res <- fit(res)      # use fit.dmod directly
-    }
-    #cat("time elapsed since start:", (proc.time()-t.start)[1],"\n")            
-    res
+##    if (fit){
+##      res <- fit(res)      # use fit.dmod directly
+##    }
+##    #cat("time elapsed since start:", (proc.time()-t.start)[1],"\n")            
+##    res
+##
+    if (fit) fit(res) else res
   }
 
 
+## FIXME .glistNUM is goodie; put somewhere
+.glistNUM <- function(glist, varNames){
+    lapply(glist, function(l) match(l, varNames))
+}
+
 .mModel_finalize <- function(glist, varNames, datainfo){
 
-  zzz <- isGSD_glist(glist, discrete=datainfo$disc.names)
- 
-  ## Numeric version of generators
-  glistNUM <- lapply(glist, function(ll) { match(ll, varNames) })
-
-  modelinfo <- .mModelinfo(glist, datainfo)
-
-  ret      <- list(glistNUM       = glistNUM,
-                   modelinfo      = modelinfo,
-                   isDecomposable = zzz[2],
-                   isGraphical    = zzz[1]
-                   )
-##   cat(".mModel_finalize\n");  print(ret)
-  return(ret)
+    zzz <- isGSD_glist(glist, discrete=datainfo$disc.names)
+    glistNUM <- .glistNUM(glist, varNames)    
+    modelinfo <- .mModelinfo(glist, datainfo)
+    
+    ret      <- list(glistNUM       = glistNUM,
+                     modelinfo      = modelinfo,
+                     properties     = zzz)
+    ret
 }
 
 
@@ -193,29 +194,28 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
     used.disc <- used.indic * (disc.indic==1)
     used.cont <- used.indic * (disc.indic==0)
     
-    if (sum(used.disc)==0)
-      stop("No discrete variables...\n")
-    if (sum(used.cont)==0)
-      stop("No continuous variables...\n")
+    if (sum(used.disc) == 0) stop("No discrete variables\n")
+    if (sum(used.cont) == 0) stop("No continuous variables\n")
     
-    select.col <- c(which(used.disc==1), which(used.cont==1))
+    select.col <- c(which(used.disc == 1), which(used.cont == 1))
     
     disc.indic2 <- rep.int(0, length(select.col))
     disc.indic2[1:sum(used.disc)] <- 1
 
-    newdata <- dd[,select.col, drop=FALSE]
+    newdata <- dd[, select.col, drop=FALSE]
     lev <- lapply(newdata, levels)
-    lev <- lev[lapply(lev, length)>0]
+    lev <- lev[lapply(lev, length) > 0]
 
     data.names <- names(newdata)
-    disc.names <- data.names[disc.indic2==1]
-    cont.names <- data.names[disc.indic2==0]
+    disc.names <- data.names[disc.indic2 == 1]
+    cont.names <- data.names[disc.indic2 == 0]
 
     ##CGstats <- .extendCGstats(CGstats(newdata, disc.names=disc.names, cont.names=cont.names,homogeneous=FALSE))
     CGstats <-
       .extendCGstats(CGstats_internal(newdata,
                                       disc.names=disc.names,
-                                      cont.names=cont.names,homogeneous=FALSE))
+                                      cont.names=cont.names,
+                                      homogeneous=FALSE))
     list(data=newdata,
          CGstats=CGstats,
          data.names=data.names,
@@ -245,11 +245,14 @@ summary.mModel <- function(object, ...){
   }
   cat("Mixed interaction model: \n")
   cat("Generators:\n")
-  utils::str(object$glist, give.head=FALSE,no.list=TRUE,comp.str=" ")
+  utils::str(.glist(object), give.head=FALSE, no.list=TRUE, comp.str=" ")
   
   cat(sprintf("Discrete: %3i   Continuous: %3i\n",
-              length(object$datainfo$disc.names), length(object$datainfo$cont.names)))
-  cat(sprintf("Is graphical: %s  Is decomposable: %s\n", object$isGraphical, object$isDecomposable))
+              length(getmi(object, "disc.names")),
+              length(getmi(object, "cont.names"))))
+  cat(sprintf("Is graphical: %s  Is decomposable: %s\n",
+              getmi(object, "isGraphical"),
+              getmi(object, "isDecomposable")))
     
   cat(sprintf("Dimension: %3i df: %3i, independence df: %3i\n",
               object$dimension[1], object$dimension[4], object$dimension[5]))

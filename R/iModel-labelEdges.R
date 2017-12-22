@@ -25,199 +25,166 @@ testEdges <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic", k=2, 
 testEdges.iModel <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic", k=2, alpha=NULL,
                       headlong=FALSE, details=1,...){
   
-  cl <- match.call()
-  if (ingraph){
-    cl[[1]] <- as.name("testInEdges")
-  } else {
-    cl[[1]] <- as.name("testOutEdges")
-  }
-  eval(cl)
+    cl <- match.call()
+    if (ingraph) cl[[1]] <- as.name("testInEdges")
+    else cl[[1]] <- as.name("testOutEdges")
+    eval(cl)
 }
 
 
 
-testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, headlong=FALSE, details=1,...){
+testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, headlong=FALSE, details=1, ...){
 
-  criterion <- match.arg(criterion, c("aic","test"))
-  
-  switch(criterion,
-         "aic" ={opt.op    <- which.min
-                 comp.op   <- `<`
-                 outstring <- "change.AIC"
-                 crit.str  <- "aic"},
-         "test"={opt.op    <- which.max
-                 comp.op   <- `>`
-                 outstring <- "p.value"
-                 crit.str  <- "p.value"
-               })
-
-  if (is.null(alpha)){
-    alpha <- if (criterion=="aic") 0 else 0.05
-  }
-
-  testFun <- if (headlong)
-    .testInEdges_headlong
-  else
-    .testInEdges_all
-
-  vn   <- object$varNames
-  amat <- glist2adjMAT(object$glist, vn=vn)
-
-  if (is.null(edgeMAT)){
-    edgeMAT <- getInEdgesMAT(amat)
-  }
-  if (nrow(edgeMAT)==0)
-    stop("There are no edges to test...\n")
-  
-  testFun(object, edgeMAT, comp.op=comp.op, crit.str=crit.str, alpha=alpha, k=k, amat=amat, vn=vn, ...)
-}
-
-
-.testInEdges_all <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0,k=2, amat, vn, ...)
-{
-
-  ##cat(".testInEdges_all\n")
-  if (nrow(edgeMAT)==0)
-    return(NULL)
-
-  testMAT <- matrix(0,nrow=nrow(edgeMAT), ncol=4)
-  colnames(testMAT) <- c("statistic","df","p.value","aic")
-  indic <- rep.int(0,nrow(edgeMAT))
-
-  for (ii in seq_len(nrow(edgeMAT))){
-    ##print(edgeMAT[ii,])
-    edgeTest <- testdelete(object, edgeMAT[ii,],k=k, amat=amat, ...)
+    criterion <- match.arg(criterion, c("aic", "test"))
     
-    testMAT[ii,] <- as.numeric(edgeTest[c("statistic","df","p.value","aic")])
-    curr.stat <- edgeTest[[crit.str]]
+    switch(criterion,
+           "aic" ={opt.op    <- which.min
+               comp.op   <- `<`
+               outstring <- "change.AIC"
+               crit.str  <- "aic"},
+           "test"={opt.op    <- which.max
+               comp.op   <- `>`
+               outstring <- "p.value"
+               crit.str  <- "p.value"
+           })
+    
+    if (is.null(alpha))
+        alpha <- if (criterion=="aic") 0 else 0.05
 
-    if (comp.op(curr.stat, alpha)) {
-      indic[ii] <- 1      
+    testFun <- if (headlong) .testInEdges_headlong
+               else .testInEdges_all
+
+    vn   <- getmi(object, "varNames")
+    amat <- glist2adjMAT(getmi(object, "glist"), vn=vn)
+
+    if (is.null(edgeMAT)) edgeMAT <- getInEdgesMAT(amat)
+    if (nrow(edgeMAT)==0) stop("There are no edges to test...\n")
+  
+    testFun(object, edgeMAT, comp.op=comp.op, crit.str=crit.str, alpha=alpha, k=k, amat=amat, vn=vn, ...)
+}
+
+
+## Loop gennem alle kanter i edgeMAT (der er p x 2 character matrix)
+## FIXME: What happens in testdelete??
+.testInEdges_all <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0, k=2, amat, vn, ...)
+{
+    if (nrow(edgeMAT)==0) return(NULL)
+    
+    testMAT <- matrix(0, nrow=nrow(edgeMAT), ncol=4)
+    colnames(testMAT) <- c("statistic", "df", "p.value", "aic")
+    indic <- rep.int(0, nrow(edgeMAT))
+    
+    for (ii in seq_len(nrow(edgeMAT))){
+        edgeTest <- testdelete(object, edgeMAT[ii, ], k=k, amat=amat, ...) ## amat       
+        testMAT[ii,] <- as.numeric(edgeTest[c("statistic", "df", "p.value", "aic")])
+        curr.stat <- edgeTest[[crit.str]]        
+        if (comp.op(curr.stat, alpha)) indic[ii] <- 1             
     }
-    ##print("BBBBBBBBBBBBBBB")
-  }
-
-  ans <- cbind(
-    as.data.frame(testMAT),
-    as.data.frame(edgeMAT,stringsAsFactors=FALSE),
-    action=c("-","+")[indic+1])
-  return(ans)
+    
+    ans <- cbind(
+        as.data.frame(testMAT),
+        as.data.frame(edgeMAT, stringsAsFactors=FALSE),
+        action=c("-", "+")[indic + 1])
+    ans
 }  
 
-.testInEdges_headlong <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0,k=2, amat, vn, ...)
+.testInEdges_headlong <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0, k=2, amat, vn, ...)
 {
-  if (nrow(edgeMAT)==0)
-    return(NULL)
+    if (nrow(edgeMAT)==0) return(NULL)
 
-  testMAT <- matrix(0,nrow=nrow(edgeMAT), ncol=4)
-  colnames(testMAT) <- c("statistic","df","p.value","aic")
-  perm <- sample(nrow(edgeMAT))
-  
-  for (ii in seq_len(nrow(edgeMAT))){  
-    edgeTest     <- testdelete(object, edgeMAT[perm[ii],],k=k, amat=amat, ...)
-    testMAT[ii,] <- as.numeric(edgeTest[c("statistic","df","p.value","aic")])
-    curr.stat    <- edgeTest[[crit.str]]
-    if (comp.op( curr.stat, alpha)) {
-      break      
+    testMAT <- matrix(0, nrow=nrow(edgeMAT), ncol=4)
+    colnames(testMAT) <- c("statistic", "df", "p.value", "aic")
+    perm <- sample(nrow(edgeMAT)) ## The headlong part
+    
+    for (ii in seq_len(nrow(edgeMAT))){  
+        edgeTest     <- testdelete(object, edgeMAT[perm[ii],],k=k, amat=amat, ...)
+        testMAT[ii,] <- as.numeric(edgeTest[c("statistic", "df", "p.value", "aic")])
+        curr.stat    <- edgeTest[[crit.str]]
+        if (comp.op( curr.stat, alpha))  break       
     }
-  }
-  
-  ans <- cbind(
-               as.data.frame(testMAT[1:ii,,drop=FALSE]),
-               as.data.frame(edgeMAT[perm[1:ii],,drop=FALSE],stringsAsFactors=FALSE),
-               action=c(rep("-",ii-1),"+"))
-  return(ans)
+    
+    ans <- cbind(
+        as.data.frame(testMAT[1:ii, , drop=FALSE]),
+        as.data.frame(edgeMAT[perm[1:ii], , drop=FALSE], stringsAsFactors=FALSE),
+        action=c(rep("-", ii - 1), "+"))
+    ans
 }  
 
 
 testOutEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, headlong=FALSE, details=1,...){
 
-  criterion <- match.arg(criterion, c("aic","test"))
-  
-  switch(criterion,
-         "aic" ={opt.op    <- which.min
-                 comp.op   <- `<`
-                 outstring <- "change.AIC"
-                 crit.str  <- "aic"},
-         "test"={opt.op    <- which.max
-                 comp.op   <- `<`
-                 outstring <- "p.value"
-                 crit.str  <- "p.value"
-               })
-
-  if (is.null(alpha)){
-    alpha <- if (criterion=="aic") 0 else 0.05
-  }
-
-  testFun <- if (headlong)
-    .testOutEdges_headlong
-  else
-    .testOutEdges_all
-
-  vn   <- object$varNames
-  amat <- glist2adjMAT(object$glist, vn=vn)
-
-  if (is.null(edgeMAT)){
-    edgeMAT <- getOutEdgesMAT(amat)
-  }
-  if (nrow(edgeMAT)==0)
-    stop("There are no missing edges to test...\n")
-  
-
-  testFun(object, edgeMAT, comp.op=comp.op, crit.str=crit.str, alpha=alpha, k=k, amat=amat, vn=vn, ...)
+    criterion <- match.arg(criterion, c("aic","test"))
+    
+    switch(criterion,
+           "aic" ={opt.op    <- which.min
+               comp.op   <- `<`
+               outstring <- "change.AIC"
+               crit.str  <- "aic"},
+           "test"={opt.op    <- which.max
+               comp.op   <- `<`
+               outstring <- "p.value"
+               crit.str  <- "p.value"
+           })
+    
+    if (is.null(alpha)){
+        alpha <- if (criterion=="aic") 0 else 0.05
+    }
+    
+    testFun <- if (headlong).testOutEdges_headlong
+               else .testOutEdges_all
+    
+    vn   <- getmi(object, "varNames")
+    amat <- glist2adjMAT(getmi(object, "glist"), vn=vn)
+    
+    if (is.null(edgeMAT)) edgeMAT <- getOutEdgesMAT(amat)
+    if (nrow(edgeMAT)==0) stop("There are no missing edges to test...\n")
+    
+    testFun(object, edgeMAT, comp.op=comp.op, crit.str=crit.str, alpha=alpha, k=k, amat=amat, vn=vn, ...)
 }
 
 
-.testOutEdges_all <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0,k=2, amat, ...)
+.testOutEdges_all <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0, k=2, amat, ...)
 {
-  if (nrow(edgeMAT)==0)
-    return(NULL)
-
-  #cat(sprintf(" .testOutEdges_all k=%f\n", k))
+  if (nrow(edgeMAT)==0) return(NULL)
   
-  testMAT <- matrix(0,nrow=nrow(edgeMAT), ncol=4)
-  colnames(testMAT) <- c("statistic","df","p.value","aic")
-  indic <- rep.int(0,nrow(edgeMAT))
+  testMAT <- matrix(0, nrow=nrow(edgeMAT), ncol=4)
+  colnames(testMAT) <- c("statistic", "df", "p.value", "aic")
+  indic <- rep.int(0, nrow(edgeMAT))
   
   for (ii in seq_len(nrow(edgeMAT))){
-    edgeTest     <- testadd(object, edgeMAT[ii,],k=k, amat=amat,...)
-    testMAT[ii,] <- as.numeric(edgeTest[c("statistic","df","p.value","aic")])
+    edgeTest     <- testadd(object, edgeMAT[ii,], k=k, amat=amat, ...)
+    testMAT[ii,] <- as.numeric(edgeTest[c("statistic", "df", "p.value", "aic")])
     curr.stat    <- edgeTest[[crit.str]]
-    if (comp.op(curr.stat, alpha)) {
-      indic[ii] <- 1      
-    }
+    if (comp.op(curr.stat, alpha)) indic[ii] <- 1      
   }
 
   ans <- cbind(
     as.data.frame(testMAT),
-    as.data.frame(edgeMAT,stringsAsFactors=FALSE),
-    action=c("-","+")[indic+1])
-  return(ans)
+    as.data.frame(edgeMAT, stringsAsFactors=FALSE),
+    action=c("-", "+")[indic + 1])
+  ans
 }  
 
 
-.testOutEdges_headlong <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0,k=2, amat, vn, ...)
+.testOutEdges_headlong <- function(object, edgeMAT, comp.op=`<`, crit.str="aic", alpha=0, k=2, amat, vn, ...)
 {
-  if (nrow(edgeMAT)==0)
-    return(NULL)
+  if (nrow(edgeMAT)==0) return(NULL)
 
-  testMAT <- matrix(0,nrow=nrow(edgeMAT), ncol=4)
-  colnames(testMAT) <- c("statistic","df","p.value","aic")
+  testMAT <- matrix(0, nrow=nrow(edgeMAT), ncol=4)
+  colnames(testMAT) <- c("statistic", "df", "p.value", "aic")
+  perm <- sample(nrow(edgeMAT)) ## The headlong part
   
-  perm <- sample(nrow(edgeMAT))
   for (ii in seq_len(nrow(edgeMAT))){  
-    edgeTest <- testadd(object, edgeMAT[perm[ii],],k=k, amat=amat, ...)
-    testMAT[ii,] <- as.numeric(edgeTest[c("statistic","df","p.value","aic")])
-    curr.stat <- edgeTest[[crit.str]]
-    if (comp.op( curr.stat, alpha)) {
-      break      
-    }
+      edgeTest <- testadd(object, edgeMAT[perm[ii], ], k=k, amat=amat, ...)
+      testMAT[ii,] <- as.numeric(edgeTest[c("statistic","df","p.value","aic")])
+      curr.stat <- edgeTest[[crit.str]]
+      if (comp.op( curr.stat, alpha)) break      
   }
   
   ans <- cbind(
-               as.data.frame(testMAT[1:ii,,drop=FALSE]),
-               as.data.frame(edgeMAT[perm[1:ii],,drop=FALSE],stringsAsFactors=FALSE),
-               action=c(rep("-",ii-1),"+"))
-  return(ans)
+      as.data.frame(testMAT[1:ii, , drop=FALSE]),
+      as.data.frame(edgeMAT[perm[1:ii], , drop=FALSE], stringsAsFactors=FALSE),
+      action=c(rep("-", ii - 1), "+"))
+  ans
 }  
 

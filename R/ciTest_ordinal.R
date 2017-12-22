@@ -1,37 +1,34 @@
 # Functions for calculating exact conditional independence tests for discrete data.
 # Presently supported: deviance and wilcoxon
 
-
-
-
-#' A function to compute Monte Carlo and asymptotic tests of conditional
-#' independence for ordinal and/or nominal variables.
+#' @title A function to compute Monte Carlo and asymptotic tests of conditional
+#'     independence for ordinal and/or nominal variables.
 #' 
-#' The function computes tests of independence of two variables, say u and v,
-#' given a set of variables, say S. The deviance, Wilcoxon, Kruskal-Wallis and
-#' Jonkheere-Terpstra tests are supported.  Asymptotic and Monte Carlo p-values
-#' are computed.
+#' @description The function computes tests of independence of two variables,
+#'     say u and v, given a set of variables, say S. The deviance, Wilcoxon,
+#'     Kruskal-Wallis and Jonkheere-Terpstra tests are supported.  Asymptotic
+#'     and Monte Carlo p-values are computed.
 #' 
-#' The deviance test is appropriate when u and v are nominal; Wilcoxon, when u
-#' is binary and v is ordinal; Kruskal-Wallis, when u is nominal and v is
-#' ordinal; Jonckheere-Terpstra, when both u and v are ordinal.
+#' @details The deviance test is appropriate when u and v are nominal; Wilcoxon,
+#'     when u is binary and v is ordinal; Kruskal-Wallis, when u is nominal and
+#'     v is ordinal; Jonckheere-Terpstra, when both u and v are ordinal.
 #' 
 #' @param x A dataframe or table.
-#' @param set The variable set (u,v,S), given either as an integer vector of
-#' the column numbers of a dataframe or dimension numbers of a table, or as a
-#' character vector with the corresponding variable or dimension names.
+#' @param set The variable set (u,v,S), given either as an integer vector of the
+#'     column numbers of a dataframe or dimension numbers of a table, or as a
+#'     character vector with the corresponding variable or dimension names.
 #' @param statistic Either "deviance", "wilcoxon", "kruskal" or "jt".
-#' @param N The number of Monte Carlo samples. If N<=0 then Monte Carlo
-#' p-values are not computed.
+#' @param N The number of Monte Carlo samples. If N<=0 then Monte Carlo p-values
+#'     are not computed.
 #' @param \dots Additional arguments, currently not used
-#' @return A list including the test statistic, the asymptotic p-value and,
-#' when computed, the Monte Carlo p-value.  \item{P}{Asymptotic p-value}
-#' \item{montecarlo.P}{Monte Carlo p-value}
-#' @author Flaminia Musella, David Edwards, S<f8>ren H<f8>jsgaard,
-#' \email{sorenh@@math.aau.dk}
+#' @return A list including the test statistic, the asymptotic p-value and, when
+#'     computed, the Monte Carlo p-value.  \item{P}{Asymptotic p-value}
+#'     \item{montecarlo.P}{Monte Carlo p-value}
+#' @author Flaminia Musella, David Edwards, Søren Højsgaard,
+#'     \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{ciTest_table}}, \code{\link{ciTest}}
-#' @references See Edwards D. (2000), "Introduction to Graphical Modelling",
-#' 2nd ed., Springer-Verlag, pp. 130-153.
+#' @references See Edwards D. (2000), "Introduction to Graphical Modelling", 2nd
+#'     ed., Springer-Verlag, pp. 130-153.
 #' @keywords htest
 #' @examples
 #' 

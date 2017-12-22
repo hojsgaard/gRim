@@ -2,8 +2,8 @@
 % Please edit documentation in R/iModel-dmod.R
 \name{dmod}
 \alias{dmod}
-\alias{fitted.dModel}
 \alias{print.dModel}
+\alias{fitted.dModel}
 \alias{residuals.dModel}
 \alias{triangulate.dModel}
 \title{Log--linear model}
@@ -74,11 +74,10 @@ dm3 <- backward(dm1, k=2, fixin=list(c("family", "phys", "systol")))
 dm1<-dmod(~ .^., data=reinis, interactions=3)
 
 }
-\author{
-Søren Højsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
 \code{\link{cmod}}, \code{\link{mmod}}
 }
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
+}
 \keyword{models}
-

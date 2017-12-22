@@ -31,10 +31,7 @@ update.iModel <- function(object, items, fit=TRUE, details=0, ...){
 
     object[ names(upd) ] <- upd
 
-    if (fit){
-        object <- fit(object)
-    }
-    object
+    if (fit) fit(object) else object
 }
 
 
@@ -86,11 +83,14 @@ triangulate.dModel <- function(object, ...){
 ###
 
 
-#' Modify generating class for a graphical/hierarchical model
+#' @title Modify generating class for a graphical/hierarchical model
 #' 
-#' Modify generating class for a graphical/hierarchical model by 1) adding
-#' edges, 2) deleting edges, 3) adding terms and 4) deleting terms.
+#' @description Modify generating class for a graphical/hierarchical model by 1)
+#'     adding edges, 2) deleting edges, 3) adding terms and 4) deleting terms.
+#'
+#' @name modify_glist
 #' 
+#' @details
 #' 
 #' The \code{items} is a list with named entries as \code{list(add.edge=,
 #' drop.edge=, add.term=, drop.term=)}
@@ -104,15 +104,14 @@ triangulate.dModel <- function(object, ...){
 #' is already in a generating class and then removing the edge again does not
 #' give the original generating class.
 #' 
-#' @param glist A list of vectors where each vector is a generator of the
-#' model.
+#' @param glist A list of vectors where each vector is a generator of the model.
 #' @param items A list with edges / terms to be added and deleted. See section
-#' 'details' below.
+#'     'details' below.
 #' @param details Control the amount of output (for debugging purposes).
 #' @return A generating class for the modified model. The elements of the list
-#' are character vectors.
-#' @author S<f8>ren H<f8>jsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{cmod}} \code{\link{dmod}} \code{\link{mmod}}
+#'     are character vectors.
+#' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
+#' @seealso \code{\link{cmod}}, \code{\link{dmod}}, \code{\link{mmod}}
 #' @keywords utilities
 #' @examples
 #' 
@@ -129,7 +128,7 @@ triangulate.dModel <- function(object, ...){
 #' ## Notice: Only the first term is added as the second is already 
 #' ## in the model.
 #' modify_glist(glist, items=list(add.term=list(c(1,4),c(1,3))))
-#' modify_glist(glist, items=list(add.term=~1:4+1:3))
+#' modify_glist(glist, items=list(add.term=~1:4 + 1:3))
 #' 
 #' ## Notice: Operations are carried out in the order given in the
 #' ## items list and hence we get different results: 
@@ -137,54 +136,6 @@ triangulate.dModel <- function(object, ...){
 #' modify_glist(glist, items=list(add.edge=c(1,4), drop.edge=c(1,4)))
 #' 
 #' @export modify_glist
-modify_glist <- function(glist, items, details=0){
-  glist   <- lapply(glist, as.character)
-  ## Here; whatever the input format is "taken apart into lists":
-  cat("modify_glist items (before): "); print(items)
-
-  items   <- .parse.change.list(items, details)
-  action  <- names(items)
-  cat("modify_glist items (after) : "); print(items)
-  for (i in seq_along(items)){
-    curr.action  <- action[ i ]
-    curr.item    <- items[[ i ]]
-    glist        <- .modify_glistPrim(glist, curr.action, curr.item, details)
-  }
-  glist
-}
-
-
-
-
-
-
-.doInput <- function( e ){
-    cls <- class(e)
-    if (cls == "data.frame" || cls == "matrix"){
-        e <- as.matrix( e )
-        if (ncol( e ) != 2)
-            stop("Must have dimension p x 2\n")
-        e <- rowmat2list( e )
-    }
-    rhsf2list( e )
-}
-
-#' e1 <- c(1,4)
-#' e2 <- c(2,4)
-#' e3 <- ~1:4
-#' e4 <- ~1:4+2:4
-#' e5 <- rbind(e1,e2)
-#' e6 <- as.data.frame(e5)
-#' e7 <- list(e1, e2)
-
-#' .doInput( e1 )
-#' .doInput( e2 )
-#' .doInput( e3 )
-#' .doInput( e4 )
-#' .doInput( e5 )
-#' .doInput( e6 )
-#' .doInput( e7 )
-
 
 modify_glist <- function(glist, items, details=0){
   glist   <- lapply(glist, as.character)
@@ -206,10 +157,6 @@ modify_glist <- function(glist, items, details=0){
   }
   glist
 }
-
-
-
-
 
 ### Updates a glist (generating class) with the elements in
 ### curr.item. These can be of the type curr.action where valid
@@ -248,6 +195,39 @@ modify_glist <- function(glist, items, details=0){
     }
     removeRedundant( c(glist, extra) )
 }
+
+
+
+
+
+
+.doInput <- function( e ){
+    cls <- class(e)
+    if (cls == "data.frame" || cls == "matrix"){
+        e <- as.matrix( e )
+        if (ncol( e ) != 2)
+            stop("Must have dimension p x 2\n")
+        e <- rowmat2list( e )
+    }
+    rhsf2list( e )
+}
+
+###' e1 <- c(1,4)
+###' e2 <- c(2,4)
+###' e3 <- ~1:4
+###' e4 <- ~1:4+2:4
+###' e5 <- rbind(e1,e2)
+###' e6 <- as.data.frame(e5)
+###' e7 <- list(e1, e2)
+##
+###' .doInput( e1 )
+###' .doInput( e2 )
+###' .doInput( e3 )
+###' .doInput( e4 )
+###' .doInput( e5 )
+###' .doInput( e6 )
+###' .doInput( e7 )
+##
 
 
 .drop.edge_glist <- function(glist, ee){
@@ -411,6 +391,22 @@ dropTerm_glist <- function(glist, e){
 
 
 
+##modify_glist <- function(glist, items, details=0){
+##  glist   <- lapply(glist, as.character)
+##  ## Here; whatever the input format is "taken apart into lists":
+##  cat("modify_glist items (before): "); print(items)
+##
+##  items   <- .parse.change.list(items, details)
+##  action  <- names(items)
+##  cat("modify_glist items (after) : "); print(items)
+##  for (i in seq_along(items)){
+##    curr.action  <- action[ i ]
+##    curr.item    <- items[[ i ]]
+##    glist        <- .modify_glistPrim(glist, curr.action, curr.item, details)
+##  }
+##  glist
+##}
+##
 
 
 

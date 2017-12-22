@@ -29,11 +29,10 @@ extractAIC.iModel <- function(fit, scale, k = 2, ...){
 
 #' @rdname iModel-general
 summary.iModel <- function(object, ...){
-  glist <- object$glist
+  glist <- getmi(object, "glist")
+  isg   <- getmi(object, "isGraphical")
+  isd   <- getmi(object, "isDecomposable")
 
-  isg   <- object$isGraphical
-  isd   <- object$isDecomposable
-  #cq    <- maxCliques(ugList(glist))$maxCliques
   cq    <- getCliques(ugList(glist))# $maxCliques
   ans   <- structure(list(glist=glist, isGraphical=isg, isDecomposable=isd, cliques=cq),
                      class="iModelsummary")
@@ -70,7 +69,7 @@ formula.iModel <- function(x,...){
 }
 
 #' @rdname iModel-general
-terms.iModel <- function(x,...){
+terms.iModel <- function(x, ...){
 	x$glist
 }
 
@@ -95,11 +94,11 @@ modelProperties.dModel <- function(object){
     vn <- unique(unlist(x))
     amat <- glist2adjMAT(x, vn = vn)
     cliq <- maxCliqueMAT(amat)[[1]]
-    isg <- all(unlist(lapply(cliq, function(sss) isin(x, sss))))
+    isg <- all(unlist(lapply(cliq, function(cq) isin(x, cq))))
     isd <- if (isg) {
-        length(mcsMAT(amat)) > 0
-    }
-    else FALSE
+               length(mcsMAT(amat)) > 0
+           }
+           else FALSE
+    
     c(isGraphical=isg, isDecomposable=isd)
-
 }

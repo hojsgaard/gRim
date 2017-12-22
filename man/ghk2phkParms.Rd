@@ -15,16 +15,13 @@ ghk2phkParms(parms)
 \item{parms}{Parameters of a mixed interaction model}
 }
 \value{
-Parameters of a mixed interaction model.  %% ~Describe the value
-returned %% If it is a LIST, use %% \item{comp1 }{Description of 'comp1'} %%
-\item{comp2 }{Description of 'comp2'} %% ...
+Parameters of a mixed interaction model.
 }
 \description{
 Functions to convert between canonical parametrization (g,h,K), moment
 parametrization (p,m,S) and mixed parametrization (p,h,K).
 }
 \author{
-S<f8>ren H<f8>jsgaard, \email{sorenh@math.aau.dk}
+Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
 \keyword{utilities}
-

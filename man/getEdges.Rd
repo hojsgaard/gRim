@@ -2,12 +2,13 @@
 % Please edit documentation in R/getEdges.R
 \name{getEdges}
 \alias{getEdges}
-\alias{getEdges.graphNEL}
 \alias{getEdges.list}
+\alias{getEdges.graphNEL}
 \alias{getEdges.matrix}
 \alias{getInEdges}
-\alias{getInEdgesMAT}
 \alias{getOutEdges}
+\alias{getEdgesMAT}
+\alias{getInEdgesMAT}
 \alias{getOutEdgesMAT}
 \title{Find edges in a graph and edges not in an undirected graph.}
 \usage{
@@ -61,7 +62,7 @@ These functions work on undirected graphs. The behaviour is
 }
 \examples{
 
-gg     <- ug(~a:b:d+a:c:d+c:e)
+gg     <- ug(~a:b:d + a:c:d + c:e)
 glist  <- getCliques(gg)
 adjmat <- as.adjMAT(gg)
 
@@ -94,7 +95,7 @@ getEdges(adjmat,type="decomposable", ingraph=FALSE)
 
 
 ## Marked graphs; vertices a,b are discrete; c,d are continuous
-UG <- ug(~a:b:c+b:c:d)
+UG <- ug(~a:b:c + b:c:d)
 disc <- c("a","b")
 getEdges(UG)
 getEdges(UG, discrete=disc)
@@ -112,12 +113,11 @@ getEdges(UG, type="decomposable", discrete=c("a","b"))
 
 
 }
+\seealso{
+\code{\link{edgeList}}, \code{\link{nonEdgeList}},
+    \code{\link{mcsmarked}}
+}
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
-\seealso{
-\code{\link{edgeList}}, \code{\link{nonEdgeList}}
-    \code{\link{mcsmarked}}
-}
 \keyword{utilities}
-

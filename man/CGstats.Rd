@@ -8,9 +8,6 @@
 \title{Mean, covariance and counts for grouped data}
 \usage{
 CGstats(object, varnames = NULL, homogeneous = TRUE, simplify = TRUE)
-
-CGstats_internal(object, disc.names = NULL, cont.names = NULL,
-  homogeneous = TRUE, simplify = TRUE)
 }
 \arguments{
 \item{object}{A dataframe.}
@@ -21,10 +18,6 @@ CGstats_internal(object, disc.names = NULL, cont.names = NULL,
 
 \item{simplify}{Logical; if TRUE the result will be presented in a simpler
 form.}
-
-\item{disc.names}{Vector of names of discrete variables}
-
-\item{cont.names}{Vector of names of continuous variables}
 }
 \value{
 A list whose form depends on the type of input data and the varnames.
@@ -55,11 +48,10 @@ CGstats(milkcomp, c(2,3,4), simplify=FALSE, homogeneous=FALSE)
 
 
 }
-\author{
-Søren Højsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
 \code{\link{cov.wt}}
 }
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
+}
 \keyword{utilities}
-

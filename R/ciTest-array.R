@@ -132,8 +132,8 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
   dim.v2 <- dn[2]
   dim.R  <- prod(dn[-(1:2)])
 
-  t.v1R <- tableMargin(x, c(v1,R))
-  t.v2R <- tableMargin(x, c(v2,R))
+  t.v1R <- tableMargin(x, c(v1, R))
+  t.v2R <- tableMargin(x, c(v2, R))
 
   ## Fit table
   if (length(R)){
@@ -146,42 +146,37 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     ## Evaluate test statistic
     ## FIXME There are functions for that in other functions
     if (statistic=="DEV"){             ## Deviance
-        tobs  <- 2* x * log(x/fit.table)
+        tobs  <- 2 * x * log(x / fit.table)
     } else {                           ## Pearson X2
-        tobs <- (x-fit.table)^2/fit.table
+        tobs <- (x - fit.table)^2 / fit.table
     }
     tobs[!is.finite(tobs)] <- 0
     tobsGlobal <- sum(tobs)
     
     ## Calculate df with or without adjustment for sparsity
     if (adjust.df){
-        t.v1Rmat    <- matrix(t.v1R, nrow=dim.R,byrow=TRUE)
-        t.v2Rmat    <- matrix(t.v2R, nrow=dim.R,byrow=TRUE)
-        zzz <- (t.v1Rmat>0)*1
-        if (!is.null(dim(zzz)))
-            dim.v1.adj  <- rowSumsPrim(zzz)
-        else
-            dim.v1.adj  <- sum(zzz)
+        t.v1Rmat    <- matrix(t.v1R, nrow=dim.R, byrow=TRUE)
+        t.v2Rmat    <- matrix(t.v2R, nrow=dim.R, byrow=TRUE)
+
+        zzz <- (t.v1Rmat > 0) * 1
+        dim.v1.adj <- if (!is.null(dim(zzz))) rowSums(zzz) else sum(zzz)
+                    
+        zzz <- (t.v2Rmat > 0) * 1
+        dim.v2.adj <- if (!is.null(dim(zzz))) rowSums(zzz) else sum(zzz)
         
-        zzz <- (t.v2Rmat>0)*1
-        if (!is.null(dim(zzz)))
-            dim.v2.adj  <- rowSumsPrim(zzz)
-        else
-            dim.v2.adj  <- sum(zzz)
-        
-        d1        <- dim.v1.adj-1
-        d1[d1<0]  <- 0
-        d2        <- dim.v2.adj-1
-        d2[d2<0]  <- 0
-        dofSlice  <- d1 * d2
+        d1         <- dim.v1.adj - 1
+        d1[d1 < 0] <- 0
+        d2         <- dim.v2.adj - 1
+        d2[d2 < 0] <- 0
+        dofSlice   <- d1 * d2
     } else {
-        dofSlice <- rep.int((dim.v1-1)*(dim.v2-1), dim.R)
+        dofSlice <- rep.int((dim.v1 - 1) * (dim.v2 - 1), dim.R)
     }
     dofGlobal <- sum(dofSlice)
-    pGlobal   <- 1-pchisq(tobsGlobal, dofGlobal)
+    pGlobal   <- 1 - pchisq(tobsGlobal, dofGlobal)
     
     tobsSlice <- rowSumsPrim(matrix(tobs, nrow=dim.R, byrow=TRUE))
-    pSlice    <- 1-pchisq(tobsSlice, df=dofSlice)
+    pSlice    <- 1 - pchisq(tobsSlice, df=dofSlice)
     
     if (length(R) && slice.info){
         sliceInfo <- list(statistic=tobsSlice, p.value=pSlice, df=dofSlice)
@@ -190,11 +185,25 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     } else {
         slice <- NULL
     }
-    ans <- list(statistic=tobsGlobal, p.value=pGlobal, df=dofGlobal, statname=statistic, method="CHISQ",
+    ans <- list(statistic=tobsGlobal, p.value=pGlobal, df=dofGlobal, statname=statistic,
+                method="CHISQ",
                 adjust.df=adjust.df, varNames=names(dimnames(x)),slice=slice)
     class(ans) <- "citest"
     ans
 }
+
+
+##        if (!is.null(dim(zzz)))
+##            dim.v1.adj  <- rowSums(zzz)
+##        else
+##            dim.v1.adj  <- sum(zzz)
+        ##
+        
+##        if (!is.null(dim(zzz)))
+##            dim.v2.adj  <- rowSums(zzz)
+##        else
+##            dim.v2.adj  <- sum(zzz)
+##        
 
 
 ###
@@ -204,9 +213,6 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
 .CI_SMC_prim <- function(x, statistic="DEV", method="SMC", L=50, B=200, slice.info=FALSE){
 
     statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
-
-    ##print(c(L=L, B=B))
-    
     switch(method,
            "MC"={
                zzz <- .CI_MC_prim(x, statistic=statistic, B=10*B, slice.info=slice.info)
@@ -227,11 +233,11 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
                    }
                }
                
-               zzz[c("p.value","n.extreme","B")] <- c(tot[1]/tot[2], tot)
+               zzz[c("p.value", "n.extreme", "B")] <- c(tot[1] / tot[2], tot)
                zzz["method"] <- "SMC"
                
                if (slice.info){
-                   slice[,"p.value"] <- slice[,"n.extreme"]/tot[2]
+                   slice[,"p.value"] <- slice[,"n.extreme"] / tot[2]
                    zzz[["slice"]]    <- slice
                }
            })
@@ -277,10 +283,10 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     ## Find observed statistics for each slice
     tobs.slice <- vector("numeric", dim.R)
     for (ii in seq_len(dim.R)){
-        r.sum    <- t1R[ii,]
-        c.sum    <- t2R[ii,]
-        expected <- outerPrim(r.sum,c.sum)/sum(r.sum)
-        mm       <- xmat[ii,]
+        r.sum    <- t1R[ii, ]
+        c.sum    <- t2R[ii, ]
+        expected <- outerPrim(r.sum, c.sum) / sum(r.sum)
+        mm       <- xmat[ii, ]
         dim(mm)  <- dim12
         tobs.slice[ii] <- .statFun(mm, expected)
     }
@@ -291,30 +297,30 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     for (ii in seq_len(nrow(t1R))){
         r.sum    <- t1R[ii,]
         c.sum    <- t2R[ii,]
-        expected <- outerPrim(r.sum,c.sum)/sum(r.sum)
+        expected <- outerPrim(r.sum, c.sum) / sum(r.sum)
         zzz      <- r2dtable(B, r.sum, c.sum)
         for (kk in seq_len(B))
-            tref.slice[ii,kk] <- .statFun(zzz[[kk]],expected)
-        n.extreme.slice[ii] <- sum(tobs.slice[ii] < tref.slice[ii,])
+            tref.slice[ii, kk] <- .statFun(zzz[[kk]],expected)
+        n.extreme.slice[ii] <- sum(tobs.slice[ii] < tref.slice[ii, ])
     }
     
-    tref.total  <- colSumsPrim(tref.slice)
+    tref.total  <- colSums(tref.slice)
     tobs.total  <- sum(tobs.slice)
-    n.extreme   <- sum(tobs.total<tref.total)
-    p.value.slice <- n.extreme.slice/B
-    p.value.total <- n.extreme/B
+    n.extreme   <- sum(tobs.total < tref.total)
+    p.value.slice <- n.extreme.slice / B
+    p.value.total <- n.extreme / B
     
     if (slice.info){
         des   <- expand.grid(dimnames(x)[-(1:2)])
-        slice <- cbind(data.frame(statistic=tobs.slice, n.extreme=n.extreme.slice, p.value=p.value.slice, df=NA),des)
+        slice <- cbind(data.frame(statistic=tobs.slice, n.extreme=n.extreme.slice,
+                                  p.value=p.value.slice, df=NA), des)
     } else {
         slice=NULL
     }
     
     ans <- list(statistic=tobs.total, p.value=p.value.total, df=NA, statname=statistic,
-                method="MC", varNames=names(dimnames(x)), n.extreme=n.extreme,B=B,slice=slice)
+                method="MC", varNames=names(dimnames(x)), n.extreme=n.extreme, B=B, slice=slice)
     class(ans) <- "citest"
-
     ans
 }
 

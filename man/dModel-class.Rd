@@ -2,8 +2,8 @@
 % Please edit documentation in R/gRim-package.R
 \docType{class}
 \name{dModel-class}
-\alias{cModel-class}
 \alias{dModel-class}
+\alias{cModel-class}
 \alias{mModel-class}
 \title{Class \code{"dModel"}}
 \description{
@@ -13,6 +13,7 @@ Setting formal classes for dModel, cModel and mModel objects
  A virtual Class: No objects may be created
 from it.
 }
+
 \examples{
 
 showClass("dModel")
@@ -22,4 +23,3 @@ showClass("dModel")
 Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
 \keyword{classes}
-

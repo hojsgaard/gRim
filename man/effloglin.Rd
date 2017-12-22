@@ -21,20 +21,20 @@ effloglin(table, margin, fit = FALSE, eps = 0.01, iter = 20,
 \item{print}{If TRUE, iteration details are printed.}
 }
 \value{
-A list with compnents \item{comp1 }{Description of 'comp1'}
-\item{comp2 }{Description of 'comp2'} ...
+A list.
 }
 \description{
-Fit log-linear models to multidimensional contingency tables by Iterative
-Proportional Fitting.
+Fit log-linear models to multidimensional contingency tables by
+    Iterative Proportional Fitting.
 }
 \details{
-The function differs from \code{loglin} in that 1) data can be given in the
-form of a list of sufficient marginals and 2) the model is fitted only on
-the cliques of the triangulated interaction graph of the model. This means
-that the full table is not fitted, which means that \code{effloglin} is
-efficient (in terms of storage requirements). However \code{effloglin} is
-implemented entirely in R and is therefore slower than \code{loglin}.
+The function differs from \code{loglin} in that 1) data can be given
+    in the form of a list of sufficient marginals and 2) the model is fitted
+    only on the cliques of the triangulated interaction graph of the
+    model. This means that the full table is not fitted, which means that
+    \code{effloglin} is efficient (in terms of storage requirements). However
+    \code{effloglin} is implemented entirely in R and is therefore slower
+    than \code{loglin}.
 }
 \examples{
 
@@ -48,11 +48,10 @@ fv3 <- effloglin(stab, glist, print=FALSE)
 
 
 }
-\author{
-S<f8>ren H<f8>jsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
 \code{\link{loglin}}
 }
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
+}
 \keyword{models}
-

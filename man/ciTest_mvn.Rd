@@ -46,14 +46,13 @@ ciTest(cov.wt(carcass, method='ML'), set=~Fat11+Meat11+Fat12)
 ciTest_mvn(cov.wt(carcass, method='ML'), set=~Fat11+Meat11+Fat12)
 
 }
-\author{
-Søren Højsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
 \code{\link{ciTest}} \code{\link{ciTest.table}},
     \code{\link{ciTest_table}}, \code{\link{ciTest.data.frame}},
     \code{\link{ciTest_df}}, \code{\link{ciTest.list}},
     \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 }
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
+}
 \keyword{htest}
-

@@ -51,42 +51,38 @@ CGstats <- function(object, varnames=NULL, homogeneous=TRUE, simplify=TRUE){
 ## FIXME: CGstats: Determination of cont.names, cont.idx is dubious
 CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify=TRUE){
 
-  if (is.null(varnames)){
-    varnames <- names(object)
-  }
+    if (is.null(varnames)) varnames <- names(object)
+    
+    use.idx <- if (is.numeric(varnames))
+                   varnames
+               else
+                   match(varnames, names(object))
   
-  if (is.numeric(varnames)){
-    use.idx <- varnames
-  } else {
-    use.idx <- match(varnames, names(object))
-  }
+  zz <- unlist(lapply(object, is.numeric))
+  cont.idx <- intersect(which(zz),  use.idx)
+  disc.idx <- intersect(which(!zz), use.idx)
   
-  zzz <- unlist(lapply(object, is.numeric))
-
-  cont.idx <- intersect(which(zzz),  use.idx)
-  disc.idx <- intersect(which(!zzz), use.idx)
-  
-  cont.names <- names(zzz)[cont.idx]
-  disc.names <- names(zzz)[disc.idx]
+  cont.names <- names(zz)[cont.idx]
+  disc.names <- names(zz)[disc.idx]
 
   CGstats_internal(object, disc.names, cont.names, homogeneous, simplify)
 }
 
 ## October 2015: New implementation of CGstats_internal
 
-#' @rdname CGstats
-#'
-#' @param disc.names Vector of names of discrete variables
-#' @param cont.names Vector of names of continuous variables
+## #' @rdname CGstats
+## #'
+## #' @param disc.names Vector of names of discrete variables
+## #' @param cont.names Vector of names of continuous variables
 CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneous=TRUE, simplify=TRUE){
 
-  if (length(cont.names)==0) {
-      xt    <- xtabs(~., data=object[,disc.names,drop=FALSE])
+  if (length(cont.names) == 0) {
+      xt    <- xtabs(~., data=object[, disc.names, drop=FALSE])
       ans   <- list(n.obs=xt)
       disc.levels <- dim(xt)
     } else {
-        if (length(disc.names)==0) {
-            ans <- stats::cov.wt(object[,cont.names,drop=FALSE], method="ML")
+        if (length(disc.names) == 0) {
+            ans <- stats::cov.wt(object[, cont.names, drop=FALSE], method="ML")
             disc.levels <- NULL
         } else {
             ans <- .moments.by( object, disc.names, cont.names )
@@ -119,17 +115,12 @@ print.CGstats <- function(x,...){
 
 ## This is fine
 .cov.wt <- function(x, method="ML"){
-    if (!is.matrix(x))
-        x <- as.matrix(x)
+    if (!is.matrix(x)) x <- as.matrix(x)
 
     n.obs  <- nrow(x)
-    center <- colSumsPrim(x) / n.obs
+    center <- colSums(x) / n.obs
+    N   <- if (method == "ML") n.obs else n.obs-1
     zz  <- x - rep(center, each=nrow(x))
-    if (method=="ML")
-        N <- n.obs
-    else
-        N <- n.obs-1
-
     cov <- crossprod(zz) / N
     list(cov=cov, center=center, n.obs=n.obs)
 }
@@ -145,10 +136,10 @@ print.CGstats <- function(x,...){
 
     ## FIXME table() is faster than xtabs(); is this generally ok?
     ## xt  <- xtabs(~., object[,disc.names,drop=FALSE])
-    xt <- table(object[,disc.names,drop=FALSE])
-    zz  <- as.data.frame.table(xt, useNA="always")[,seq_along(disc.names),drop=FALSE]
+    xt <- table(object[, disc.names, drop=FALSE])
+    zz  <- as.data.frame.table(xt, useNA="always")[, seq_along(disc.names), drop=FALSE]
     uniqval <- .dfcols2namevec(zz)
-    facstr  <- .dfcols2namevec(object[,disc.names,drop=FALSE])
+    facstr  <- .dfcols2namevec(object[, disc.names, drop=FALSE])
 
     list(facstr=facstr, uniqval=uniqval, xt=xt)    
 }
@@ -163,8 +154,8 @@ print.CGstats <- function(x,...){
     len.uniqval <- length(spl$uniqval)
     i=1
     while(i <= len.uniqval ){
-        out[[i]] <- object[spl$uniqval[i]==spl$facstr, , drop=FALSE]
-        i=i+1
+        out[[i]] <- object[spl$uniqval[i] == spl$facstr, , drop=FALSE]
+        i = i + 1
     }
     out
 }
@@ -180,7 +171,7 @@ print.CGstats <- function(x,...){
     names(SS.mean) <- names(SS.cov) <- spl$uniqval
     
     for (ii in seq_along(spl$uniqval)){
-        xx <- object[spl$uniqval[ii]==spl$facstr, cont.names, drop=FALSE]
+        xx <- object[spl$uniqval[ii] == spl$facstr, cont.names, drop=FALSE]
         zz <- .cov.wt(xx, method="ML" )
         SS.mean[[ii]] <- zz$center
         SS.cov[[ii]]  <- zz$cov
@@ -195,8 +186,8 @@ print.CGstats <- function(x,...){
   N      <- sum(n.i)
   Q      <- nrow(CGstats[['center']])
     
-  SSD    <- matrix(rowSumsPrim(.colmult(n.i, CGstats[['cov']])), nrow=Q)
-  S      <- SSD/N
+  SSD    <- matrix(rowSums(.colmult(n.i, CGstats[['cov']])), nrow=Q)
+  S      <- SSD / N
     
   mmm   <- CGstats[['center']]
   ttt   <- .colmult(n.i, mmm)
@@ -216,9 +207,8 @@ print.CGstats <- function(x,...){
     len.VV <- length(VV)
     i <- 1
     while(i <= len.VV){
-        if (nn[i]>0)
-            WW <- WW + VV[[i]] * nn[i]
-        i <- i+1
+        if (nn[i] > 0) WW <- WW + VV[[i]] * nn[i]
+        i <- i + 1
     }
     WW <- WW / sum(nn)
     WW
@@ -230,147 +220,4 @@ print.CGstats <- function(x,...){
 
 
 
-## This is fine
-#' .dfcols2namevec <- function(x, sep='|'){
-#'   ans <- as.character(x[,1])
-#'   if (ncol(x)>1){
-#'     for (j in 2:ncol(x)){
-#'       ans <- paste(ans, x[,j], sep=sep)
-#'     }
-#'   }
-#'   ans
-#' }
 
-#' .dfcols2namevec2 <- function(x, sep='|'){
-#'   ans <- as.character(x[,1])
-#'   if (ncol(x)>1){
-#'     for (j in 2:ncol(x)){
-#'       ans <- paste(ans, as.character(x[,j]), sep=sep)
-#'     }
-#'   }
-#'   ans
-#' }
-
-#' .dfcols2namevec3 <- function(x, sep='|'){
-#'     x<-lapply(x, as.character)
-#'     do.call(function(...)paste(..., sep=sep), x)
-#' }
-
-
-#' .cov.wt2 <- function(x, method="ML"){
-#'     if (!is.matrix(x))
-#'         x <- as.matrix(x)
-
-#'     n.obs  <- nrow(x)
-#'     center <- colSumsPrim(x) / n.obs
-#'     #zz  <- x - rep(center, each=nrow(x))
-
-#'     zz <- t.default(t.default(x)-center)
-
-#'     if (method=="ML")
-#'         N <- n.obs
-#'     else
-#'         N <- n.obs-1
-
-#'     cov <- crossprod(zz) / N
-#'     list(cov=cov, center=center, n.obs=n.obs)
-#' }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#' ## deprecated
-#' ## uses .cov.wt.by, .split.by
-#' CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneous=TRUE, simplify=TRUE){
-
-#'   if (length(cont.names)==0)
-#'     {
-#'       xt    <- xtabs(~., data=object[,disc.names,drop=FALSE])
-#'       ans   <- list(n.obs=xt)
-#'       disc.levels <- dim(xt)
-#'     }
-#'   else
-#'     {
-#'       if (length(disc.names)==0)
-#'         {
-#'           ans <- cov.wt(object[,cont.names,drop=FALSE], method="ML")
-#'           disc.levels <- NULL
-#'         }
-#'       else
-#'         {
-#'           ans <- .cov.wt.by(disc.names, cont.names, object)
-#'           disc.levels <- dim(ans$n.obs)
-          
-#'           if (homogeneous) {
-#'             pp   <- ans$n.obs / sum(ans$n.obs)
-#'             CC   <- ans$cov[[1]]
-#'             CC[] <- 0
-#'             for (ii in 1:length(ans$cov)){
-#'               CC <- CC + ans$cov[[ii]]*pp[ii]
-#'             } 
-#'             ans$cov <- CC 
-#'           }
-          
-#'           if (simplify){
-#'             ans$center <- t(do.call(rbind, ans$center))
-#'             rownames(ans$center) <- cont.names
-#'             if (!homogeneous){
-#'               ans$cov <- t(do.call(rbind, lapply(ans$cov, as.numeric)))
-#'             }
-#'           }
-#'         }
-#'     }
-#'   res  <- c(ans, list(cont.names=cont.names, disc.names=disc.names, disc.levels=disc.levels))
-#'   ##class(res) <- "CGstats"
-#'   return(res)
-#'  }
-
-
-
-#' ## deprecated
-#' .cov.wt.by <- function(disc.names, cont.names, data){
-  
-#'   sss   <- .split.by(disc.names, indata=data)
-  
-#'   SS.mean  <- SS.cov   <- vector("list", length(sss$uniqval))
-#'   names(SS.mean)  <- names(SS.cov) <- sss$uniqval
-  
-#'   for (ii in 1:length(sss$uniqval)){
-#'     xx <- data[sss$uniqval[ii]==sss$facstr,cont.names,drop=FALSE]
-#'     zz <- .cov.wt(xx, method="ML" )
-#'     SS.mean[[ii]] <- zz$center
-#'     SS.cov[[ii]]  <- zz$cov
-#'   }
-  
-#'   ans <- list(n.obs=sss$xt, center=SS.mean, cov=SS.cov)
-#'   return(ans)
-
-#' }
-
-#' ## deprecated
-#' .split.by <- function(disc.names, indata, drop=FALSE){
-
-#'     .dfcols2namevec <- function(x, sep='|'){
-#'                                         #x<-lapply(x, as.character)
-#'         do.call(function(...)paste(..., sep=sep), x)
-#'     }
-    
-#'     xt   <- xtabs(~., indata[,disc.names,drop=FALSE])
-#'     ooo  <- as.data.frame.table(xt, useNA="always")[,1:length(disc.names),drop=FALSE]
-    
-#'     ooostr <- .dfcols2namevec(ooo)
-#'     facstr <- .dfcols2namevec(indata[,disc.names,drop=FALSE])
-    
-#'     ans <- list(facstr=facstr, uniqval=ooostr, xt=xt)
-#'     return(ans)
-#' }

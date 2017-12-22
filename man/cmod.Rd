@@ -8,10 +8,10 @@ cmod(formula, data, marginal = NULL, fit = TRUE, details = 0)
 }
 \arguments{
 \item{formula}{Model specification in one of the following forms: 1) a
-right-hand sided formula, 2) as a list of generators, 3) an undirected graph
-(represented either as a graphNEL object or as an adjacency matrix).  Notice
-that there are certain model specification shortcuts, see Section 'details'
-below}
+right-hand sided formula, 2) as a list of generators, 3) an undirected
+graph (represented either as a graphNEL object or as an adjacency
+matrix).  Notice that there are certain model specification shortcuts,
+see Section 'details' below}
 
 \item{data}{Data in one of the following forms: 1) A dataframe or 2) a list
 with elements \code{cov} and \code{n.obs} (such as returned by the
@@ -25,40 +25,38 @@ with the model specification shortcuts}
 \item{details}{Control the amount of output; for debugging purposes.}
 }
 \value{
-An object of class \code{cModel} (a list) % ~Describe the value
-returned % If it is a LIST, use % \item{comp1 }{Description of 'comp1'} %
-\item{comp2 }{Description of 'comp2'} % ...
+An object of class \code{cModel} (a list)
 }
 \description{
-Specification of graphical Gaussian model. The 'c' in the name \code{cmod}
-refers to that it is a (graphical) model for 'c'ontinuous variables
+Specification of graphical Gaussian model. The 'c' in the name
+    \code{cmod} refers to that it is a (graphical) model for 'c'ontinuous
+    variables
 }
 \details{
-The independence model can be specified as \code{~.^1} and the saturated
-model as \code{~.^.}. The \code{marginal} argument can be used for
-specifying the independence or saturated models for only a subset of the
-variables.
+The independence model can be specified as \code{~.^1} and the
+    saturated model as \code{~.^.}. The \code{marginal} argument can be used
+    for specifying the independence or saturated models for only a subset of
+    the variables.
 }
 \examples{
 
 ## Graphical Gaussian model
 data(carcass)
-cm1<-cmod(~.^., carcass)
+cm1 <- cmod(~ .^., data=carcass)
 
 ## Stepwise selection based on BIC
-cm2<-backward(cm1,k=log(nrow(carcass)))
+cm2 <- backward(cm1, k=log(nrow(carcass)))
 
 ## Stepwise selection with fixed edges
-cm3<-backward(cm1,k=log(nrow(carcass)),
- fixinMAT=matrix(c("LeanMeat","Meat11","Meat12","Meat13","LeanMeat","Fat11","Fat12","Fat13"),
+cm3 <- backward(cm1, k=log(nrow(carcass)),
+ fixin=matrix(c("LeanMeat", "Meat11", "Meat12", "Meat13", "LeanMeat", "Fat11", "Fat12", "Fat13"),
  ncol=2))
 
 }
-\author{
-S<f8>ren H<f8>jsgaard, \email{sorenh@math.aau.dk}
-}
 \seealso{
-\code{\link{dmod}} \code{\link{mmod}} \code{\link{ggmfit}}
+\code{\link{dmod}}, \code{\link{mmod}}, \code{\link{ggmfit}}
+}
+\author{
+Søren Højsgaard, \email{sorenh@math.aau.dk}
 }
 \keyword{models}
-

@@ -1,5 +1,5 @@
 Package: gRim
-Version: 0.1-18
+Version: 0.2-0
 Title: Graphical Interaction Models
 Author: Søren Højsgaard <sorenh@math.aau.dk>
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
@@ -8,18 +8,18 @@ Description: Provides the following types of models: Models for for contingency
     normal data (i.e. covariance selection models) Mixed interaction models.
 License: GPL (>= 2)
 URL: http://people.math.aau.dk/~sorenh/software/gR/
+Encoding: UTF-8
 Depends:
     R (>= 3.0.2),
     methods,
-    gRbase (>= 1.7-1)
+    gRbase (>= 1.8-3)
 Imports:
     igraph,
     graph,
     gRain,
     Rcpp (>= 0.11.1)
-Encoding: latin1
 Suggests:
     Rgraphviz
 ByteCompile: yes
 LinkingTo: Rcpp (>= 0.11.1), RcppArmadillo
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

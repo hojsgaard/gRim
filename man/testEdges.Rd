@@ -41,7 +41,7 @@ testOutEdges(object, edgeMAT=NULL, criterion = "aic", k = 2,
 }
 %\references{ ~put references to the literature/web site here ~ }
 \author{
-  Søren Højsgaard, \email{sorenh@math.aau.dk}
+  SÃ¸ren HÃ¸jsgaard, \email{sorenh@math.aau.dk}
 }
 % \note{ ~~further notes~~ 
 
@@ -54,7 +54,7 @@ testOutEdges(object, edgeMAT=NULL, criterion = "aic", k = 2,
 }
 \examples{
 data(math)
-cm1 <- cmod(~me:ve+ve:al+al:an, data=math)
+cm1 <- cmod(~me:ve + ve:al + al:an, data=math)
 testInEdges(cm1, getEdges(cm1$glist))
 testOutEdges(cm1, getEdges(cm1$glist, ingraph=FALSE))
 }
