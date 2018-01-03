@@ -1,44 +1,3 @@
-###
-### fit method for mModel objects
-###
-fit.mModel <- function(object, method="general", details=0, eps.parm=1e-6, maxit=100,...){
-  method <- match.arg(method, c("general", "stephalving"))
-
-  ans           <- .fitmModel(object, method=method, details=details, eps.parm=eps.parm, maxit=maxit, ...)
-  ans$dimension <- .mmod_dimension(object$modelinfo$dlq, object$datainfo)
-
-  cg <- object$datainfo$CGstats
-
-  ## Saturated model
-  n.obs <- cg$n.obs
-  NN    <- cg$N
-  qq    <- length(cg$cont.names)
-  SS    <- cg$SSD/NN
-  logL.sat <- sum(n.obs*log(n.obs/NN)) - NN*qq/2 * log(2*pi) - NN/2 * log(det(SS)) - NN*qq/2
-
-  ## Independence model
-  i.model <- loglin(n.obs, as.list(seq_along(dim(n.obs))),iter=1, print=FALSE, fit=TRUE)
-  grand.mean <- rowSumsPrim(colwiseProd(n.obs/NN, cg$center))
-  SS.ind <- (cg$SS - NN*grand.mean %*% t(grand.mean))/NN
-  logL.ind <- sum(n.obs*log(i.model$fit/NN))- NN*qq/2 * log(2*pi) - NN/2 * sum(log(diag(SS.ind))) - NN*qq/2
-
-  ans$ideviance <- ans$logL - logL.ind
-  ans$dev       <- logL.sat - ans$logL
-  ans$aic       <-  -2*ans$logL + 2*ans$dimension['mod.dim']
-  ans$bic       <-  -2*ans$logL + log(nrow(object$datainfo$data))*ans$dimension['mod.dim']
-
-  object$fitinfo  <- ans
-  object$isFitted <- TRUE
-  return(object)
-}
-
-
-print.MIfit <- function(x,...){
-  ##cat("MIfit:\n")
-  cat(sprintf("components: %s \n", toString(names(x))))
-  print(x[c("parms","logL","init.logL","dimension")])
-  return(invisible(x))
-}
 
 #######################################################################
 ###
@@ -50,43 +9,93 @@ print.MIfit <- function(x,...){
 ###
 #######################################################################
 
-.fitmModel <- function(object, method="general", details=0, eps.parm=1e-6, eps.logL=1e-6, maxit=100,...){
+fit.mModel <- function(object, method="general", details=0, eps.parm=1e-6, maxit=100, ...){
+  method <- match.arg(method, c("general", "stephalving"))
 
-  t.start <- proc.time()
+  ## cat("fit.mModel - entry\n")
+  ##cg <- object$datainfo$CGstats ##; str(cg)
+  cg <- getmi(object, "cgstats")
   
+  ans           <- .fitmModel(object, method=method, details=details, eps.parm=eps.parm, maxit=maxit, ...)
+  ans$dimension <- .mmod_dimension(object$modelinfo$dlq, object$datainfo)
+
+  ## Saturated model
+  n.obs <- cg$n.obs
+  NN    <- cg$N
+  qq    <- length(cg$cont.names)
+  SS    <- cg$SSD/NN
+  logL.sat <- sum(n.obs*log(n.obs/NN)) - NN*qq/2 * log(2*pi) - NN/2 * log(det(SS)) - NN*qq/2
+
+  ## Independence model
+  i.model    <- loglin(n.obs, as.list(seq_along(dim(n.obs))),iter=1, print=FALSE, fit=TRUE)
+  grand.mean <- rowSumsPrim(colwiseProd(n.obs/NN, cg$center))
+  SS.ind     <- (cg$SS - NN*grand.mean %*% t(grand.mean))/NN
+  logL.ind   <- sum(n.obs*log(i.model$fit/NN))- NN*qq/2 * log(2*pi) - NN/2 * sum(log(diag(SS.ind))) - NN*qq/2
+
+  ans$ideviance <- ans$logL - logL.ind
+  ans$dev       <- logL.sat - ans$logL
+  ans$aic       <-  -2 * ans$logL + 2 * ans$dimension['mod.dim']
+  ans$bic       <-  -2 * ans$logL + log(nrow(getmi(object, "data"))) * ans$dimension['mod.dim']
+
+  object$fitinfo  <- ans
+  object$isFitted <- TRUE
+  return(object)
+}
+
+.fitmModel <- function(object, method="general", details=0, eps.parm=1e-6, eps.logL=1e-6, maxit=100, ...){
+
+    ## cat(".fitmModel\n")
+    ## print(object$datainfo$CGstats)
+    
 ### Generate initial parameter value
 ###
-  .infoPrint(details,1, "fit.mModel: Creating initial values\n")
-  Mparms <- .CGstats2initpms(object$datainfo$CGstats)
-  Cparms <- pms2ghkParms(Mparms)
-  
+    .infoPrint(details,1, "fit.mModel: Creating initial values\n")
+    Mparms <- .CGstats2initpms(getmi(object, "cgstats"))
+    Cparms <- pms2ghkParms(Mparms)
+    
 ### Generator lists
 ###
-  Ad.list <- object$modelinfo$glist.num.disc
-  Ac.list <- object$modelinfo$glist.num.cont
-  
+    Ad.list <- object$modelinfo$glist.num.disc
+    Ac.list <- object$modelinfo$glist.num.cont
+    
 ### Find weak marginal model for each generator
 ###
-  WMDghk <- .getWeakMarginalDataList(object$datainfo$CGstats,
-                                     Ad.list, Ac.list, type="ghk", details=details)
+    WMDghk <- .getWeakMarginalDataList(getmi(object, "cgstats"),
+                                       Ad.list, Ac.list, type="ghk", details=details)
 
-  ## WMDpms <- lapply(WMDghk, ghk2pmsParms)
-  ## The new version of ghk2pmsParms_ is really a timesaver here
-  WMDpms <- lapply(WMDghk, ghk2pmsParms_)
-  
+
+    ## print("UUUUUUUUUUUUUUUUUUUU"); print(object$datainfo$CGstats)
+    ## print("WMDghk"); print(WMDghk)
+
+    ##WMDpms <- lapply(WMDghk, ghk2pmsParms)
+
+    ## The new version of ghk2pmsParms_ is really a timesaver here
+    WMDpms <- lapply(WMDghk, ghk2pmsParms_)
+
+    ## print("WMDpms"); print(WMDpms)
+    ## print("UUUUUUUUUUUUUUUUUUUU"); print(object$datainfo$CGstats)
+    
 ### Iterate to maximize logL
 ###
-  .infoPrint(details,1, "fit.mModel: Calling .mModel_iterate\n")
-  ans <- .mModel_iterate(Mparms, Cparms, Ad.list, Ac.list,
-                         WMDghk, WMDpms, object$datainfo$CGstats,
-                         method, eps.parm, eps.logL, maxit, details)
-  
-  ans$WMDghk      <- WMDghk
-  ans$init.parms  <- Mparms
-  class(ans)      <- "MIfit"
-  t.use           <- proc.time()-t.start
-                                        #cat("Fitting time:",t.use[1],"\n")
-  return(ans)
+    .infoPrint(details,1, "fit.mModel: Calling .mModel_iterate\n")
+    ans <- .mModel_iterate(Mparms, Cparms, Ad.list, Ac.list,
+                           WMDghk, WMDpms, getmi(object, "cgstats"), 
+                           method, eps.parm, eps.logL, maxit, details)
+    
+    ans$WMDghk      <- WMDghk
+    ans$init.parms  <- Mparms
+    class(ans)      <- "MIfit"
+    ans
+}
+
+
+
+
+print.MIfit <- function(x,...){
+  ##cat("MIfit:\n")
+  cat(sprintf("components: %s \n", toString(names(x))))
+  print(x[c("parms","logL","init.logL","dimension")])
+  return(invisible(x))
 }
 
 
@@ -107,49 +116,49 @@ print.MIfit <- function(x,...){
   prev.Mparms <- Mparms
   init.logL   <- prev.logL <- .mModel_logLpms(CGstats, Mparms)
 
-  .infoPrint(details,3, cat(sprintf("Initial logL %f\n", init.logL)))
+  .infoPrint(details, 3, cat(sprintf("Initial logL %f\n", init.logL)))
 
   itcount    <- 1
   scale      <- 1
 
-  if (maxit>0){
-    repeat {
-      zzz       <- .outerloop(Mparms, Cparms, Ad.list, Ac.list,
-                              WMDghk, WMDpms, CGstats, scale,
-                              method, prev.logL, itcount, details)
-      curr.logL <- zzz$logL
-      d.logL    <- zzz$d.logL
-      d.parms   <- zzz$d.parms
+  if (maxit > 0){
+      repeat {
+          zzz       <- .outerloop(Mparms, Cparms, Ad.list, Ac.list,
+                                  WMDghk, WMDpms, CGstats, scale,
+                                  method, prev.logL, itcount, details)
+          curr.logL <- zzz$logL
+          d.logL    <- zzz$d.logL
+          d.parms   <- zzz$d.parms
+          
+          .infoPrint(details,1,
+                     cat(sprintf(".mModel_iterate maxit=%i, curr.logL=%14.6f, d.logL=%12.6f, d.parms=%12.8f\n",
+                                 maxit, curr.logL, d.logL, d.parms)))
 
-      .infoPrint(details,1,
-                 cat(sprintf(".mModel_iterate maxit=%i, curr.logL=%14.6f, d.logL=%12.6f, d.parms=%12.8f\n",
-                             maxit, curr.logL, d.logL, d.parms)))
-
-      it.exceed.crit <- itcount >=maxit
-      neg.d.logL     <- d.logL < 0
-
-      if (!neg.d.logL & d.logL < eps.logL){
-        break() # We are done
-      } else {
-        if (neg.d.logL){
-          cat(sprintf("Fitting method=%s; logL failed to increase (d.logL=%f) - fit may be questionable\n",
-                      method,d.logL))
-          break()
-        } else {
-          if (it.exceed.crit){
-            cat(sprintf("Fitting method=%s; Maximum number of iterations=%i exceeded - fit may be questionable\n",
-                        method,itcount))
-            break()
+          it.exceed.crit <- itcount >=maxit
+          neg.d.logL     <- d.logL < 0
+          
+          if (!neg.d.logL & d.logL < eps.logL){
+              break() # We are done
+          } else {
+              if (neg.d.logL){
+                  cat(sprintf("Fitting method=%s; logL failed to increase (d.logL=%f) - fit may be questionable\n",
+                              method,d.logL))
+                  break()
+              } else {
+                  if (it.exceed.crit){
+                      cat(sprintf("Fitting method=%s; Maximum number of iterations=%i exceeded - fit may be questionable\n",
+                                  method,itcount))
+                      break()
+                  }
+              }
           }
-        }
+          
+          Mparms      <- zzz$Mparms
+          Cparms      <- zzz$Cparms
+          prev.Mparms <- Mparms
+          prev.logL   <- curr.logL
+          itcount     <- itcount + 1
       }
-
-      Mparms      <- zzz$Mparms
-      Cparms      <- zzz$Cparms
-      prev.Mparms <- Mparms
-      prev.logL   <- curr.logL
-      itcount     <- itcount + 1
-    }
   }
   res <- list(parms=Cparms, logL=curr.logL, init.logL=init.logL)
   res
@@ -299,18 +308,25 @@ print.MIfit <- function(x,...){
 
 .getWeakMarginalDataList <- function(CGstats, Ad.list, Ac.list, type="ghk", details=0){
 
-  .infoPrint(details,1,"fit.mModel: Finding weak (empirical) marginals for each generator\n")
-
-  ##CGstats <- unclass(CGstats)
-
-  ans <- vector("list", length(Ad.list))
-  for (ii in 1:length(Ad.list)){
-    EE.mm <- weakMarginalData(CGstats, disc=Ad.list[[ii]], cont=Ac.list[[ii]],
-                              type=type, details=details)
-    ans[[ii]] <- EE.mm
-  }
-  ans
+    #details <- 1
+    .infoPrint(details,1,"getWeakMarginalDataList: Finding weak (empirical) marginals for each generator\n")
+    #str(CGstats);
+    #print(CGstats$n.obs)
+    
+    ans <- vector("list", length(Ad.list))
+    for (ii in 1:length(Ad.list)){
+        EE.mm <- weakMarginalData(CGstats, disc=Ad.list[[ii]], cont=Ac.list[[ii]],
+                                  type=type, details=details)
+        ans[[ii]] <- EE.mm
+    }
+    #print("getWeakMarginalDataList - exit"); #str(CGstats);
+    #print(CGstats$n.obs)
+    ans
 }
+
+
+
+
 
 ###########################################################################
 ###
@@ -427,9 +443,9 @@ print.MIfit <- function(x,...){
   if (details>=5){
     cat("POST UPDATE Cparms // Mparms:\n");
     MM   <- ghk2pmsParmsFUN(Cparms)
-    MM$p <- MM$p*MM$N
+    MM$p <- MM$p * MM$N
     RR   <- ghk2pmsParmsFUN(res)
-    RR$p <- RR$p*RR$N
+    RR$p <- RR$p * RR$N
     print(rbind(.as.matrix(res), .as.matrix(RR)))
   }
   #res$max.chg <- max.chg
@@ -443,17 +459,25 @@ print.MIfit <- function(x,...){
 
 .mModel_logLpms <- function(CGstats, Mparms){
 
-  Sigma.inv <- solveSPD(Mparms[['Sigma']])
+    ## cg <<- CGstats; mp <<- Mparms
+    ## print(CGstats);  print(Mparms)
 
-  n.i    <- as.numeric(CGstats[['n.obs']])
-  N      <- sum(n.i)
-  Q      <- nrow(CGstats[['center']])
-  xxx    <- sum(n.i * log(Mparms[['p']])) - N * (Q * log(2*pi) + .logdet(Mparms[['Sigma']])) / 2
-  x4     <- -  sum(CGstats[['SSD']] * Sigma.inv) / 2
-  mu.dif <- CGstats[['center']] - Mparms[['mu']]
-  quad   <- .vMMt(n.i, mu.dif)
-  x5     <- - sum(Sigma.inv * quad) / 2
-  return(xxx+x4+x5)
+    Sigma.inv <- solveSPD(Mparms[['Sigma']])
+    n.i    <- as.numeric(CGstats[['n.obs']])
+
+    N      <- sum(n.i)
+    Q      <- nrow(CGstats[['center']])
+
+    xxx    <- sum(n.i * log(Mparms[['p']])) - N * (Q * log(2*pi) + .logdet(Mparms[['Sigma']])) / 2
+
+    ##print("HHHHHHHHHHHHHHHHHHHHH")    
+    x4     <- -  sum(CGstats[['SSD']] * Sigma.inv) / 2
+
+    mu.dif <- CGstats[['center']] - Mparms[['mu']]
+    quad   <- .vMMt(n.i, mu.dif)
+    x5     <- - sum(Sigma.inv * quad) / 2
+
+    return(xxx + x4 + x5)
 }
 
 
@@ -472,18 +496,18 @@ print.MIfit <- function(x,...){
     cp  <- curr.Mparms[['p']]
     sss <- curr.Mparms[['Sigma']]
     nr  <- nrow(sss)
-    iii <- 1+(nr+1)*((1:nr)-1)
+    iii <- 1 + (nr + 1) * ((1:nr) - 1)
     ddd <- sss[iii] ## faster than diag(sss)
     ##     ppp <- as.numeric(N * abs((cp - prev.Mparms[[p.idx]])) / sqrt((N * cp + 1)))
     ##     mmm <- as.numeric(abs(curr.Mparms[[mu.idx]] - prev.Mparms[[mu.idx]])/sqrt(ddd))
 
     ppp <- c(N * abs((cp - prev.Mparms[['p']])) / sqrt((N * cp + 1)))
-    mmm <- c(abs(curr.Mparms[['mu']] - prev.Mparms[['mu']])/sqrt(ddd))
+    mmm <- c(abs(curr.Mparms[['mu']] - prev.Mparms[['mu']]) / sqrt(ddd))
 
     xxx <- abs(sss - prev.Mparms[['Sigma']])
-    uuu <- xxx/sqrt(tcrossprod(ddd) + sss^2)
+    uuu <- xxx / sqrt(tcrossprod(ddd) + sss^2)
 
-    ans <- max(c(ppp,mmm,c(uuu)))
+    ans <- max(c(ppp, mmm, c(uuu)))
     ##  cat("max parm diff:", ans, "\n")
   }
   ans
@@ -493,6 +517,7 @@ print.MIfit <- function(x,...){
 ##############################################################
 ###
 ### Create initial parms for mModel from CGstats
+
 ###
 ##############################################################
 .CGstats2initpms <- function(CGstats, unif=TRUE){
@@ -504,7 +529,7 @@ print.MIfit <- function(x,...){
     PPP[] <- 1 / length(PPP)
     MMM   <- CGstats$center
     MMM[] <- rowMeans(CGstats$center)
-    CCC   <- diag(1,nrow(MMM))
+    CCC   <- diag(1, nrow(MMM))
   } else {
     ## p.i
     n.i   <- as.numeric(CGstats$n.obs)
@@ -523,7 +548,7 @@ print.MIfit <- function(x,...){
 
     quad    <- .colmult(n.i, d.mu.i) %*% t(d.mu.i)
     #quad <- tcrossprod(.colmult(sqrt(n.i),d.mu.i))
-    Sigma   <- (SSD + quad)/sum(n.i)
+    Sigma   <- (SSD + quad) / sum(n.i)
 
     ## Create uniform p's
     PPP   <- CGstats$n.obs
@@ -533,13 +558,12 @@ print.MIfit <- function(x,...){
     MMM   <- CGstats$center
     MMM[] <- rowSumsPrim(MMM)/ncol(MMM)
 
-    CCC   <- Sigma
-    if (nrow(CCC)>1)
-      CCC <- diag(diag(CCC))
+    CCC <- Sigma
+    if (nrow(CCC) > 1)  CCC <- diag(diag(CCC))
   }
 
   rownames(CCC) <- colnames(CCC) <- rownames(MMM) <- CGstats$cont.names
-  ans        <- c(list(p=PPP,mu=MMM,Sigma=CCC,gentype="mixed"),CGstats[-(1:3)])
+  ans        <- c(list(p=PPP, mu=MMM, Sigma=CCC, gentype="mixed"), CGstats[-(1:3)])
   ##class(ans) <- c("pms","MIparms")
   return(ans)
 }

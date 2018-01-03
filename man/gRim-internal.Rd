@@ -17,14 +17,28 @@
 \alias{dropEdge_glist}
 \alias{dropTerm_glist}
 
+\alias{C_ghk2pms}
+\alias{C_pms2ghk}
+\alias{fit2way_}
 
-
-
-
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
+%\alias{}
 
 %% iModel methods (some needs .Rd-files)
 \alias{update.iModel}
-
 
 %% Printing
 \alias{print.iModel}

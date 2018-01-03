@@ -1,4 +1,8 @@
 
+
+
+
+
 getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss", "center")){
     
     switch(name,
@@ -18,11 +22,13 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
            "data"                 =object$datainfo$data,
            "dimension"            =object$fitinfo$dimension,
            "dev"                  =object$fitinfo$dev,
+           "logL"                 =object$fitinfo$logL,
+           "aic"                  =object$fitinfo$aic,
+           "bic"                  =object$fitinfo$bic,
            "isGraphical"          =object$properties["isg"],
            "isDecomposable"       =object$properties["issd"]
            )
 }
-
 
 .glist <- function(object){
     if (inherits(object, "iModel"))
@@ -51,7 +57,7 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
 }
 
 .as_amat <- function(x, vn=NULL){
-    #cat("caller of .as_amat: ", deparse(sys.calls()[[sys.nframe()-1]]), "\n")
+    ##cat("caller of .as_amat: ", deparse(sys.calls()[[sys.nframe()-1]]), "\n")
     if (inherits(x, "list")){
         if (is.null(vn)) vn <- unique.default(c(x, recursive=TRUE))
         .glist2amat(x, vn=vn)

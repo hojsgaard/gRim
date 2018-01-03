@@ -18,12 +18,12 @@
 
 
 testEdges <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic", k=2, alpha=NULL,
-                      headlong=FALSE, details=1,...){
+                      headlong=FALSE, details=1, ...){
   UseMethod("testEdges")
 }
 
 testEdges.iModel <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic", k=2, alpha=NULL,
-                      headlong=FALSE, details=1,...){
+                      headlong=FALSE, details=1, ...){
   
     cl <- match.call()
     if (ingraph) cl[[1]] <- as.name("testInEdges")
@@ -55,8 +55,11 @@ testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, 
                else .testInEdges_all
 
     vn   <- getmi(object, "varNames")
-    amat <- glist2adjMAT(getmi(object, "glist"), vn=vn)
-
+    if (is.null((amat <- list(...)$amat))){
+        ##cat("testInEdges\n")
+        amat <- .as_amat(getmi(object, "glist"))
+    }
+    
     if (is.null(edgeMAT)) edgeMAT <- getInEdgesMAT(amat)
     if (nrow(edgeMAT)==0) stop("There are no edges to test...\n")
   
@@ -73,9 +76,13 @@ testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, 
     testMAT <- matrix(0, nrow=nrow(edgeMAT), ncol=4)
     colnames(testMAT) <- c("statistic", "df", "p.value", "aic")
     indic <- rep.int(0, nrow(edgeMAT))
-    
+
+##    print("OOOOOOOOOOOOOO")
     for (ii in seq_len(nrow(edgeMAT))){
+    ##    ee <- edgeMAT[ii, ]
         edgeTest <- testdelete(object, edgeMAT[ii, ], k=k, amat=amat, ...) ## amat       
+      ##  cat("edgeTest\n"); print(edgeTest)
+      ##  et <<- edgeTest
         testMAT[ii,] <- as.numeric(edgeTest[c("statistic", "df", "p.value", "aic")])
         curr.stat <- edgeTest[[crit.str]]        
         if (comp.op(curr.stat, alpha)) indic[ii] <- 1             

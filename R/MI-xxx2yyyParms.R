@@ -5,17 +5,14 @@
 #####################################################################
 
 pms2ghkParms <- function(parms){
+    ##cat("pms2ghkParms\n")
     c(.Call("C_pms2ghk", parms), parms[-(1:4)])
 }
 
 ghk2pmsParms <- function(parms){
+    ##cat("ghk2pmsParms\n")
     c(.Call("C_ghk2pms", parms), parms[-(1:4)])
 }
-
-
-
-
-
 
 
 #' pms2ghkParms <- function(parms){

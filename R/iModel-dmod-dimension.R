@@ -100,12 +100,12 @@ loglinDecDim <- function(glist, tableinfo, adjust=TRUE){
     ## cat("With adjustment of dimension for sparsity\n")
     if (!is.array(tableinfo))
       stop("Model dimension adjusted for sparsity requires an array\n")
-    tm1  <- tableMargin(tableinfo, cliq[[1]])
+    tm1  <- .tableMargin(tableinfo, cliq[[1]])
     npar <- sum(1*(tm1>0))-1
     if (length(cliq)>1){
       for (ii in 2:length(cliq)){
-        tm1  <- tableMargin(tableinfo, cliq[[ii]])
-        tm2  <- tableMargin(tm1, seps[[ii]])
+        tm1  <- .tableMargin(tableinfo, cliq[[ii]])
+        tm2  <- .tableMargin(tm1, seps[[ii]])
         dimC <- sum(1*(tm1>0))-1
         dimS <- sum(1*(tm2>0))-1
         npar <- npar + dimC - dimS

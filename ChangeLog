@@ -1,10 +1,16 @@
+2018-01-07 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* Improved usage of new gRbase functionality; results in speed up
+
+	* Version 0.2-1 uploaded
+	
 2017-03-31 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Major cleanups of model selection and a few other things
 
-	* Workthoru of man pages
+	* Workthrough of man pages
 
-	* Version 0.1-20 uploaded
+	* Version 0.2-0 uploaded
 	
 2015-06-28 Søren Højsgaard <sorenh@math.aau.dk>
 

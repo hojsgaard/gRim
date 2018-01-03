@@ -53,10 +53,8 @@ CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify
 
     if (is.null(varnames)) varnames <- names(object)
     
-    use.idx <- if (is.numeric(varnames))
-                   varnames
-               else
-                   match(varnames, names(object))
+    use.idx <- if (is.numeric(varnames)) varnames
+               else match(varnames, names(object))
   
   zz <- unlist(lapply(object, is.numeric))
   cont.idx <- intersect(which(zz),  use.idx)
@@ -76,21 +74,24 @@ CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify
 ## #' @param cont.names Vector of names of continuous variables
 CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneous=TRUE, simplify=TRUE){
 
-  if (length(cont.names) == 0) {
-      xt    <- xtabs(~., data=object[, disc.names, drop=FALSE])
-      ans   <- list(n.obs=xt)
-      disc.levels <- dim(xt)
+    if (length(cont.names) == 0) {
+        
+        xt    <- xtabs(~., data=object[, disc.names, drop=FALSE])
+        ans   <- list(n.obs=xt)
+        disc.levels <- dim(xt)
     } else {
         if (length(disc.names) == 0) {
             ans <- stats::cov.wt(object[, cont.names, drop=FALSE], method="ML")
             disc.levels <- NULL
         } else {
+            ##cat("the mixed case\n")
             ans <- .moments.by( object, disc.names, cont.names )
+            ##print(ans)
             disc.levels <- dim(ans$n.obs)
-
+            
             if (homogeneous)
                 ans$cov <- .makeHomogeneous(ans$cov, ans$n.obs)
-
+            
             if (simplify){
                 ans$center <- t.default(do.call(rbind, ans$center))
                 rownames(ans$center) <- cont.names
@@ -104,19 +105,18 @@ CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneo
   # res  <- c(ans, list(cont.names=cont.names, disc.names=disc.names, disc.levels=disc.levels))
   # ##class(res) <- "CGstats"
   # return(res)
- }
-
-## deprecated
-print.CGstats <- function(x,...){
-  print.default(x[1:3])
-  return(invisible(x))
 }
 
+## deprecated
+print.CGstats <- function(x, ...){
+    print.default(x[1:3])
+    return(invisible(x))
+}
 
 ## This is fine
 .cov.wt <- function(x, method="ML"){
     if (!is.matrix(x)) x <- as.matrix(x)
-
+    
     n.obs  <- nrow(x)
     center <- colSums(x) / n.obs
     N   <- if (method == "ML") n.obs else n.obs-1
@@ -124,7 +124,6 @@ print.CGstats <- function(x,...){
     cov <- crossprod(zz) / N
     list(cov=cov, center=center, n.obs=n.obs)
 }
-
 
 ## Should perhaps detect disc.names (as the factors in object) if not given
 ## Should check if object is dataframe.
@@ -134,9 +133,7 @@ print.CGstats <- function(x,...){
         do.call(function(...)paste(..., sep=sep), x)
     }
 
-    ## FIXME table() is faster than xtabs(); is this generally ok?
-    ## xt  <- xtabs(~., object[,disc.names,drop=FALSE])
-    xt <- table(object[, disc.names, drop=FALSE])
+    xt  <- xtabs(~., object[,disc.names,drop=FALSE])
     zz  <- as.data.frame.table(xt, useNA="always")[, seq_along(disc.names), drop=FALSE]
     uniqval <- .dfcols2namevec(zz)
     facstr  <- .dfcols2namevec(object[, disc.names, drop=FALSE])
@@ -189,10 +186,10 @@ print.CGstats <- function(x,...){
   SSD    <- matrix(rowSums(.colmult(n.i, CGstats[['cov']])), nrow=Q)
   S      <- SSD / N
     
-  mmm   <- CGstats[['center']]
-  ttt   <- .colmult(n.i, mmm)
-  quad  <- ttt %*% t(mmm)
-  SS    <- SSD + quad
+  mmm    <- CGstats[['center']]
+  ttt    <- .colmult(n.i, mmm)
+  quad   <- ttt %*% t(mmm)
+  SS     <- SSD + quad
   
   ans <- c(CGstats, list(N=N, SSD=SSD, SS=SS))
   ##class(ans) <- "CGstats"

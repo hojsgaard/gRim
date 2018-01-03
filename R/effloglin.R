@@ -34,7 +34,7 @@
 #' glist <-list(c("smoke", "mental"), c("mental", "phys"),
 #'              c("phys", "systol"), c("systol", "smoke"))
 #' 
-#' stab <- lapply(glist, function(gg) tableMargin(reinis, gg))
+#' stab <- lapply(glist, function(gg) .tableMargin(reinis, gg))
 #' fv3 <- effloglin(stab, glist, print=FALSE)
 #' 
 #' @export effloglin
@@ -67,7 +67,7 @@ effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
 
     if (is.array(table)){
         Nobs   <- sum(table)
-        ##stlist <- lapply(margin, function(xx) {tableMargin(table, xx)})
+        ##stlist <- lapply(margin, function(xx) {.tableMargin(table, xx)})
         stlist <- lapply(margin, function(xx) ar_marg(table, xx))
     } else {
         Nobs   <- sum(table[[1]])
@@ -98,9 +98,9 @@ effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
             cq      <- cliq[[ghost[ss]]]
             cq.idx  <- ghost[ss]
             cpot    <- prob.list[[cq.idx]]
-            ##adjust  <- tableOp(st, tableMargin(cpot, gg)*Nobs, "/")
+            ##adjust  <- tableOp(st, .tableMargin(cpot, gg)*Nobs, "/")
 
-            ##tm      <- tableMargin(cpot, gg)*Nobs
+            ##tm      <- .tableMargin(cpot, gg)*Nobs
             tm      <- ar_marg(cpot, gg) * Nobs
             adjust  <- st / tm
             max.dif[ss] <- max(abs(log(adjust)))
@@ -135,7 +135,7 @@ effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
             for (ii in 2:length(prob.list)){
                 pjoint <- tableOp(pjoint, tableOp(prob.list[[ii]],
                                                   ar_marg(prob.list[[ii]], rip$sep[[ii]]),
-                                                  ##tableMargin(prob.list[[ii]], rip$sep[[ii]]),
+                                                  ##.tableMargin(prob.list[[ii]], rip$sep[[ii]]),
                                                   "/"),"*")
             }
         }

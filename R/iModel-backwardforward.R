@@ -132,7 +132,9 @@ backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", s
   itcount <- 1
   repeat{
       ##cat("Iteration", itcount, "\n")
-      amat    <- .as_amat(.glist(object))
+
+      amat    <- .as_amat(.glist(object)) ## FIXME generate amat yet another time
+
       edgeMAT <- getEdges(amat, type=type, ingraph=TRUE, discrete=disc) 
 
       if (!is.null(fmat))
@@ -142,7 +144,9 @@ backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", s
           if (details >= 1) cat(sprintf("No edges can be removed\n"))
           break
       } 
-      
+
+      ## print("KKKKKKKKKKKKKKKKKKKKKKKKK")
+      ## print(edgeMAT)
       testMAT <- testEdges(object, edgeMAT, comp.op=comp.op, crit.str=crit.str,
                            alpha=alpha, k=k, amat=amat, ...)
       statvec   <- testMAT[, crit.str]

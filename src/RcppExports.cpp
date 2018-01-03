@@ -2,13 +2,28 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <RcppArmadillo.h>
+#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
 
+// fit2way_
+NumericVector fit2way_(const NumericVector& tab1, const NumericVector& tab2, const CharacterVector& R, const CharacterVector& vn);
+RcppExport SEXP _gRim_fit2way_(SEXP tab1SEXP, SEXP tab2SEXP, SEXP RSEXP, SEXP vnSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericVector& >::type tab1(tab1SEXP);
+    Rcpp::traits::input_parameter< const NumericVector& >::type tab2(tab2SEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type R(RSEXP);
+    Rcpp::traits::input_parameter< const CharacterVector& >::type vn(vnSEXP);
+    rcpp_result_gen = Rcpp::wrap(fit2way_(tab1, tab2, R, vn));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ghk2pmsParms_
 List ghk2pmsParms_(List parms);
-RcppExport SEXP gRim_ghk2pmsParms_(SEXP parmsSEXP) {
+RcppExport SEXP _gRim_ghk2pmsParms_(SEXP parmsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +34,7 @@ END_RCPP
 }
 // pms2ghkParms_
 List pms2ghkParms_(List parms);
-RcppExport SEXP gRim_pms2ghkParms_(SEXP parmsSEXP) {
+RcppExport SEXP _gRim_pms2ghkParms_(SEXP parmsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -30,7 +45,7 @@ END_RCPP
 }
 // updateA
 arma::mat updateA(arma::mat A, arma::mat E, arma::uvec row, arma::uvec col);
-RcppExport SEXP gRim_updateA(SEXP ASEXP, SEXP ESEXP, SEXP rowSEXP, SEXP colSEXP) {
+RcppExport SEXP _gRim_updateA(SEXP ASEXP, SEXP ESEXP, SEXP rowSEXP, SEXP colSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -44,7 +59,7 @@ END_RCPP
 }
 // update_ghkParms_
 List update_ghkParms_(List Cparms, IntegerVector dgen_idx, IntegerVector cgen_idx, List ghk_obs, List pms_obs, List ghk_fit, List pms_fit, double scale, double details);
-RcppExport SEXP gRim_update_ghkParms_(SEXP CparmsSEXP, SEXP dgen_idxSEXP, SEXP cgen_idxSEXP, SEXP ghk_obsSEXP, SEXP pms_obsSEXP, SEXP ghk_fitSEXP, SEXP pms_fitSEXP, SEXP scaleSEXP, SEXP detailsSEXP) {
+RcppExport SEXP _gRim_update_ghkParms_(SEXP CparmsSEXP, SEXP dgen_idxSEXP, SEXP cgen_idxSEXP, SEXP ghk_obsSEXP, SEXP pms_obsSEXP, SEXP ghk_fitSEXP, SEXP pms_fitSEXP, SEXP scaleSEXP, SEXP detailsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -61,9 +76,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// C_pms2ghk
+RcppExport SEXP C_pms2ghk(SEXP parms_);
+RcppExport SEXP _gRim_C_pms2ghk(SEXP parms_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type parms_(parms_SEXP);
+    rcpp_result_gen = Rcpp::wrap(C_pms2ghk(parms_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// C_ghk2pms
+RcppExport SEXP C_ghk2pms(SEXP parms_);
+RcppExport SEXP _gRim_C_ghk2pms(SEXP parms_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type parms_(parms_SEXP);
+    rcpp_result_gen = Rcpp::wrap(C_ghk2pms(parms_));
+    return rcpp_result_gen;
+END_RCPP
+}
 // normalize_ghkParms_
 List normalize_ghkParms_(List parms);
-RcppExport SEXP gRim_normalize_ghkParms_(SEXP parmsSEXP) {
+RcppExport SEXP _gRim_normalize_ghkParms_(SEXP parmsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
