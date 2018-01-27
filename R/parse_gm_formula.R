@@ -1,6 +1,17 @@
 ## Turn a formula into a list of generators (glist)
 ##
-.parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NULL)
+#' @title Parse graphical model formula
+#'
+#' @description Parse graphical model formula to internal representation
+#'
+#' @param formula A right hand sided formula or a list.
+#' @param varnames Specification of the variables.
+#' @param marginal Possible specification of marginal (a set of
+#'     variables); useful in connection with model specification
+#'     shortcuts.
+#' @param interactions The maximum order of interactions allowed;
+#'     useful in connection with model specification shortcuts.
+parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NULL)
 {
     
     if (!inherits(formula, c("formula", "list"))) stop("Invalid formula specification")

@@ -115,6 +115,13 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
            )
 }
 
+
+## citest_disc <- function(dat, set){
+##     lapply(dat[[set]]
+
+## }
+
+
 ###
 ### CIP test; asymptotic, based on either deviance or Pearsons X2
 ###
@@ -191,55 +198,6 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     class(ans) <- "citest"
     ans
 }
-
-
-
-## .CI_X2_fast <- function(x, statistic="DEV", adjust.df=TRUE, slice.info=TRUE){
-    
-##     vn    <- names(dimnames(x))
-##     di    <- dim(x)
-##     u     <- vn[1]
-##     w     <- vn[2]
-##     R     <- vn[-(1:2)]
-##     dim.u <- di[1]
-##     dim.w <- di[2]
-##     dim.R  <- prod(di[-(1:2)])
-##     dim12  <-  dim(x)[1:2]
-    
-##     tuR <- gRbase::ar_marg(x, c(u, R))
-##     twR <- gRbase::ar_marg(x, c(w, R))
-##     tuR  <-  matrix(tuR, nrow=dim.R, byrow=TRUE)
-##     twR  <-  matrix(twR, nrow=dim.R, byrow=TRUE)
-##     xmat <-  matrix(x,   nrow=dim.R, byrow=TRUE)
-    
-##     ## Find observed statistics for each slice
-##     tobs.slice <- vector("numeric", dim.R)
-##     dofa.slice <- vector("numeric", dim.R)
-##     dofu.slice <- vector("numeric", dim.R)
-    
-##     dofu <- (dim.u - 1) * (dim.w - 1) 
-##     for (ii in seq_len(dim.R)){
-##         r.sum    <- tuR[ii, ]
-##         c.sum    <- twR[ii, ]
-##         expected <- outer(r.sum, c.sum) / sum(r.sum)
-##         expected[!is.finite(expected)] <- 0
-##         mm       <- xmat[ii, ]
-##         dim(mm)  <- dim12
-##         tobs <- .statFun(mm, expected)
-##         tobs.slice[ii] <- tobs
-##         r.df <- if((rs <- sum(rowSums(mm)>0)) == 0) 0 else (rs - 1)
-##         c.df <- if((cs <- sum(colSums(mm)>0)) == 0) 0 else (cs - 1)
-##         dofa <- r.df * c.df
-##         dofa.slice[ii] <- dofa
-##         dofu.slice[ii] <- dofu
-##     }
-    
-##     cbind(tobs.slice, dofa.slice, dofu.slice)
-## }
-
-
-
-
 
 
 
@@ -368,6 +326,55 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
 }
 
 
+
+
+
+
+
+
+
+## .CI_X2_fast <- function(x, statistic="DEV", adjust.df=TRUE, slice.info=TRUE){
+    
+##     vn    <- names(dimnames(x))
+##     di    <- dim(x)
+##     u     <- vn[1]
+##     w     <- vn[2]
+##     R     <- vn[-(1:2)]
+##     dim.u <- di[1]
+##     dim.w <- di[2]
+##     dim.R  <- prod(di[-(1:2)])
+##     dim12  <-  dim(x)[1:2]
+    
+##     tuR <- gRbase::ar_marg(x, c(u, R))
+##     twR <- gRbase::ar_marg(x, c(w, R))
+##     tuR  <-  matrix(tuR, nrow=dim.R, byrow=TRUE)
+##     twR  <-  matrix(twR, nrow=dim.R, byrow=TRUE)
+##     xmat <-  matrix(x,   nrow=dim.R, byrow=TRUE)
+    
+##     ## Find observed statistics for each slice
+##     tobs.slice <- vector("numeric", dim.R)
+##     dofa.slice <- vector("numeric", dim.R)
+##     dofu.slice <- vector("numeric", dim.R)
+    
+##     dofu <- (dim.u - 1) * (dim.w - 1) 
+##     for (ii in seq_len(dim.R)){
+##         r.sum    <- tuR[ii, ]
+##         c.sum    <- twR[ii, ]
+##         expected <- outer(r.sum, c.sum) / sum(r.sum)
+##         expected[!is.finite(expected)] <- 0
+##         mm       <- xmat[ii, ]
+##         dim(mm)  <- dim12
+##         tobs <- .statFun(mm, expected)
+##         tobs.slice[ii] <- tobs
+##         r.df <- if((rs <- sum(rowSums(mm)>0)) == 0) 0 else (rs - 1)
+##         c.df <- if((cs <- sum(colSums(mm)>0)) == 0) 0 else (cs - 1)
+##         dofa <- r.df * c.df
+##         dofa.slice[ii] <- dofa
+##         dofu.slice[ii] <- dofu
+##     }
+    
+##     cbind(tobs.slice, dofa.slice, dofu.slice)
+## }
 
 
 
