@@ -2,7 +2,6 @@ language: R
 cache: packages
 sudo: required
 dist: trusty
-group: deprecated-2017Q4
 bioc_packages:
 - graph
 - RBGL
@@ -10,6 +9,8 @@ bioc_packages:
 os:
 - linux
 - osx
+r_github_packages:
+  hojsgaard/gRbase
 before_install:
 - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tlmgr install boxedminipage; fi
 - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo tlmgr install a4wide boxedminipage; fi
