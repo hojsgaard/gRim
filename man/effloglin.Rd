@@ -42,7 +42,7 @@ data(reinis)
 glist <-list(c("smoke", "mental"), c("mental", "phys"),
              c("phys", "systol"), c("systol", "smoke"))
 
-stab <- lapply(glist, function(gg) .tableMargin(reinis, gg))
+stab <- lapply(glist, function(gg) ar_marg(reinis, gg))
 fv3 <- effloglin(stab, glist, print=FALSE)
 
 }
