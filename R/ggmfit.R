@@ -117,6 +117,32 @@ ggmfitr <- function(S, n.obs, glist, start=NULL,
                     eps=1e-12, iter=1000, details=0, ...)
 {
 
+    ##
+## Calculate logL for N(0,\Sigma) model.
+##
+## Sigma = Covariance matrix parameter
+## K     = Sigma inverse
+## S     = sample covariance matrix
+## n     = sample size
+##
+ell <- function(Sigma, S, n){
+
+    shdet <- function(Sigma){
+        prod(eigen(Sigma)[[1]])
+    }
+    p <- dim(S)[1]
+    const <- -n * p/2 * log(2 * pi)
+    const - n/2 * log(shdet(Sigma)) - n/2 * sum(diag( solve(Sigma) %*% S )) 
+}
+
+ellK <- function (K, S, n)
+{
+    value <- (n/2) * (log(det(K)) - sum(rowSums(K * S)))
+    value
+}
+
+
+    
   if (is.null(start)){
     K     <- diag(1/diag(S))
   } else {

@@ -1,5 +1,5 @@
 Package: gRim
-Version: 0.2-0.1
+Version: 0.2-1
 Title: Graphical Interaction Models
 Author: Søren Højsgaard <sorenh@math.aau.dk>
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
@@ -10,17 +10,18 @@ License: GPL (>= 2)
 URL: http://people.math.aau.dk/~sorenh/software/gR/
 Encoding: UTF-8
 Depends:
-    R (>= 3.0.2),
+    R (>= 3.6.0),
     methods,
-    gRbase (>= 1.8-3)
+    gRbase (>= 1.8-5)
 Imports:
-    igraph,
     graph,
+    Rgraphviz,
+    igraph,
     gRain,
+    magrittr,    
     Rcpp (>= 0.11.1)
-Suggests:
-    Rgraphviz
 ByteCompile: yes
-LinkingTo: Rcpp (>= 0.11.1), RcppArmadillo, RcppEigen, gRbase
-RoxygenNote: 6.0.1
-Remotes: hojsgaard/gRbase, hojsgaard/gRain
+biocViews: 
+LinkingTo: Rcpp (>= 0.11.1), RcppArmadillo, RcppEigen, gRbase (>= 1.8-5)
+RoxygenNote: 7.0.2
+Roxygen: list(markdown = TRUE)

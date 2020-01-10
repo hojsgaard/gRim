@@ -14,26 +14,26 @@ ghk2pmsParms <- function(parms){
     c(.Call("C_ghk2pms", parms), parms[-(1:4)])
 }
 
+ 
+## pms2ghkParms <- function(parms){
+## ##   cat("----------------\npms2ghkParms\n")
+## ##   str(parms)
 
-#' pms2ghkParms <- function(parms){
-#' ##   cat("----------------\npms2ghkParms\n")
-#' ##   str(parms)
+##   res <- .Call("C_pms2ghk", parms)
+##   val <- c(res, parms[-(1:4)])
+##   val
 
-#'   res <- .Call("C_pms2ghk", parms)
-#'   val <- c(res, parms[-(1:4)])
-#'   val
+## ##   .pms2ghkParms(parms)
 
-#' ##   .pms2ghkParms(parms)
+## }
 
-#' }
-
-#' ghk2pmsParms <- function(parms){
-#' ##   cat("----------------\nghk2pmsParms\n")
-#' ##   str(parms)
-#'   res <- .Call("C_ghk2pms", parms)
-#'   val <- c(res, parms[-(1:4)])
-#'   val
-#' }
+## ghk2pmsParms <- function(parms){
+## ##   cat("----------------\nghk2pmsParms\n")
+## ##   str(parms)
+##   res <- .Call("C_ghk2pms", parms)
+##   val <- c(res, parms[-(1:4)])
+##   val
+## }
 
 
 
@@ -268,8 +268,6 @@ ghk2phkParms<-function(parms){
   #print(hh * mu)
   quad   <- colSumsPrim(hh * mu)
   #print(list(dimh=dim(hh), dimK=dim(parms[[K.idx]]), dimq=dim(quad)))
-  #' #' print(parms[['g']])
-  #' #' print(quad)
 
   zzz    <- parms[['g']] + quad / 2
   ##print(zzz)

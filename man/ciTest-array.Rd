@@ -5,8 +5,17 @@
 \alias{ciTest_table}
 \title{Test for conditional independence in a contingency table}
 \usage{
-ciTest_table(x, set = NULL, statistic = "dev", method = "chisq",
-  adjust.df = TRUE, slice.info = TRUE, L = 20, B = 200, ...)
+ciTest_table(
+  x,
+  set = NULL,
+  statistic = "dev",
+  method = "chisq",
+  adjust.df = TRUE,
+  slice.info = TRUE,
+  L = 20,
+  B = 200,
+  ...
+)
 }
 \arguments{
 \item{x}{An array of counts with named dimnames.}

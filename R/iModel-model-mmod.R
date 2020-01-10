@@ -30,7 +30,8 @@
 #' @examples
 #' 
 #' ### FIXME: To be written
-#' 
+
+
 #' @export mmod
 mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
   {
@@ -86,14 +87,12 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
 
 
 .mModelinfo <- function(glist, datainfo){
-  .mModelinfoPrimitive(glist, datainfo$data.names, datainfo$disc.indic)
+    .mModelinfoPrimitive(glist, datainfo$data.names, datainfo$disc.indic)
 }
 
 ## Finds numeric representations of generators.
-.mModelinfoPrimitive <- function(glist, data.names, disc.indic){
 
-    #' cat(".mModelinfoPrimitive\n")
-    #' str(list(glist=glist, data.names=data.names, disc.indic=disc.indic))
+.mModelinfoPrimitive <- function(glist, data.names, disc.indic){
     
     len.glist     <- length( glist )
     n.disc.names  <- sum(disc.indic)

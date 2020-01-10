@@ -8,8 +8,14 @@
 \alias{triangulate.dModel}
 \title{Log--linear model}
 \usage{
-dmod(formula, data, marginal = NULL, interactions = NULL, fit = TRUE,
-  details = 0)
+dmod(
+  formula,
+  data,
+  marginal = NULL,
+  interactions = NULL,
+  fit = TRUE,
+  details = 0
+)
 }
 \arguments{
 \item{formula}{Model specification in one of the following forms: 1) a

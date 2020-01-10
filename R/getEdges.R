@@ -44,6 +44,7 @@
 #' 
 #' @aliases getEdges getEdges.list getEdges.graphNEL getEdges.matrix getInEdges
 #'     getOutEdges getEdgesMAT getInEdgesMAT getOutEdgesMAT
+#' 
 #' @param object An object representing a graph; either a generator list, a
 #'     graphNEL object or an adjacency matrix.
 #' @param type Either "unrestricted" or "decomposable"
@@ -114,7 +115,7 @@
 #' 
 #' @export getEdges
 getEdges <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
-  UseMethod("getEdges")
+    UseMethod("getEdges")
 }
 
 getEdges.list <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
@@ -131,11 +132,11 @@ getEdges.matrix <- function(object, type="unrestricted", ingraph=TRUE, discrete=
 
 
 getInEdges <- function(object, type="unrestricted", discrete=NULL, ...){
-  getEdges(object, type=type, ingraph=TRUE, discrete=discrete, ...)
+    getEdges(object, type=type, ingraph=TRUE, discrete=discrete, ...)
 }
 
 getOutEdges <- function(object, type="unrestricted", discrete=NULL, ...){
-  getEdges(object, type=type, ingraph=FALSE, discrete=discrete, ...)
+    getEdges(object, type=type, ingraph=FALSE, discrete=discrete, ...)
 }
 
 
@@ -165,17 +166,17 @@ getInEdgesMAT <- function(adjmat, type="unrestricted", discrete=NULL, ...){
 }
 
 getOutEdgesMAT <- function(adjmat, type="unrestricted", discrete=NULL, ...){
-  type <- match.arg(type, c("unrestricted", "decomposable"))
-  emat <- nonEdgeListMAT(adjmat, matrix=TRUE)
-  if (type == "decomposable"){
-      idx <- vector("logical", nrow(emat))    
-      for (ii in seq_len(nrow(emat))){
-        ed <- emat[ii,]
-        adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 1L
-        idx[ii] <- length(mcsmarkedMAT(adjmat, discrete=discrete)) > 0
-        adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 0L
-      }
-      emat <- emat[idx, , drop=FALSE]
+    type <- match.arg(type, c("unrestricted", "decomposable"))
+    emat <- nonEdgeListMAT(adjmat, matrix=TRUE)
+    if (type == "decomposable"){
+        idx <- vector("logical", nrow(emat))    
+        for (ii in seq_len(nrow(emat))){
+            ed <- emat[ii,]
+            adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 1L
+            idx[ii] <- length(mcsmarkedMAT(adjmat, discrete=discrete)) > 0
+            adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 0L
+        }
+        emat <- emat[idx, , drop=FALSE]
     }
-  emat
+    emat
 }

@@ -65,10 +65,6 @@ triangulate.dModel <- function(object, ...){
 }
 
 
-
-
-
-
 ##################################################################
 ####
 #### Update generator list by adding/deleting edges and terms
@@ -115,25 +111,25 @@ triangulate.dModel <- function(object, ...){
 #' @keywords utilities
 #' @examples
 #' 
-#' glist <- list(c(1,2,3),c(2,3,4))
+#' glist <- list(c(1, 2, 3), c(2, 3, 4))
 #' 
 #' ## Add edges
-#' modify_glist(glist, items=list(add.edge=c(1,4)))
+#' modify_glist(glist, items=list(add.edge=c(1, 4)))
 #' modify_glist(glist, items=list(add.edge=~1:4))
 #' 
 #' ## Add terms
-#' modify_glist(glist, items=list(add.term=c(1,4)))
+#' modify_glist(glist, items=list(add.term=c(1, 4)))
 #' modify_glist(glist, items=list(add.term=~1:4))
 #' 
 #' ## Notice: Only the first term is added as the second is already 
 #' ## in the model.
-#' modify_glist(glist, items=list(add.term=list(c(1,4),c(1,3))))
+#' modify_glist(glist, items=list(add.term=list(c(1, 4), c(1, 3))))
 #' modify_glist(glist, items=list(add.term=~1:4 + 1:3))
 #' 
 #' ## Notice: Operations are carried out in the order given in the
 #' ## items list and hence we get different results: 
-#' modify_glist(glist, items=list(drop.edge=c(1,4), add.edge=c(1,4)))
-#' modify_glist(glist, items=list(add.edge=c(1,4), drop.edge=c(1,4)))
+#' modify_glist(glist, items=list(drop.edge=c(1, 4), add.edge=c(1, 4)))
+#' modify_glist(glist, items=list(add.edge=c(1, 4), drop.edge=c(1, 4)))
 #' 
 #' @export modify_glist
 
@@ -212,23 +208,22 @@ modify_glist <- function(glist, items, details=0){
     rhsf2list( e )
 }
 
-###' e1 <- c(1,4)
-###' e2 <- c(2,4)
-###' e3 <- ~1:4
-###' e4 <- ~1:4+2:4
-###' e5 <- rbind(e1,e2)
-###' e6 <- as.data.frame(e5)
-###' e7 <- list(e1, e2)
+### e1 <- c(1,4)
+### e2 <- c(2,4)
+### e3 <- ~1:4
+### e4 <- ~1:4+2:4
+### e5 <- rbind(e1,e2)
+### e6 <- as.data.frame(e5)
+### e7 <- list(e1, e2)
 ##
-###' .doInput( e1 )
-###' .doInput( e2 )
-###' .doInput( e3 )
-###' .doInput( e4 )
-###' .doInput( e5 )
-###' .doInput( e6 )
-###' .doInput( e7 )
+### .doInput( e1 )
+### .doInput( e2 )
+### .doInput( e3 )
+### .doInput( e4 )
+### .doInput( e5 )
+### .doInput( e6 )
+### .doInput( e7 )
 ##
-
 
 .drop.edge_glist <- function(glist, ee){
   .drop.term_glist(glist, ee)

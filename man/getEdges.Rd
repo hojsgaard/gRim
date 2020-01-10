@@ -12,8 +12,7 @@
 \alias{getOutEdgesMAT}
 \title{Find edges in a graph and edges not in an undirected graph.}
 \usage{
-getEdges(object, type = "unrestricted", ingraph = TRUE, discrete = NULL,
-  ...)
+getEdges(object, type = "unrestricted", ingraph = TRUE, discrete = NULL, ...)
 }
 \arguments{
 \item{object}{An object representing a graph; either a generator list, a

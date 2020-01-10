@@ -6,17 +6,17 @@ setOldClass("mModel")
 
 setAs("dModel", "graphNEL",
       function(from){
-        ugList(from$glist, result="NEL")
+        ugList(from$glist, result="graphNEL")
       })
 
 setAs("cModel", "graphNEL",
       function(from){
-        ugList(from$glist, result="NEL")
+        ugList(from$glist, result="graphNEL")
       })
 
 setAs("mModel", "graphNEL",
       function(from){
-        ugList(from$glist, result="NEL")
+        ugList(from$glist, result="graphNEL")
       })
 
 setAs("dModel", "matrix",

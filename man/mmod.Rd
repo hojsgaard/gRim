@@ -35,7 +35,6 @@ A mixed interaction model is a model (often with conditional
 \examples{
 
 ### FIXME: To be written
-
 }
 \seealso{
 \code{\link{dmod}} \code{\link{cmod}}

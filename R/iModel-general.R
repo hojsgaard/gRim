@@ -75,12 +75,14 @@ terms.iModel <- function(x, ...){
 
 #' @rdname iModel-general
 isGraphical.dModel <- function(x){
-    gRbase::isGraphical.default( terms(x) )
+##    gRbase::isGraphical.default( terms(x) )
+    isGraphical( terms(x) )
 }
 
 #' @rdname iModel-general
 isDecomposable.dModel <- function(x){
-    gRbase::isDecomposable.default( terms(x) )
+    ##gRbase::isDecomposable.default( terms(x) )
+    isDecomposable( terms(x) )
 }
 
 #' @rdname iModel-general

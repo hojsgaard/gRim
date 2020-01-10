@@ -5,8 +5,16 @@
 \alias{ggmfitr}
 \title{Iterative proportional fitting of graphical Gaussian model}
 \usage{
-ggmfit(S, n.obs, glist, start = NULL, eps = 1e-12, iter = 1000,
-  details = 0, ...)
+ggmfit(
+  S,
+  n.obs,
+  glist,
+  start = NULL,
+  eps = 1e-12,
+  iter = 1000,
+  details = 0,
+  ...
+)
 }
 \arguments{
 \item{S}{Empirical covariance matrix}

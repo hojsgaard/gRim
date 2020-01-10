@@ -205,8 +205,6 @@ print.MIfit <- function(x,...){
     logL.fail <- logL.fail + zzz$logL.fail
   }
 
-  #' mp.old <<- Mparms
-  #' stop()
   
   curr.logL <- .mModel_logLpms(CGstats,Mparms)
   d.logL    <- curr.logL - prev.logL
@@ -338,8 +336,6 @@ print.MIfit <- function(x,...){
 
 .update.ghkParms <- function(Cparms, Ad.idx, Ac.idx, EEghk, EEpms, AAghk, AApms, scale, CGstats, details=0) {
 
-    #' cat(".update.ghkParms: Cparms:\n"); print(Cparms)
-    #cat("AAghk:\n"); print(AAghk)
 
   g.idx <- 1
   h.idx <- 2
@@ -450,8 +446,6 @@ print.MIfit <- function(x,...){
   }
   #res$max.chg <- max.chg
 
-    #' cparms.old <<- Cparms
-    #' res.old <<- res
 
     res
 }

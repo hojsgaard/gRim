@@ -4,8 +4,7 @@
 \alias{effloglin}
 \title{Fitting Log-Linear Models by Message Passing}
 \usage{
-effloglin(table, margin, fit = FALSE, eps = 0.01, iter = 20,
-  print = TRUE)
+effloglin(table, margin, fit = FALSE, eps = 0.01, iter = 20, print = TRUE)
 }
 \arguments{
 \item{table}{A contingency table}

@@ -7,18 +7,49 @@
 \alias{forward}
 \title{Stepwise model selection in (graphical) interaction models}
 \usage{
-\method{stepwise}{iModel}(object, criterion = "aic", alpha = NULL,
-  type = "decomposable", search = "all", steps = 1000, k = 2,
-  direction = "backward", fixin = NULL, fixout = NULL, details = 0,
-  trace = 2, ...)
+\method{stepwise}{iModel}(
+  object,
+  criterion = "aic",
+  alpha = NULL,
+  type = "decomposable",
+  search = "all",
+  steps = 1000,
+  k = 2,
+  direction = "backward",
+  fixin = NULL,
+  fixout = NULL,
+  details = 0,
+  trace = 2,
+  ...
+)
 
-backward(object, criterion = "aic", alpha = NULL, type = "decomposable",
-  search = "all", steps = 1000, k = 2, fixin = NULL, details = 1,
-  trace = 2, ...)
+backward(
+  object,
+  criterion = "aic",
+  alpha = NULL,
+  type = "decomposable",
+  search = "all",
+  steps = 1000,
+  k = 2,
+  fixin = NULL,
+  details = 1,
+  trace = 2,
+  ...
+)
 
-forward(object, criterion = "aic", alpha = NULL, type = "decomposable",
-  search = "all", steps = 1000, k = 2, fixout = NULL, details = 1,
-  trace = 2, ...)
+forward(
+  object,
+  criterion = "aic",
+  alpha = NULL,
+  type = "decomposable",
+  search = "all",
+  steps = 1000,
+  k = 2,
+  fixout = NULL,
+  details = 1,
+  trace = 2,
+  ...
+)
 }
 \arguments{
 \item{object}{An \code{iModel} model object}

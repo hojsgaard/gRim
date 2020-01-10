@@ -1,3 +1,10 @@
+2019-10-07 Søren Højsgaard <sorenh@math.aau.dk>
+
+	* Modifications to avoid warnings with new gRbase package.
+	
+
+	* Version 0.2-1.1 uploaded
+
 2018-01-07 Søren Højsgaard <sorenh@math.aau.dk>
 
 	* Improved usage of new gRbase functionality; results in speed up
