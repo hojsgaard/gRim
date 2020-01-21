@@ -28,14 +28,14 @@ An object of class \code{cModel} (a list)
 }
 \description{
 Specification of graphical Gaussian model. The 'c' in the name
-    \code{cmod} refers to that it is a (graphical) model for 'c'ontinuous
-    variables
+\code{cmod} refers to that it is a (graphical) model for 'c'ontinuous
+variables
 }
 \details{
 The independence model can be specified as \code{~.^1} and the
-    saturated model as \code{~.^.}. The \code{marginal} argument can be used
-    for specifying the independence or saturated models for only a subset of
-    the variables.
+saturated model as \code{~.^.}. The \code{marginal} argument can be used
+for specifying the independence or saturated models for only a subset of
+the variables.
 }
 \examples{
 

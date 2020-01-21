@@ -11,26 +11,37 @@
 #' @description Generic function for conditional independence test. Specializes
 #'     to specific types of data.
 #'
-#' @name ciTest-general
+#' @name citest_general
 #' 
 #' @aliases ciTest ciTest.data.frame ciTest.table ciTest.list print.citest
 #'     summary.citest
 #' 
 #' @param x An object for which a test for conditional independence is to be
 #'     made. See 'details' for valid types of \code{x}.
+#' 
 #' @param set A specification of the test to be made. The tests are of the form
 #'     u and v are independent condionally on S where u and v are variables and
 #'     S is a set of variables. See 'details' for details about specification of
 #'     \code{set}.
+#' 
 #' @param \dots Additional arguments to be passed on to other methods.
-#' @return An object of class 'citest' (which is a list).
 #'
-#' @details \code{x} can be 1) a table, 2) a dataframe whose columns are
-#'     numerics and factors or 3) a list with components \code{cov} and
+#' @return An object of class `citest` (which is a list).
+#'
+#' @details \code{x} can be
+#'  1. a table,
+#'  1. a dataframe whose columns are
+#'     numerics and factors or
+#'  1. a list with components \code{cov} and
 #'     \code{n.obs}.
 #'
-#'     \code{set} can be 1) a vector or 2) a right-hand sided
-#'     formula in which variables are separated by '+'. In either case, it is
+#' @details
+#'  \code{set} can be
+#'  1. a vector,
+#'  1. a right-hand sided
+#'     formula in which variables are separated by '+'.
+#'
+#'  In either case, it is
 #'     tested if the first two variables in the \code{set} are conditionally
 #'     independent given the remaining variables in \code{set}.  (Notice an
 #'     abuse of the '+' operator in the right-hand sided formula: The order of
@@ -54,7 +65,6 @@
 #' ciTest(cov.wt(carcass, method='ML'), set=~Fat11 + Meat11 + Fat12)
 #' ciTest(reinis, set=~smo + phy + sys)
 #' ciTest(milkcomp1, set=~tre + fat + pro)
-#' 
 #' 
 #' @export ciTest
 ciTest <- function(x, set=NULL, ...){
@@ -136,7 +146,7 @@ summary.citest <- function(object,...){
 #'     S is a set of variables. See 'details' for details about specification of
 #'     \code{set}.
 #' @param \dots Additional arguments.
-#' @return An object of class 'citest' (which is a list).
+#' @return An object of class `citest` (which is a list).
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{ciTest}}, \code{\link{ciTest.table}},
 #'     \code{\link{ciTest_table}}, \code{\link{ciTest.list}},
@@ -150,39 +160,31 @@ summary.citest <- function(object,...){
 #' 
 #' @export ciTest_df
 ciTest_df <- function(x, set=NULL,...){
-    if ( is.null( set ) ){
-        set <- names( x )
-    } else {
-        if ( inherits( set, c("formula","character")) ){
+    
+    if (is.null(set)) set <- names(x)
+    else {
+        if (inherits(set, c("formula", "character"))){
             set <- unlist(rhsFormula2list(set), use.names = FALSE)
-            set <- names( x )[ pmatch(set, names(x)) ]
+            set <- names(x)[pmatch(set, names(x))] 
         }
     }
 
-    cat("set: "); print(set)
-
-    wdata       <- x[ ,set ]
-    varTypes    <- unique.default( unlist( lapply(wdata, class), use.names = FALSE) )
+    wdata       <- x[ , set]
+    varTypes    <- unique.default(unlist(lapply(wdata, class), use.names=FALSE))
 
     has.factor  <- "factor" %in% varTypes
     has.numeric <- any(c("integer", "numeric") %in% varTypes)
     switch.code <- as.character(1 * has.factor + 2 * has.numeric)
-    ##print(c(has.factor=has.factor, has.numeric=has.numeric))
-    ##print(c(switch.code=switch.code))
 
-    switch( switch.code,
+    switch(switch.code,
            "0"={ ## F & F
-               stop("Strange error...\n")
-           },
+               stop("Strange error...\n")},
            "1"={ ## T & F
-               ciTest_table(xtabs(~., data=wdata),set=set, ...)
-           },
+               ciTest_table(xtabs(~., data=wdata),set=set, ...)},
            "2"={ ## F & T
-               ciTest_mvn(cov.wt(wdata, method="ML"), set=set, ...)
-           },
+               ciTest_mvn(cov.wt(wdata, method="ML"), set=set, ...)},
            "3"={ ## T & T
-               .ciTest_df_internal(wdata, set, ...)
-           }
+               .ciTest_df_internal(wdata, set, ...)}
            )
 }
 
@@ -193,11 +195,9 @@ ciTest_df <- function(x, set=NULL,...){
 ### FIXME: set can be e.g. c(2,4,1) and this causes an error.
 .ciTest_df_internal <- function(x, set=NULL,...){
     ##cat("CHK: ciTestmixed\n")
-    if (is.numeric(set))
-        set <- names(x)[ set ]
+    if (is.numeric(set)) set <- names(x)[set]
 
     obj <- mmod(list(set), data=x)
-
     ans <- testdelete(obj, set[1:2])
     ans <- ans[c(1,3,2)] ## FIXME: This is fragile
     ans$method   <- "CHISQ"

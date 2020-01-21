@@ -3,11 +3,12 @@
 #'
 #' @description General functions related to iModels
 #'
-#' @name iModel-general
+#' @name imodel_general
 #'
 #' @param object,fit,x An \code{iModel} object.
-#' 
-#' @rdname iModel-general
+
+
+#' @rdname imodel_general
 logLik.iModel <- function(object, ...){
     val <- object$fitinfo$logL
     attr(val, "df") <- unname( object$fitinfo$dimension["mod.dim"] )
@@ -17,7 +18,7 @@ logLik.iModel <- function(object, ...){
 }
 
 
-#' @rdname iModel-general
+#' @rdname imodel_general
 #' @param scale Unused (and irrelevant for these models)
 #' @param k Weight of the degrees of freedom in the AIC formula
 #' @param ... Currently unused.
@@ -27,7 +28,7 @@ extractAIC.iModel <- function(fit, scale, k = 2, ...){
              -2*fit$fitinfo$logL + k*fit$fitinfo$dimension["mod.dim"]))
 }
 
-#' @rdname iModel-general
+#' @rdname imodel_general
 summary.iModel <- function(object, ...){
   glist <- getmi(object, "glist")
   isg   <- getmi(object, "isGraphical")
@@ -39,7 +40,7 @@ summary.iModel <- function(object, ...){
   ans
 }
 
-#' @rdname iModel-general
+#' @rdname imodel_general
 print.iModelsummary <- function(x,...){
   cat(sprintf("is graphical=%s; is decomposable=%s\n", x$isGraphical, x$isDecomposable))
   cat("generators (glist):\n")
@@ -62,35 +63,40 @@ print.iModelsummary <- function(x,...){
   ans
 }
 
-#' @rdname iModel-general
+#' importFrom stats formula terms
+
+#' @export
+#' @rdname imodel_general
 formula.iModel <- function(x,...){
 	#list2rhsFormula(x$glist)
   .glist2formula(x$glist)
 }
 
-#' @rdname iModel-general
+#' @export
+#' @rdname imodel_general
 terms.iModel <- function(x, ...){
 	x$glist
 }
 
-#' @rdname iModel-general
+
+#' @rdname imodel_general
 isGraphical.dModel <- function(x){
 ##    gRbase::isGraphical.default( terms(x) )
     isGraphical( terms(x) )
 }
 
-#' @rdname iModel-general
+#' @rdname imodel_general
 isDecomposable.dModel <- function(x){
     ##gRbase::isDecomposable.default( terms(x) )
     isDecomposable( terms(x) )
 }
 
-#' @rdname iModel-general
+#' @rdname imodel_general
 modelProperties <- function(object){
     UseMethod("modelProperties")
 }
 
-#' @rdname iModel-general
+#' @rdname imodel_general                
 modelProperties.dModel <- function(object){
     x <- terms( object )
     vn <- unique(unlist(x))

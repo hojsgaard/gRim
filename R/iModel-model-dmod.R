@@ -1,39 +1,39 @@
-##########################################################
-##
-## Discrete interaction model (log-linear model)
-##
-##########################################################
-
 ## FIXME: Delete df from loglin() output.
 
-#' @title Log--linear model
+##########################################################
+##
+#' @title Discrete interaction model (log-linear model)
 #'
+#' @description Specification of log--linear (graphical) model. The
+#'     'd' in the name \code{dmod} refers to that it is a (graphical)
+#'     model for 'd'iscrete variables
+#' 
 #' @name dmod
-#' 
-#' @description Specification of log--linear (graphical) model. The 'd' in the name
-#' \code{dmod} refers to that it is a (graphical) model for 'd'iscrete
-#' variables
-#' 
+##
+##########################################################
+
 #' @details The independence model can be specified as \code{~.^1} and the
 #'     saturated model as \code{~.^.}.  Setting e.g. \code{interactions=3}
 #'     implies that there will be at most three factor interactions in the
 #'     model.
 #' 
-#' Data can be specified as a table of counts or as a dataframe. If data is a
-#' dataframe then it will be converted to a table (using \code{xtabs()}). This
-#' means that if the dataframe contains numeric values then the you can get a
-#' very sparse and high dimensional table. When a dataframe contains numeric
-#' values it may be worthwhile to discretize data using the \code{cut()}
-#' function.
+#' Data can be specified as a table of counts or as a dataframe. If
+#' data is a dataframe then it will be converted to a table (using
+#' \code{xtabs()}). This means that if the dataframe contains numeric
+#' values then the you can get a very sparse and high dimensional
+#' table. When a dataframe contains numeric values it may be
+#' worthwhile to discretize data using the \code{cut()} function.
 #' 
-#' The \code{marginal} argument can be used for specifying the independence or
-#' saturated models for only a subset of the variables. When \code{marginal} is
-#' given the corresponding marginal table of data is formed and used in the
-#' analysis (notice that this is different from the behaviour of
-#' \code{loglin()} which uses the full table.
+#' The \code{marginal} argument can be used for specifying the
+#' independence or saturated models for only a subset of the
+#' variables. When \code{marginal} is given the corresponding marginal
+#' table of data is formed and used in the analysis (notice that this
+#' is different from the behaviour of \code{loglin()} which uses the
+#' full table.
 #' 
-#' The \code{triangulate()} method for discrete models (dModel objects) will
-#' for a model look at the dependence graph for the model.
+#' The \code{triangulate()} method for discrete models (dModel
+#' objects) will for a model look at the dependence graph for the
+#' model.
 #' 
 #' @aliases dmod print.dModel fitted.dModel residuals.dModel 
 #'     triangulate.dModel
@@ -51,6 +51,7 @@
 #' @param fit Should the model be fitted.
 #' @param details Control the amount of output; for debugging purposes.
 #' @param ... Additional arguments; currently no used.
+#'
 #' @return An object of class \code{dModel}.
 #'
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
@@ -68,7 +69,7 @@
 #' dm1<-dmod(~ .^., data=reinis, interactions=3)
 #' 
 #' @export dmod
-dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, details=0){
+dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, details=0, ...){
 
     if (!inherits(data, c("data.frame", "table")))
       stop("data must be either a dataframe or a table \n")
@@ -112,7 +113,7 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
     upd <- .dModel_finalize(ans$glist, varNames)
     res[names(upd)] <- upd
     
-    class(res) <- c("dModel","iModel")
+    class(res) <- c("dModel", "iModel")
     
     if (fit) fit(res) else res
 }

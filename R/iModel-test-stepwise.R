@@ -64,7 +64,7 @@ stepwise.iModel <- function(object,
     criterion  <- match.arg(criterion, c("aic",        "test"))
     search     <- match.arg(search,    c("headlong",   "all"))
     
-    if (isGSD_glist(.glist(object))[2]){
+    if (isGSD_glist(.glist(object))[2]){  ## FIXME .glist is ugly
         type <- match.arg(type,      c("decomposable", "unrestricted"))
     } else {
         type <- "unrestricted"
@@ -80,15 +80,15 @@ stepwise.iModel <- function(object,
     }
     
     if (direction == "backward"){
-        ans <- backward(object, type=type, search=search,
+        out <- backward(object, type=type, search=search,
                         criterion=criterion, alpha=alpha, steps=steps,
                         k=k, fixin=fixin, details=details, trace=trace)#$object
     } else {
-        ans <- forward(object, type=type,  search=search,
+        out <- forward(object, type=type,  search=search,
                        criterion=criterion, alpha=alpha, steps=steps,
                        k=k, fixout=fixout, details=details, trace=trace)#$object
     }
-    return(ans)
+    out
 }
 
 #' @rdname stepwise
@@ -104,7 +104,6 @@ backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", s
   vn   <- getmi(object, "varNames")
 
   fmat <- if (!is.null(fixin)) .as_amat(.do_handlefix(fixin), vn=vn)
-
 
   ## Here we use amat behind the scenes...
   isgsd  <- isGSD_glist(.glist(object), discrete=disc)
@@ -132,9 +131,7 @@ backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", s
   itcount <- 1
   repeat{
       ##cat("Iteration", itcount, "\n")
-
       amat    <- .as_amat(.glist(object)) ## FIXME generate amat yet another time
-
       edgeMAT <- getEdges(amat, type=type, ingraph=TRUE, discrete=disc) 
 
       if (!is.null(fmat))
@@ -145,8 +142,6 @@ backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", s
           break
       } 
 
-      ## print("KKKKKKKKKKKKKKKKKKKKKKKKK")
-      ## print(edgeMAT)
       testMAT <- testEdges(object, edgeMAT, comp.op=comp.op, crit.str=crit.str,
                            alpha=alpha, k=k, amat=amat, ...)
       statvec   <- testMAT[, crit.str]
@@ -203,13 +198,11 @@ forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", se
     testEdges <- switch(search,
                       "headlong" ={.testOutEdges_headlong},
                       "all"      ={.testOutEdges_all})
-    
     itcount <- 1
     repeat{
         ##cat("Iteration", itcount, "\n")
         amat    <- .as_amat(.glist(object))
         edgeMAT <- getEdges(amat, type=type, ingraph=FALSE, discrete=disc)  
-        ##cat("edgeMAT:\n"); print(edgeMAT)
         
         if (!is.null(fmat))
             edgeMAT <- .update_edgeMAT(edgeMAT, fmat, vn)
@@ -227,11 +220,10 @@ forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", se
         
         if (details >= 2) print(testMAT, row.names=FALSE, digits=4)        
         if (comp.op( statvec[opt.idx], alpha)) {
-            opt.edge    <- as.character(testMAT[opt.idx, c("V1","V2")])
-            ## Update model 
-            object  <- update(object, list(add.edge=opt.edge))            
+            opt.edge <- as.character(testMAT[opt.idx, c("V1","V2")])            
+            object   <- update(object, list(add.edge=opt.edge)) ## Update model            
             if (details >= 1) cat(sprintf("  %s %9.4f Edge added: %s\n",
-                                        outstring, statvec[opt.idx], .toString(opt.edge)))
+                                          outstring, statvec[opt.idx], .toString(opt.edge)))
             if (itcount == steps) { break }
         } else break
         itcount <- itcount + 1
@@ -240,7 +232,7 @@ forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", se
 }
 
 
-
+### dot-functions below here
 
 .amat_subtract <- function(amat1, amat2){
     if (is.null(amat2)) return(amat1)
@@ -330,55 +322,6 @@ forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", se
     edgeMAT <- .edge_matrix(am, names=TRUE, long=TRUE)
     edgeMAT
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##        
-
-
-
-
-
-##setdiff_edge <- function(x, y){
-##    ## x, y: p x 2 and q x 2 matrices - no checks
-##    if (!(is.matrix(x) && ncol(x)==2)) stop("x is not p x 2 matrix\n")
-##    if (!(is.matrix(y) && ncol(y)==2)) stop("y is not q x 2 matrix\n")
-##    vn <- unique.default(c(x, y))
-##    xn <- pairs2num(x, vn)
-##    yn <- pairs2num(y, vn)    
-##    d <-  setdiff(xn, yn)
-##    i <-  match(d, xn)
-##    x[i, ]
-##}
-##
-
-
-
-
-##    .infoPrint(details, 2,
-##               if (criterion=="aic"){
-##                   cat(sprintf("FORWARD: type=%s search=%s, criterion=%s(%4.2f), alpha=%4.2f \n",
-##                               type, search, criterion, k, alpha ))
-##               } else {
-##                   cat(sprintf("FORWARD: type=%s search=%s, criterion=%s, alpha=%4.2f \n",
-##                               type, search, criterion, alpha ))
-##               }
-##               )
-##    .infoPrint(details, 2,
-##               cat(sprintf("Initial model: is graphical=%s is decomposable=%s\n",
-##                           isgsd[1], isgsd[2])))
-##
 
 
 

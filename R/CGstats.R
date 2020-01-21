@@ -12,7 +12,7 @@
 #'
 #' @name CGstats
 #' 
-#' @aliases CGstats CGstats.data.frame CGstats_internal print.CGstats
+#' @aliases CGstats CGstats.data.frame print.CGstats
 #' 
 #' @param object A dataframe.
 #' @param varnames Names of variables to be used.

@@ -16,11 +16,11 @@ modify_glist(glist, items, details = 0)
 }
 \value{
 A generating class for the modified model. The elements of the list
-    are character vectors.
+are character vectors.
 }
 \description{
 Modify generating class for a graphical/hierarchical model by 1)
-    adding edges, 2) deleting edges, 3) adding terms and 4) deleting terms.
+adding edges, 2) deleting edges, 3) adding terms and 4) deleting terms.
 }
 \details{
 The \code{items} is a list with named entries as \code{list(add.edge=,
@@ -37,25 +37,25 @@ give the original generating class.
 }
 \examples{
 
-glist <- list(c(1,2,3),c(2,3,4))
+glist <- list(c(1, 2, 3), c(2, 3, 4))
 
 ## Add edges
-modify_glist(glist, items=list(add.edge=c(1,4)))
+modify_glist(glist, items=list(add.edge=c(1, 4)))
 modify_glist(glist, items=list(add.edge=~1:4))
 
 ## Add terms
-modify_glist(glist, items=list(add.term=c(1,4)))
+modify_glist(glist, items=list(add.term=c(1, 4)))
 modify_glist(glist, items=list(add.term=~1:4))
 
 ## Notice: Only the first term is added as the second is already 
 ## in the model.
-modify_glist(glist, items=list(add.term=list(c(1,4),c(1,3))))
+modify_glist(glist, items=list(add.term=list(c(1, 4), c(1, 3))))
 modify_glist(glist, items=list(add.term=~1:4 + 1:3))
 
 ## Notice: Operations are carried out in the order given in the
 ## items list and hence we get different results: 
-modify_glist(glist, items=list(drop.edge=c(1,4), add.edge=c(1,4)))
-modify_glist(glist, items=list(add.edge=c(1,4), drop.edge=c(1,4)))
+modify_glist(glist, items=list(drop.edge=c(1, 4), add.edge=c(1, 4)))
+modify_glist(glist, items=list(add.edge=c(1, 4), drop.edge=c(1, 4)))
 
 }
 \seealso{

@@ -6,7 +6,7 @@
 \alias{fitted.dModel}
 \alias{residuals.dModel}
 \alias{triangulate.dModel}
-\title{Log--linear model}
+\title{Discrete interaction model (log-linear model)}
 \usage{
 dmod(
   formula,
@@ -14,7 +14,8 @@ dmod(
   marginal = NULL,
   interactions = NULL,
   fit = TRUE,
-  details = 0
+  details = 0,
+  ...
 )
 }
 \arguments{
@@ -43,31 +44,33 @@ model, see Section 'details' below.}
 An object of class \code{dModel}.
 }
 \description{
-Specification of log--linear (graphical) model. The 'd' in the name
-\code{dmod} refers to that it is a (graphical) model for 'd'iscrete
-variables
+Specification of log--linear (graphical) model. The
+'d' in the name \code{dmod} refers to that it is a (graphical)
+model for 'd'iscrete variables
 }
 \details{
 The independence model can be specified as \code{~.^1} and the
-    saturated model as \code{~.^.}.  Setting e.g. \code{interactions=3}
-    implies that there will be at most three factor interactions in the
-    model.
+saturated model as \code{~.^.}.  Setting e.g. \code{interactions=3}
+implies that there will be at most three factor interactions in the
+model.
 
-Data can be specified as a table of counts or as a dataframe. If data is a
-dataframe then it will be converted to a table (using \code{xtabs()}). This
-means that if the dataframe contains numeric values then the you can get a
-very sparse and high dimensional table. When a dataframe contains numeric
-values it may be worthwhile to discretize data using the \code{cut()}
-function.
+Data can be specified as a table of counts or as a dataframe. If
+data is a dataframe then it will be converted to a table (using
+\code{xtabs()}). This means that if the dataframe contains numeric
+values then the you can get a very sparse and high dimensional
+table. When a dataframe contains numeric values it may be
+worthwhile to discretize data using the \code{cut()} function.
 
-The \code{marginal} argument can be used for specifying the independence or
-saturated models for only a subset of the variables. When \code{marginal} is
-given the corresponding marginal table of data is formed and used in the
-analysis (notice that this is different from the behaviour of
-\code{loglin()} which uses the full table.
+The \code{marginal} argument can be used for specifying the
+independence or saturated models for only a subset of the
+variables. When \code{marginal} is given the corresponding marginal
+table of data is formed and used in the analysis (notice that this
+is different from the behaviour of \code{loglin()} which uses the
+full table.
 
-The \code{triangulate()} method for discrete models (dModel objects) will
-for a model look at the dependence graph for the model.
+The \code{triangulate()} method for discrete models (dModel
+objects) will for a model look at the dependence graph for the
+model.
 }
 \examples{
  

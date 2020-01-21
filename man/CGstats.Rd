@@ -3,7 +3,6 @@
 \name{CGstats}
 \alias{CGstats}
 \alias{CGstats.data.frame}
-\alias{CGstats_internal}
 \alias{print.CGstats}
 \title{Mean, covariance and counts for grouped data}
 \usage{
@@ -24,8 +23,8 @@ A list whose form depends on the type of input data and the varnames.
 }
 \description{
 \code{CGstats} provides what corresponds to calling
-    \code{cow.wt} on different strata of data where the strata are defined by
-    the combinations of factors in data.
+\code{cow.wt} on different strata of data where the strata are defined by
+the combinations of factors in data.
 }
 \examples{
 

@@ -3,7 +3,7 @@
 \name{ciTest_ordinal}
 \alias{ciTest_ordinal}
 \title{A function to compute Monte Carlo and asymptotic tests of conditional
-    independence for ordinal and/or nominal variables.}
+independence for ordinal and/or nominal variables.}
 \usage{
 ciTest_ordinal(x, set = NULL, statistic = "dev", N = 0, ...)
 }
@@ -23,19 +23,19 @@ are not computed.}
 }
 \value{
 A list including the test statistic, the asymptotic p-value and, when
-    computed, the Monte Carlo p-value.  \item{P}{Asymptotic p-value}
-    \item{montecarlo.P}{Monte Carlo p-value}
+computed, the Monte Carlo p-value.  \item{P}{Asymptotic p-value}
+\item{montecarlo.P}{Monte Carlo p-value}
 }
 \description{
 The function computes tests of independence of two variables,
-    say u and v, given a set of variables, say S. The deviance, Wilcoxon,
-    Kruskal-Wallis and Jonkheere-Terpstra tests are supported.  Asymptotic
-    and Monte Carlo p-values are computed.
+say u and v, given a set of variables, say S. The deviance, Wilcoxon,
+Kruskal-Wallis and Jonkheere-Terpstra tests are supported.  Asymptotic
+and Monte Carlo p-values are computed.
 }
 \details{
 The deviance test is appropriate when u and v are nominal; Wilcoxon,
-    when u is binary and v is ordinal; Kruskal-Wallis, when u is nominal and
-    v is ordinal; Jonckheere-Terpstra, when both u and v are ordinal.
+when u is binary and v is ordinal; Kruskal-Wallis, when u is nominal and
+v is ordinal; Jonckheere-Terpstra, when both u and v are ordinal.
 }
 \examples{
 
@@ -43,11 +43,11 @@ library(gRim)
 data(dumping, package="gRbase")
 
 ciTest_ordinal(dumping, c(2,1,3), stat="jt", N=1000)
-ciTest_ordinal(dumping, c("Operation","Symptom","Centre"), stat="jt", N=1000)
-ciTest_ordinal(dumping, ~ Operation + Symptom + Centre, stat="jt", N=1000)
+ciTest_ordinal(dumping, c("Operation", "Symptom", "Centre"), stat="jt", N=1000)
+ciTest_ordinal(dumping, ~Operation + Symptom + Centre, stat="jt", N=1000)
 
 data(reinis)
-ciTest_ordinal(reinis, c(1,3,4:6),N=1000)
+ciTest_ordinal(reinis, c(1,3,4:6), N=1000)
 
 # If data is a dataframe
 dd     <- as.data.frame(dumping)
@@ -61,17 +61,16 @@ ciTest_ordinal(dumpDF, c(2,1,3), stat="jt", N=1000)
 ciTest_ordinal(dumpDF, c("Operation","Symptom","Centre"), stat="jt", N=1000)
 ciTest_ordinal(dumpDF, ~ Operation + Symptom + Centre, stat="jt", N=1000)
 
-
 }
 \references{
 See Edwards D. (2000), "Introduction to Graphical Modelling", 2nd
-    ed., Springer-Verlag, pp. 130-153.
+ed., Springer-Verlag, pp. 130-153.
 }
 \seealso{
 \code{\link{ciTest_table}}, \code{\link{ciTest}}
 }
 \author{
 Flaminia Musella, David Edwards, Søren Højsgaard,
-    \email{sorenh@math.aau.dk}
+\email{sorenh@math.aau.dk}
 }
 \keyword{htest}

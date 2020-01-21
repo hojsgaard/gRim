@@ -5,7 +5,7 @@
 ##
 ## ########################################################
 
-## FIXME: ciTest-array:
+## FIXME: citest_array:
 ## FIXME: Clean up code;
 ## FIXME: use modern tabXXX functions;
 ## FIXME: add parametric bootstrap
@@ -15,7 +15,7 @@
 #' @description Test for conditional independence in a contingency table
 #'     represented as an array.
 #'
-#' @name ciTest-array
+#' @name citest_array
 #' 
 #' @details \code{set} can be 1) a vector or 2) a right-hand sided formula in
 #'     which variables are separated by '+'. In either case, it is tested if the
@@ -46,7 +46,7 @@
 #'     \code{"smc"} (Monte Carlo test or sequential Monte Carlo test); ignored
 #'     otherwise.
 #' @param ...  Additional arguments.
-#' @return An object of class 'citest' (which is a list).
+#' @return An object of class `citest` (which is a list).
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{ciTest}}, \code{\link{ciTest.data.frame}},
 #'     \code{\link{ciTest_df}}, \code{\link{ciTest.list}},
@@ -84,8 +84,9 @@
 #' # 2) Do at most B*10 simulations divided equally over each slice, but stop
 #' # when at most L extreme values are found
 #' ciTest(lizard, set=c("diam", "height", "species"), method="smc", B=400)
+#'
 #' 
-#' @rdname ciTest-array
+#' @rdname citest_array
 ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df=TRUE, slice.info=TRUE, L=20, B=200, ...){
 
     statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
@@ -116,12 +117,6 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
 }
 
 
-## citest_disc <- function(dat, set){
-##     lapply(dat[[set]]
-
-## }
-
-
 ###
 ### CIP test; asymptotic, based on either deviance or Pearsons X2
 ###
@@ -146,7 +141,6 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     t.wR <- .tableMargin(x, c(w, R))
 
     fit.table <- fit2way_(t.uR, t.wR, R, vn)
-
     
     ## Evaluate test statistic
     ## FIXME There are functions for that in other functions
@@ -156,17 +150,18 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
         tobs <- (x - fit.table)^2 / fit.table   
     }
     tobs[!is.finite(tobs)] <- 0
-
+    
     tobsGlobal <- sum(tobs)
 
     ## Calculate df with or without adjustment for sparsity
-    if (adjust.df){
+    if (!adjust.df) dofSlice <- rep.int((dim.u - 1) * (dim.w - 1), dim.R)
+    else {
         t.uRmat    <- matrix(t.uR, nrow=dim.R, byrow=TRUE)
         t.wRmat    <- matrix(t.wR, nrow=dim.R, byrow=TRUE)
-
+        
         z <- (t.uRmat > 0) * 1
         dim.u.adj <- if (!is.null(dim(z))) rowSums(z) else sum(z)
-                    
+        
         z <- (t.wRmat > 0) * 1
         dim.w.adj <- if (!is.null(dim(z))) rowSums(z) else sum(z)
         
@@ -175,9 +170,7 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
         d2         <- dim.w.adj - 1
         d2[d2 < 0] <- 0
         dofSlice   <- d1 * d2
-    } else {
-        dofSlice <- rep.int((dim.u - 1) * (dim.w - 1), dim.R)
-    }
+    } 
     
     dofGlobal <- sum(dofSlice)
     pGlobal   <- 1 - pchisq(tobsGlobal, dofGlobal)
@@ -186,25 +179,16 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
         tobsSlice <- rowSums(matrix(tobs, nrow=dim.R, byrow=TRUE))
         pSlice    <- 1 - pchisq(tobsSlice, df=dofSlice)
         sliceInfo <- list(statistic=tobsSlice, p.value=pSlice, df=dofSlice)
-        des   <- expand.grid(dimnames(x)[-(1:2)])
-        slice <- cbind(as.data.frame(sliceInfo[1:3]), des)
-    } else {
-        slice <- NULL
-    }
+        des       <- expand.grid(dimnames(x)[-(1:2)])
+        slice     <- cbind(as.data.frame(sliceInfo[1:3]), des)
+    } else slice <- NULL
     
     ans <- list(statistic=tobsGlobal, p.value=pGlobal, df=dofGlobal, statname=statistic,
-                method="CHISQ",
-                adjust.df=adjust.df, varNames=vn, slice=slice)
+                method="CHISQ", adjust.df=adjust.df, varNames=vn, slice=slice)
+
     class(ans) <- "citest"
     ans
 }
-
-
-
-
-
-
-
 
 
 ###

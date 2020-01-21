@@ -34,7 +34,7 @@
 #' @param statistic The test statistic to be used, valid choices are
 #'     \code{"DEV"} and \code{"F"}.
 #' @param \dots Additional arguments
-#' @return An object of class 'citest' (which is a list).
+#' @return An object of class `citest` (which is a list).
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{ciTest}} \code{\link{ciTest.table}},
 #'     \code{\link{ciTest_table}}, \code{\link{ciTest.data.frame}},

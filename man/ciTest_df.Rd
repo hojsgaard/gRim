@@ -17,7 +17,7 @@ S is a set of variables. See 'details' for details about specification of
 \item{\dots}{Additional arguments.}
 }
 \value{
-An object of class 'citest' (which is a list).
+An object of class \code{citest} (which is a list).
 }
 \description{
 Test for conditional independence in a dataframe.
@@ -50,8 +50,8 @@ ciTest_df(milkcomp1, set=~tre + fat + pro)
 }
 \seealso{
 \code{\link{ciTest}}, \code{\link{ciTest.table}},
-    \code{\link{ciTest_table}}, \code{\link{ciTest.list}},
-    \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
+\code{\link{ciTest_table}}, \code{\link{ciTest.list}},
+\code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

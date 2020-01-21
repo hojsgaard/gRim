@@ -21,7 +21,7 @@ S is a set of variables. See 'details' for details about specification of
 \item{\dots}{Additional arguments}
 }
 \value{
-An object of class 'citest' (which is a list).
+An object of class \code{citest} (which is a list).
 }
 \description{
 Test for conditional independence in the multivariate normal distribution.
@@ -48,9 +48,9 @@ ciTest_mvn(cov.wt(carcass, method='ML'), set=~Fat11+Meat11+Fat12)
 }
 \seealso{
 \code{\link{ciTest}} \code{\link{ciTest.table}},
-    \code{\link{ciTest_table}}, \code{\link{ciTest.data.frame}},
-    \code{\link{ciTest_df}}, \code{\link{ciTest.list}},
-    \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
+\code{\link{ciTest_table}}, \code{\link{ciTest.data.frame}},
+\code{\link{ciTest_df}}, \code{\link{ciTest.list}},
+\code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

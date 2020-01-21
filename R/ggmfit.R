@@ -40,8 +40,6 @@
 #' ggmfit (ddd$cov, ddd$n.obs, glist)
 #' ggmfitr(ddd$cov, ddd$n.obs, glist)
 #' 
-#' 
-#' 
 #' @export ggmfit
 ggmfit <- function(S, n.obs, glist, start=NULL, 
                    eps=1e-12, iter=1000, details=0, ...)

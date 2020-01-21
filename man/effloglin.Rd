@@ -24,16 +24,16 @@ A list.
 }
 \description{
 Fit log-linear models to multidimensional contingency tables by
-    Iterative Proportional Fitting.
+Iterative Proportional Fitting.
 }
 \details{
 The function differs from \code{loglin} in that 1) data can be given
-    in the form of a list of sufficient marginals and 2) the model is fitted
-    only on the cliques of the triangulated interaction graph of the
-    model. This means that the full table is not fitted, which means that
-    \code{effloglin} is efficient (in terms of storage requirements). However
-    \code{effloglin} is implemented entirely in R and is therefore slower
-    than \code{loglin}.
+in the form of a list of sufficient marginals and 2) the model is fitted
+only on the cliques of the triangulated interaction graph of the
+model. This means that the full table is not fitted, which means that
+\code{effloglin} is efficient (in terms of storage requirements). However
+\code{effloglin} is implemented entirely in R and is therefore slower
+than \code{loglin}.
 }
 \examples{
 

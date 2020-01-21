@@ -35,16 +35,16 @@ ggmfit(
 }
 \value{
 A list with \item{lrt}{Likelihood ratio statistic (-2logL)}
-    \item{df}{Degrees of freedom} \item{logL}{log likelihood}
-    \item{K}{Estimated concentration matrix (inverse covariance matrix)}
+\item{df}{Degrees of freedom} \item{logL}{log likelihood}
+\item{K}{Estimated concentration matrix (inverse covariance matrix)}
 }
 \description{
 Fit graphical Gaussian model by iterative proportional fitting.
 }
 \details{
 \code{ggmfit} is based on a C implementation.  \code{ggmfitr} is
-    implemented purely in R (and is provided mainly as a benchmark for the
-    C-version).
+implemented purely in R (and is provided mainly as a benchmark for the
+C-version).
 }
 \examples{
 

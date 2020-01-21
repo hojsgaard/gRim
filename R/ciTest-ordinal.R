@@ -36,11 +36,11 @@
 #' data(dumping, package="gRbase")
 #' 
 #' ciTest_ordinal(dumping, c(2,1,3), stat="jt", N=1000)
-#' ciTest_ordinal(dumping, c("Operation","Symptom","Centre"), stat="jt", N=1000)
-#' ciTest_ordinal(dumping, ~ Operation + Symptom + Centre, stat="jt", N=1000)
+#' ciTest_ordinal(dumping, c("Operation", "Symptom", "Centre"), stat="jt", N=1000)
+#' ciTest_ordinal(dumping, ~Operation + Symptom + Centre, stat="jt", N=1000)
 #' 
 #' data(reinis)
-#' ciTest_ordinal(reinis, c(1,3,4:6),N=1000)
+#' ciTest_ordinal(reinis, c(1,3,4:6), N=1000)
 #' 
 #' # If data is a dataframe
 #' dd     <- as.data.frame(dumping)
@@ -53,7 +53,6 @@
 #' ciTest_ordinal(dumpDF, c(2,1,3), stat="jt", N=1000)
 #' ciTest_ordinal(dumpDF, c("Operation","Symptom","Centre"), stat="jt", N=1000)
 #' ciTest_ordinal(dumpDF, ~ Operation + Symptom + Centre, stat="jt", N=1000)
-#' 
 #' 
 #' @export ciTest_ordinal
 ciTest_ordinal <- function(x, set=NULL, statistic="dev", N=0, ...){
@@ -97,7 +96,8 @@ ciTest_ordinal <- function(x, set=NULL, statistic="dev", N=0, ...){
 #  cat(sprintf("CHK: c1: %s, c2: %s, S: %s test: %s\n", toString(c1), toString(c2), toString(S), test))
 #  print(class(dataset))
 #  str(dimnames(dataset))
-  ## Calculates the deviance, degrees of freedom and asymptotic P given an ftable (m).   
+
+## Calculates the deviance, degrees of freedom and asymptotic P given an ftable (m).   
   LRT <- function(m, d1, d2) {  
     oneslice <- function(t,d1,d2) {  
       dim(t) <- c(d1,d2)
@@ -335,9 +335,8 @@ ciTest_ordinal <- function(x, set=NULL, statistic="dev", N=0, ...){
 }
 
 
-# Functions for calculating exact conditional independence tests for discrete data.
-# Presently supported: deviance and wilcoxon
-
+## Functions for calculating exact conditional independence tests for discrete data.
+## Presently supported: deviance and wilcoxon
 
 .CI.exact <- function(c1,c2, S=NULL, dataset, test="deviance", N=0) {
 
