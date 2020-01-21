@@ -118,27 +118,32 @@ getEdges <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, .
     UseMethod("getEdges")
 }
 
+#' @export
 getEdges.iModel <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
     getEdgesMAT(glist2adjMAT(terms(object)), type=type, ingraph=ingraph, discrete=discrete, ...)
 }
 
+#' @export
 getEdges.graphNEL <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
     getEdgesMAT(as.adjMAT(object), type=type, ingraph=ingraph, discrete=discrete, ...)
 }
 
+#' @export
 getEdges.list <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
     getEdgesMAT(glist2adjMAT(object), type=type, ingraph=ingraph, discrete=discrete, ...)
 }
 
+#' @export
 getEdges.matrix <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
     getEdgesMAT(object, type=type, ingraph=ingraph, discrete=discrete, ...)    
 }
 
-
+#' @export
 getInEdges <- function(object, type="unrestricted", discrete=NULL, ...){
     getEdges(object, type=type, ingraph=TRUE, discrete=discrete, ...)
 }
 
+#' @export
 getOutEdges <- function(object, type="unrestricted", discrete=NULL, ...){
     getEdges(object, type=type, ingraph=FALSE, discrete=discrete, ...)
 }

@@ -69,6 +69,7 @@
 testdelete <- function(object, edge, k=2, details=1, ...)
   UseMethod("testdelete")
 
+#' @export 
 testdelete.iModel <- function(object, edge, k=2, details=1, ...){
 
     model.type <- class(object)[1]
@@ -186,6 +187,7 @@ testdelete.iModel <- function(object, edge, k=2, details=1, ...){
 testadd <- function(object, edge, k=2, details=1, ...)
   UseMethod("testadd")
 
+#' @export 
 testadd.iModel <- function(object, edge, k=2, details=1, ...){
 
     model.type <- class(object)[1]

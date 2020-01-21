@@ -49,6 +49,7 @@ CGstats <- function(object, varnames=NULL, homogeneous=TRUE, simplify=TRUE){
 }
 
 ## FIXME: CGstats: Determination of cont.names, cont.idx is dubious
+#' @export
 CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify=TRUE){
 
     if (is.null(varnames)) varnames <- names(object)

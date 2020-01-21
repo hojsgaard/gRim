@@ -59,12 +59,15 @@
 #' # testInEdges(cm1)
 #' # testOutEdges(cm) 
 
+
+#' @export
 #' @rdname test_edges
 testEdges <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic", k=2, alpha=NULL,
                       headlong=FALSE, details=1, ...){
   UseMethod("testEdges")
 }
 
+#' @export
 testEdges.iModel <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic", k=2, alpha=NULL,
                       headlong=FALSE, details=1, ...){
   
@@ -74,6 +77,7 @@ testEdges.iModel <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic"
     eval(cl)
 }
 
+#' @export
 #' @rdname test_edges
 testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, headlong=FALSE, details=1, ...){
 
@@ -106,6 +110,7 @@ testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, 
 }
 
 
+#' @export
 #' @rdname test_edges
 testOutEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, headlong=FALSE, details=1,...){
 

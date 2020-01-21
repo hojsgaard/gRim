@@ -1,4 +1,4 @@
-% \VignetteIndexEntry{gRim - Graphical Interaction Models}
+% \VignetteIndexEntry{grim - Graphical Interaction Models}
 % \VignetteDepends{gRbase}
 % \VignetteKeyword{Graphical Models}
 % \VignetteKeyword{Hierarchical log-linear models}
@@ -35,7 +35,7 @@ prettyDate <- format(Sys.Date())
 
 \begin{document}
 \SweaveOpts{prefix.string=figures/GRIM, keep.source=T}
-\setkeys{Gin}{width=0.5\textwidth,height=2in} %sæt figurstørrelse i Sweave
+\setkeys{Gin}{width=0.5\textwidth,height=2in} %sÃ¦t figurstÃ¸rrelse i Sweave
 \renewenvironment{Schunk}{\linespread{.85}\scriptsize}{}
 
 \definecolor{myGray}{rgb}{0.95,0.95,0.95}

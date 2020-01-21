@@ -13,6 +13,7 @@
 ## glist <<- object$glist
 ## vn <<- object$varNames
 
+#' @export
 update.iModel <- function(object, items, fit=TRUE, details=0, ...){
 
     glist           <- modify_glist(object$glist, items)
@@ -132,13 +133,16 @@ triangulate.dModel <- function(object, ...){
 #' modify_glist(glist, items=list(add.edge=c(1, 4), drop.edge=c(1, 4)))
 #' 
 #' @export modify_glist
+#' 
 
 modify_glist <- function(glist, items, details=0){
-  glist   <- lapply(glist, as.character)
-  ## Here; whatever the input format is "taken apart into lists":
-  ## cat("modify_glist items (before): "); print(items)
-  action <- names( items )
 
+    ## cat("modify_glist items (before): "); str(items)
+    glist   <- lapply(glist, as.character)
+    ## Here; whatever the input format is "taken apart into lists":
+    
+    action <- names( items )
+    
   items <- lapply( items, .doInput )
   ## cat("modify_glist items (after .doInput): "); print(items)
   names( items ) <- action

@@ -57,8 +57,6 @@ glist <- list(c("al","st","an"), c("me","ve","al"))
 ggmfit (ddd$cov, ddd$n.obs, glist)
 ggmfitr(ddd$cov, ddd$n.obs, glist)
 
-
-
 }
 \seealso{
 \code{\link{cmod}}, \code{\link{loglin}}

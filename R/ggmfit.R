@@ -110,7 +110,7 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
 
 
 
-  
+#' @export  
 ggmfitr <- function(S, n.obs, glist, start=NULL, 
                     eps=1e-12, iter=1000, details=0, ...)
 {

@@ -71,17 +71,20 @@ ciTest <- function(x, set=NULL, ...){
   UseMethod("ciTest")
 }
 
+#' @export
 ciTest.table <- function(x, set=NULL, ...){
   ciTest_table(x, set, ...)
 }
 
+#' @export
 ciTest.list <- function(x, set=NULL, ...){
   ciTest_mvn(x, set, ...)
 }
-
+#' @export
 ciTest.data.frame <- function(x, set=NULL, ...){
   ciTest_df(x, set, ...)
 }
+
 
 print.citest <- function(x, ...){
     if (length(x$varNames) > 2){

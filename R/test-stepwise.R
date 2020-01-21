@@ -46,6 +46,8 @@
 #' m2 <- stepwise(m1)
 #' m2
 
+#' @export
+#' @rdname stepwise
 stepwise.iModel <- function(object,
                           criterion="aic",
                           alpha=NULL,
@@ -91,6 +93,7 @@ stepwise.iModel <- function(object,
     out
 }
 
+#' @export
 #' @rdname stepwise
 backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", search="all",
                      steps=1000,  k=2, fixin=NULL, details=1, trace=2, ...)
@@ -163,6 +166,7 @@ backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", s
 }
 
 
+#' @export
 #' @rdname stepwise
 forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", search="all",
                      steps=1000,  k=2, fixout=NULL, details=1, trace=2, ...)

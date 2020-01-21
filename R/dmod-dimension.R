@@ -8,6 +8,8 @@
 #########################################################
 
 
+## FIXME loglinDecDim etc are SILLY names
+
 #' @title Return the dimension of a log-linear model
 #' 
 #' @description Return the dimension of a log-linear model given by
@@ -48,8 +50,6 @@
 #' dimension which is adjusted for sparsity of data. For this to work,
 #' \code{tableinfo} *MUST* be a table.
 #' 
-#' 
-
 #' @return A numeric.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{dmod}}, \code{\link{glm}}, \code{\link{loglm}}
@@ -67,6 +67,7 @@
 #' loglinDecDim(list(c("a","b"),c("b","c")), c(a=4,b=7,c=6),adjust=FALSE)
 #' 
 
+#' @export
 #' @rdname loglin_dim
 loglinGenDim <- function(glist, tableinfo){
 
@@ -81,6 +82,25 @@ loglinGenDim <- function(glist, tableinfo){
   }
   .loglinGenDim(glist, dtab)
 }
+
+## Find dimension of decomposable model
+## (with or without dimension adjustment for sparsity)
+##
+## 'cliq', 'seps' are cliques and separators (can be found from rip() function)
+## 'table' can be either an array or a vector of levels with named components
+##
+
+#' @export
+#' @rdname loglin_dim
+loglinDecDim <- function(glist, tableinfo, adjust=TRUE){
+  rr <- ripMAT(glist2adjMAT(glist))  ## FIXME glist2adjMAT should go...
+  .loglinDecDim(rr$cliques, rr$separators, tableinfo=tableinfo, adjust=adjust)
+}
+
+
+### dot-functions below here
+
+
 
 .loglinGenDim <- function(glist, dtab){
 
@@ -127,18 +147,6 @@ loglinGenDim <- function(glist, tableinfo){
 }
 
 
-## Find dimension of decomposable model
-## (with or without dimension adjustment for sparsity)
-##
-## 'cliq', 'seps' are cliques and separators (can be found from rip() function)
-## 'table' can be either an array or a vector of levels with named components
-##
-
-#' @rdname loglin_dim
-loglinDecDim <- function(glist, tableinfo, adjust=TRUE){
-  rr <- ripMAT(glist2adjMAT(glist))
-  .loglinDecDim(rr$cliques, rr$separators, tableinfo=tableinfo, adjust=adjust)
-}
 
 .loglinDecDim <- function(cliq, seps, tableinfo, adjust=TRUE){
 
@@ -174,13 +182,6 @@ loglinDecDim <- function(glist, tableinfo, adjust=TRUE){
     }
   }
   return(npar)
-
-
-
-
-
-
-
 
 
 ## Extract from loglin().
