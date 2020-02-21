@@ -1,18 +1,15 @@
-#####################################################################
-###
-### Statistics for conditional Gaussian distribution
-###
-#####################################################################
-
-#' @title Mean, covariance and counts for grouped data
+################################################################################
+#' @title Mean, covariance and counts for grouped data (statistics for
+#'     conditional Gaussian distribution).
 #' 
 #' @description \code{CGstats} provides what corresponds to calling
 #'     \code{cow.wt} on different strata of data where the strata are defined by
 #'     the combinations of factors in data.
 #'
-#' @name CGstats
-#' 
-#' @aliases CGstats CGstats.data.frame print.CGstats
+#' @name cg-stats
+################################################################################
+#'
+#' @aliases CGstats CGstats.data.frame 
 #' 
 #' @param object A dataframe.
 #' @param varnames Names of variables to be used.
@@ -75,8 +72,7 @@ CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify
 ## #' @param cont.names Vector of names of continuous variables
 CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneous=TRUE, simplify=TRUE){
 
-    if (length(cont.names) == 0) {
-        
+    if (length(cont.names) == 0) {        
         xt    <- xtabs(~., data=object[, disc.names, drop=FALSE])
         ans   <- list(n.obs=xt)
         disc.levels <- dim(xt)
@@ -87,7 +83,6 @@ CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneo
         } else {
             ##cat("the mixed case\n")
             ans <- .moments.by( object, disc.names, cont.names )
-            ##print(ans)
             disc.levels <- dim(ans$n.obs)
             
             if (homogeneous)

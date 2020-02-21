@@ -1,0 +1,18 @@
+gRim v0.2.1  (Release date: 2020-02-21)
+=======================================
+
+Changes:
+
+  * NEWS file added
+  * Automatic generation of NAMESPACE file
+  * More streamlined interface to gRbase
+  * Modifications to avoid warnings with new gRbase package.
+  * Improved usage of new gRbase functionality; results in speed up
+
+gRim v0.2-0 (Release date: 2017-03-31)
+======================================
+
+Changes:
+
+  * Major cleanups of model selection and a few other things	
+  * Workthrough of man pages

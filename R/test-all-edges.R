@@ -21,7 +21,7 @@
 #' @description Test edges in graphical models with p-value/AIC
 #'     value. The models must be \code{iModel}s.
 #'
-#' @name test_edges
+#' @name test-edges
 #' 
 #' @aliases testEdges testInEdges testOutEdges  
 #'
@@ -61,7 +61,7 @@
 
 
 #' @export
-#' @rdname test_edges
+#' @rdname test-edges
 testEdges <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic", k=2, alpha=NULL,
                       headlong=FALSE, details=1, ...){
   UseMethod("testEdges")
@@ -78,7 +78,7 @@ testEdges.iModel <- function(object, edgeMAT=NULL, ingraph=TRUE, criterion="aic"
 }
 
 #' @export
-#' @rdname test_edges
+#' @rdname test-edges
 testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, headlong=FALSE, details=1, ...){
 
     criterion <- match.arg(criterion, c("aic", "test"))
@@ -111,7 +111,7 @@ testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, 
 
 
 #' @export
-#' @rdname test_edges
+#' @rdname test-edges
 testOutEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, headlong=FALSE, details=1,...){
 
     criterion <- match.arg(criterion, c("aic", "test"))

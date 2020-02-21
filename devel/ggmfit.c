@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 #include <R_ext/Lapack.h> 
-//#include <R_ext/Applic.h>       /* for dgemm */
-//#include <R_ext/RS.h>		/* for F77_... */
+#include <R_ext/Applic.h>       /* for dgemm */
+#include <R_ext/RS.h>		/* for F77_... */
 
 #include "_utils_mat.h"
 #include "_utils_print.h"

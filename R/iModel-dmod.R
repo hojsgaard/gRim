@@ -67,7 +67,8 @@
 #' dm3 <- backward(dm1, k=2, fixin=list(c("family", "phys", "systol")))
 #' ## At most 3-factor interactions
 #' dm1<-dmod(~ .^., data=reinis, interactions=3)
-#' 
+
+
 #' @export dmod
 dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, details=0, ...){
 
@@ -95,8 +96,8 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
         data <- xtabs(~., data=data[ans$varNames])
     } else {
         if (length(ans$varNames) != length(varNames)){
-            ## FIXME: Looks strange: as.table(.tableMargin(data, ans$varNames))
-            data <- as.table(.tableMargin(data, ans$varNames))
+            ## FIXME: Looks strange: as.table(tabMarg(data, ans$varNames))
+            data <- as.table(tabMarg(data, ans$varNames))
         }
     }
     varNames     <- names(dimnames(data))
@@ -130,6 +131,7 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
 }
 
 
+#' @export
 fitted.dModel <- function(object,...){
     if ( object$isFitted ){
         object$fitinfo$fit
@@ -141,6 +143,7 @@ fitted.dModel <- function(object,...){
 }
 
 
+#' @export
 fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
 
   ## FIXME: At some point we should allow for data in the form of a dataframe
@@ -162,13 +165,13 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
     
     if (getmi(object, "isDecomposable")){
         rr <- ripMAT(glist2adjMAT(getmi(object, "glist")))
-        dim.adj   <- .loglinDecDim(rr$cliques, rr$separators,
+        dim.adj   <- .dim_loglin_decomp(rr$cliques, rr$separators,
                                    tableinfo=getmi(object, "data"), adjust=TRUE)
-        dim.unadj <- .loglinDecDim(rr$cliques, rr$separators,
+        dim.unadj <- .dim_loglin_decomp(rr$cliques, rr$separators,
                                    tableinfo=getmi(object, "data"), adjust=FALSE)
     } else {
         dim.adj   <- NA
-        dim.unadj <- .loglinGenDim(glistNUM, dim(getmi(object, "data")))
+        dim.unadj <- .dim_loglin(glistNUM, dim(getmi(object, "data")))
     }
     
     df.adj       <- sat.dim.adj   - dim.adj
@@ -276,9 +279,9 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
         ## For each marginal cell with positive counts, check if counts are > 5. If so, the chi2 is ok.
         sparsecode3 <- rep.int(0, length(glist))
         for (ii in 1:length(glist)){
-          tmC <- .tableMargin(data, glist[[ii]])
-          tm0 <- tmC>0
-          tm5 <- tmC[tm0]>5
+          tmC <- tabMarg(data, glist[[ii]])
+          tm0 <- tmC > 0
+          tm5 <- tmC[tm0] > 5
           if (length(tm5) == length(tm0)){
             sparsecode3[ii] <- 1
           }
@@ -305,6 +308,7 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
 
 
 
+#' @export
 residuals.dModel <-
     function (object, type = c("deviance", "pearson", "response"),
               ...)

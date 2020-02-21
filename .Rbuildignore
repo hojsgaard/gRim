@@ -2,3 +2,4 @@
 .gitignore
 LICENSE
 NAMESPACE_OLD
+devel/

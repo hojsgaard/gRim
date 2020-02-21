@@ -6,20 +6,14 @@
    
    ************************************************************ */ 
 
-#define USE_FC_LEN_T
-#include <Rconfig.h>
-
 #include <Rdefines.h>
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
 
 #include <R_ext/Lapack.h>
-#ifndef FCONE
-# define FCONE
-#endif
-//#include <R_ext/Applic.h>       /* for dgemm */
-//#include <R_ext/RS.h>		/* for F77_... */
+#include <R_ext/Applic.h>       /* for dgemm */
+#include <R_ext/RS.h>		/* for F77_... */
 
 #include "_utils_print.h"
 
@@ -453,7 +447,7 @@ void C_matprod(double *X, int *nrX, int *ncX,
   char *transa = "N", *transb = "N";
   double one = 1.0, zero = 0.0;
   F77_CALL(dgemm)(transa, transb, nrX, ncY, ncX, &one,
-		  X, nrX, Y, nrY, &zero, ans, nrX FCONE FCONE);
+		  X, nrX, Y, nrY, &zero, ans, nrX);
 }
 
 /* Csolve: */

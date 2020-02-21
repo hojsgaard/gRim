@@ -25,9 +25,11 @@
 #'
 #' @name getEdges
 #'
-#' @details When \code{ingraph=TRUE}: If type="decomposable" then
-#'     \code{getEdges()} returns those edges e for which the graph with e
-#'     removed is decomposable.
+#' @details
+#'
+#' When \code{ingraph=TRUE}: If type="decomposable" then
+#' \code{getEdges()} returns those edges e for which the graph with e
+#' removed is decomposable.
 #' 
 #' When \code{ingraph=FALSE}: Likewise, if type="decomposable" then
 #' \code{getEdges()} returns those edges e for which the graph with e added is
@@ -112,7 +114,7 @@
 #' ## would create a forbidden path; a path with only continuous vertices
 #' ## between two discrete vertices.
 #' 
-#' 
+ 
 #' @export getEdges
 getEdges <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
     UseMethod("getEdges")

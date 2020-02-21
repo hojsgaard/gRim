@@ -5,20 +5,20 @@ fit2way_ <- function(tab1, tab2, R, vn) {
     .Call('_gRim_fit2way_', PACKAGE = 'gRim', tab1, tab2, R, vn)
 }
 
-ghk2pmsParms_ <- function(parms) {
-    .Call('_gRim_ghk2pmsParms_', PACKAGE = 'gRim', parms)
+parm_ghk2pms_ <- function(parms) {
+    .Call('_gRim_parm_ghk2pms_', PACKAGE = 'gRim', parms)
 }
 
-pms2ghkParms_ <- function(parms) {
-    .Call('_gRim_pms2ghkParms_', PACKAGE = 'gRim', parms)
+parm_pms2ghk_ <- function(parms) {
+    .Call('_gRim_parm_pms2ghk_', PACKAGE = 'gRim', parms)
 }
 
 updateA <- function(A, E, row, col) {
     .Call('_gRim_updateA', PACKAGE = 'gRim', A, E, row, col)
 }
 
-update_ghkParms_ <- function(Cparms, dgen_idx, cgen_idx, ghk_obs, pms_obs, ghk_fit, pms_fit, scale, details = 0) {
-    .Call('_gRim_update_ghkParms_', PACKAGE = 'gRim', Cparms, dgen_idx, cgen_idx, ghk_obs, pms_obs, ghk_fit, pms_fit, scale, details)
+parm_update_ghk_ <- function(Cparms, dgen_idx, cgen_idx, ghk_obs, pms_obs, ghk_fit, pms_fit, scale, details = 0) {
+    .Call('_gRim_parm_update_ghk_', PACKAGE = 'gRim', Cparms, dgen_idx, cgen_idx, ghk_obs, pms_obs, ghk_fit, pms_fit, scale, details)
 }
 
 C_pms2ghk <- function(parms_) {
@@ -29,7 +29,7 @@ C_ghk2pms <- function(parms_) {
     .Call('_gRim_C_ghk2pms', PACKAGE = 'gRim', parms_)
 }
 
-normalize_ghkParms_ <- function(parms) {
-    .Call('_gRim_normalize_ghkParms_', PACKAGE = 'gRim', parms)
+parm_normalize_ghk_ <- function(parms) {
+    .Call('_gRim_parm_normalize_ghk_', PACKAGE = 'gRim', parms)
 }
 

@@ -1,22 +1,4 @@
 
-## #' Internal functions in the gRim package
-## #' 
-## #' Internal functions called by other functions.
-## #' 
-## #' 
-## #' @aliases ghk2pmsParms_ pms2ghkParms_ normalize_ghkParms_
-## #'     update_ghkParms_ getmi dModel cModel mModel addEdge_glist
-## #'     addTerm_glist dropEdge_glist dropTerm_glist logLik.iModel
-## #'     summary.iModel print.iModelsummary update.iModel
-## #'     extractAIC.iModel print.iModel plot.mModel plot.iModel
-## #'     iplot.iModel iplot.mModel fit.cModel fit.dModel fit.mModel
-## #'     logLik.mModel update.mModel formula.iModel terms.iModel
-## #'     CItest.data.frame compareModels.iModel print.compareiModels
-## #'     CGstats2mmodParms moment2pmsParms compareGC compareGCpairs
-## #'     pFormula print.MIfit print.MIparms weakMarginalModel
-## #'     weakMarginalData
-## #' @keywords internal
-
 
 
 

@@ -34,7 +34,7 @@ parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NUL
                            glist <- as.list(used.var)  ##cat("The independence model\n")
                        } else {
                            pow   <- min(c(pow, length(used.var)))
-                           glist <- gRbase::combnPrim(used.var, pow, simplify=FALSE)
+                           glist <- combnPrim(used.var, pow, simplify=FALSE)
                        }               
                    }
                }
@@ -42,7 +42,7 @@ parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NUL
            "list"={
                glist <- formula
            })
-    glist <- gRbase::removeRedundant(glist)    
+    glist <- removeRedundant(glist)    
     glist <- .check.glist(glist, used.var)  
     
     if (!is.null(interactions))
@@ -79,11 +79,10 @@ parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NUL
     if (length(ss) <= interactions){
         list(ss)
     } else {
-        gRbase::combnPrim(ss, interactions, simplify=FALSE)
+        combnPrim(ss, interactions, simplify=FALSE)
     }
   })
-  
-  gRbase::removeRedundant(unlist(zz, recursive=FALSE))
+  removeRedundant(unlist(zz, recursive=FALSE))
 }
 
 

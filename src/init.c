@@ -14,10 +14,10 @@ extern void Cggmfit(void *, void *, void *, void *, void *, void *, void *, void
 extern SEXP _gRim_C_ghk2pms(SEXP);
 extern SEXP _gRim_C_pms2ghk(SEXP);
 extern SEXP _gRim_fit2way_(SEXP, SEXP, SEXP, SEXP);
-extern SEXP _gRim_ghk2pmsParms_(SEXP);
-extern SEXP _gRim_normalize_ghkParms_(SEXP);
-extern SEXP _gRim_pms2ghkParms_(SEXP);
-extern SEXP _gRim_update_ghkParms_(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP _gRim_parm_ghk2pms_(SEXP);
+extern SEXP _gRim_parm_normalize_ghk_(SEXP);
+extern SEXP _gRim_parm_pms2ghk_(SEXP);
+extern SEXP _gRim_parm_update_ghk_(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP _gRim_updateA(SEXP, SEXP, SEXP, SEXP);
 extern SEXP C_ghk2pms(SEXP);
 extern SEXP C_pms2ghk(SEXP);
@@ -31,10 +31,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gRim_C_ghk2pms",           (DL_FUNC) &_gRim_C_ghk2pms,           1},
     {"_gRim_C_pms2ghk",           (DL_FUNC) &_gRim_C_pms2ghk,           1},
     {"_gRim_fit2way_",            (DL_FUNC) &_gRim_fit2way_,            4},
-    {"_gRim_ghk2pmsParms_",       (DL_FUNC) &_gRim_ghk2pmsParms_,       1},
-    {"_gRim_normalize_ghkParms_", (DL_FUNC) &_gRim_normalize_ghkParms_, 1},
-    {"_gRim_pms2ghkParms_",       (DL_FUNC) &_gRim_pms2ghkParms_,       1},
-    {"_gRim_update_ghkParms_",    (DL_FUNC) &_gRim_update_ghkParms_,    9},
+    {"_gRim_parm_ghk2pms_",       (DL_FUNC) &_gRim_parm_ghk2pms_,       1},
+    {"_gRim_parm_normalize_ghk_", (DL_FUNC) &_gRim_parm_normalize_ghk_, 1},
+    {"_gRim_parm_pms2ghk_",       (DL_FUNC) &_gRim_parm_pms2ghk_,       1},
+    {"_gRim_parm_update_ghk_",    (DL_FUNC) &_gRim_parm_update_ghk_,    9},
     {"_gRim_updateA",             (DL_FUNC) &_gRim_updateA,             4},
     {"C_ghk2pms",                 (DL_FUNC) &C_ghk2pms,                 1},
     {"C_pms2ghk",                 (DL_FUNC) &C_pms2ghk,                 1},

@@ -51,7 +51,7 @@ fit.mModel <- function(object, method="general", details=0, eps.parm=1e-6, maxit
 ###
     .infoPrint(details,1, "fit.mModel: Creating initial values\n")
     Mparms <- .CGstats2initpms(getmi(object, "cgstats"))
-    Cparms <- pms2ghkParms(Mparms)
+    Cparms <- parm_pms2ghk(Mparms)
     
 ### Generator lists
 ###
@@ -70,7 +70,7 @@ fit.mModel <- function(object, method="general", details=0, eps.parm=1e-6, maxit
     ##WMDpms <- lapply(WMDghk, ghk2pmsParms)
 
     ## The new version of ghk2pmsParms_ is really a timesaver here
-    WMDpms <- lapply(WMDghk, ghk2pmsParms_)
+    WMDpms <- lapply(WMDghk, parm_ghk2pms_)
 
     ## print("WMDpms"); print(WMDpms)
     ## print("UUUUUUUUUUUUUUUUUUUU"); print(object$datainfo$CGstats)
@@ -196,7 +196,7 @@ print.MIfit <- function(x,...){
     EEghk     <- WMDghk[[ii]]
     EEpms     <- WMDpms[[ii]]
     AApms     <- weakMarginalModel(Mparms, disc=Ad.idx, cont=Ac.idx, type="pms", details=details)
-    AAghk     <- pms2ghkParms(AApms)
+    AAghk     <- parm_pms2ghk(AApms)
     zzz       <- .innerloop(Mparms, Cparms, Ad.idx, Ac.idx,
                             EEghk, EEpms, AAghk, AApms, CGstats, scale, prev.logL, details)
     Mparms    <- zzz$Mparms
@@ -227,7 +227,7 @@ print.MIfit <- function(x,...){
 
   ##ncp.old <<- new.Cparms
   ##new.Mparms <- ghk2pmsParms(new.Cparms)
-  new.Mparms <- ghk2pmsParms_(new.Cparms) 
+  new.Mparms <- parm_ghk2pms_(new.Cparms) 
 
   curr.logL  <- d.logL <- d.parms <- NA
   logL.fail  <- as.numeric(d.logL < 0)
@@ -265,7 +265,7 @@ print.MIfit <- function(x,...){
     new.Cparms <- .update.ghkParms(good.Cparms, Ad.idx, Ac.idx,
                                    EEghk, EEpms, AAghk, AApms, scale, CGstats, details=details)
     ##new.Mparms <- ghk2pmsParms(new.Cparms)
-    new.Mparms <- ghk2pmsParms_(new.Cparms)
+    new.Mparms <- parm_ghk2pms_(new.Cparms)
     
     curr.logL  <- .mModel_logLpms(CGstats, new.Mparms)
     d.logL     <- curr.logL - prev.logL
@@ -343,7 +343,7 @@ print.MIfit <- function(x,...){
 
   normalize.ghkParms <- .normalize.ghkParms
   ##normalize.ghkParms <- normalize_ghkParms_
-  ghk2pmsParmsFUN    <- ghk2pmsParms
+  parm_ghk2pmsFUN    <- parm_ghk2pms
   
   .infoPrint(details,5, cat(sprintf(".update.ghkParms: A=%8s\n",
                                     .toString(c("{",Ad.idx,"|", Ac.idx,"}")))))
@@ -354,7 +354,7 @@ print.MIfit <- function(x,...){
     #print(gt)
   if (details>=5){
     cat("PRE UPDATED marginal OBSERVED // FITTED values - moment form\n")
-    print(rbind(.as.matrix(ghk2pmsParmsFUN(EEghk)),.as.matrix(ghk2pmsParmsFUN(AAghk))))
+    print(rbind(.as.matrix(parm_ghk2pmsFUN(EEghk)),.as.matrix(parm_ghk2pmsFUN(AAghk))))
   }
 
   ##  cat(".update.ghkParms - calling .mModel_parmdiff\n")
@@ -368,7 +368,7 @@ print.MIfit <- function(x,...){
       
       if (details>=5){
           cat("PRE UPDATE Mparms:\n");
-          print(.MIparms2matrix(ghk2pmsParmsFUN(Cparms)))
+          print(.MIparms2matrix(parm_ghk2pmsFUN(Cparms)))
           cat("PRE UPDATED marginal OBSERVED // FITTED values - canonical form\n")
           print(rbind(.as.matrix((EEghk)),.as.matrix((AAghk))))
           cat("PRE UPDATE Cparms:\n");
@@ -438,9 +438,9 @@ print.MIfit <- function(x,...){
 
   if (details>=5){
     cat("POST UPDATE Cparms // Mparms:\n");
-    MM   <- ghk2pmsParmsFUN(Cparms)
+    MM   <- parm_ghk2pmsFUN(Cparms)
     MM$p <- MM$p * MM$N
-    RR   <- ghk2pmsParmsFUN(res)
+    RR   <- parm_ghk2pmsFUN(res)
     RR$p <- RR$p * RR$N
     print(rbind(.as.matrix(res), .as.matrix(RR)))
   }

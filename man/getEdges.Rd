@@ -110,7 +110,6 @@ getEdges(UG, type="decomposable", discrete=c("a","b"))
 ## would create a forbidden path; a path with only continuous vertices
 ## between two discrete vertices.
 
-
 }
 \seealso{
 \code{\link{edgeList}}, \code{\link{nonEdgeList}},

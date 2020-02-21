@@ -107,7 +107,7 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
     ret
 }
 
-
+#' @export
 fit.cModel <- function(object, engine="ggmfit",start=NULL, ...){
 
   switch(engine,

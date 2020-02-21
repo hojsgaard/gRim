@@ -221,17 +221,17 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
 }
 
 
-
+#' @export
 coef.mModel <- coefficients.mModel <- function(object,type="ghk", ...){
-  type <- match.arg(type, c("ghk","pms"))
+  type <- match.arg(type, c("ghk", "pms"))
   val <- object$fitinfo$parms
   switch(type,
-         "pms"={val<-ghk2pmsParms_(val)}
+         "pms"={val <- parm_ghk2pms_(val)}
          )
   val
 }
 
-
+#' @export
 summary.mModel <- function(object, ...){
   .listprint <- function(z){
     for ( i  in 1:length(z)){
@@ -258,7 +258,7 @@ summary.mModel <- function(object, ...){
                 object$fitinfo$logL, 2*(object$fitinfo$logL-object$fitinfo$init.logL)))   
   }
     
-  return(invisible(object))
+  invisible(object)
 }
 
 

@@ -7,7 +7,7 @@ using namespace arma;
 using namespace Rcpp;
 
 //[[Rcpp::export]]
-List ghk2pmsParms_ (List parms ){
+List parm_ghk2pms_ (List parms){
 
   int ii;
   
@@ -80,7 +80,7 @@ List ghk2pmsParms_ (List parms ){
 
 
 //[[Rcpp::export]]
-List pms2ghkParms_ ( List parms ){
+List parm_pms2ghk_ ( List parms ){
   using namespace arma;
   using namespace Rcpp;
   // Rcpp::List parms(parms_);
@@ -162,7 +162,7 @@ arma::mat updateA ( arma::mat A, arma::mat E, arma::uvec row, arma::uvec col){
 
 
 //[[Rcpp::export]]
-List update_ghkParms_ (List Cparms, IntegerVector dgen_idx, IntegerVector cgen_idx, 
+List parm_update_ghk_ (List Cparms, IntegerVector dgen_idx, IntegerVector cgen_idx, 
 		       List ghk_obs, List pms_obs, List ghk_fit, List pms_fit, double scale, double details=0) {
   
   Environment stats("package:stats");
@@ -367,232 +367,8 @@ RcppExport SEXP C_ghk2pms ( SEXP parms_ ){
 
 
 
-// //[[Rcpp::export]]
-// List ghk2pms_ (List parms ){
-
-//   std::string gentype = as<std::string>(parms["gentype"]); 
-  
-// 	if (strcmp(gentype.c_str(),"discrete")==0){
-//     //Rcpp::Rcout << "generator: discrete" << std::endl;
-//     vec DD = as<arma::vec>(parms["g"]);
-//     int ii, ndd = DD.n_elem;
-//     rowvec DD_out = rowvec(ndd);
-
-//     double mm = mean(DD);
-		
-// 		DD_out = exp(DD-mm);
-// 		DD_out = DD_out / sum( DD_out );
-    
-//     NumericVector gg1 = parms["g"];
-//     NumericVector gg2 = clone(gg1);
-//     for (ii=0; ii<ndd; ii++){ gg2(ii) = DD_out(ii); }
-// 		List value=List::create(Named("p",       wrap(gg2)),      
-// 														Named("mu",      R_NilValue),
-// 														Named("Sigma",   R_NilValue), 
-// 														Named("gentype", "discrete"));
-// 		return value;
-//   } else {
-// 		mat QQ = parms["K"];
-// 		mat LL = parms["h"];
-// 		mat QQ_out = inv_sympd( QQ );
-//     mat LL_out = QQ_out * LL;
-//     int ii, ndd = LL_out.n_cols, Q =QQ_out.n_rows;
-//     rowvec DD_out  = rowvec(ndd);
-		
-//     if (strcmp(gentype.c_str(),"mixed")==0){
-//       //Rcpp::Rcout << "generator: mixed" << std::endl;      
-//       vec dd = vec(Q);
-//       arma::vec DD = as<arma::vec>(parms["g"]);
-
-// 			mat tmp = ( QQ_out * LL ); 
-// 			mat qmat = LL % tmp; 
-// 			rowvec quad2 = sum(qmat, 0); // same as colSums
-
-// 			for (ii=0; ii<ndd; ii++){
-// 				quad2(ii) = DD(ii) + quad2(ii)/2;
-// 			}
-// 			double mm2 = mean(quad2);
-// 			DD_out = exp(quad2-mm2);
-// 			DD_out = DD_out / sum(DD_out);
-
-//       NumericVector gg1 = parms["g"];
-//       NumericVector gg2 = clone(gg1);
-//       for (ii=0; ii<ndd; ii++){ gg2(ii) = DD_out(ii); }
-// 			List value=List::create(Rcpp::Named("p",       wrap(gg2)),
-// 																Rcpp::Named("mu",      wrap(LL_out)),
-// 																Rcpp::Named("Sigma",   wrap(QQ_out)),
-// 																Rcpp::Named("gentype", gentype.c_str())	);	
-// 			return value;
-//     } else {
-// 			List value=List::create(Rcpp::Named("p",       1),
-// 															Rcpp::Named("mu",      wrap(LL_out)),
-// 															Rcpp::Named("Sigma",   wrap(QQ_out)),
-// 															Rcpp::Named("gentype", gentype.c_str())	);	
-// 			return value;
-//     } 
-//   }
-// }
-
-
-
-// //[[Rcpp::export]]
-// List ghk2pms_ORIGINAL (List parms ){
-
-//   // List out = clone( parms );
-// 	// CharacterVector out_names = out.names();
-// 	// out_names[0] = "p";
-// 	// out_names[1] = "mu";
-// 	// out_names[2] = "Sigma";
-// 	// out.names() = out_names;
-// 	//Rf_PrintValue( out_names );
-
-//   std::string gentype = as<std::string>(parms["gentype"]); 
-  
-// 	if (strcmp(gentype.c_str(),"discrete")==0){
-//     //Rcpp::Rcout << "generator: discrete" << std::endl;
-//     vec DD = as<arma::vec>(parms["g"]);
-//     int ii, ndd = DD.n_elem;
-//     rowvec DD_out = rowvec(ndd);
-
-//     double mm = mean(DD);
-//     // for (ii=0; ii<ndd; ii++) {DD_out(ii) = exp(DD(ii)-mm);}
-//     // double ss = sum(DD_out);
-//     // for (ii=0; ii<ndd; ii++) {DD_out(ii) = DD_out(ii)/ss;}
-		
-// 		DD_out = exp(DD-mm);
-// 		DD_out = DD_out / sum( DD_out );
-    
-//     NumericVector gg1 = parms["g"];
-//     NumericVector gg2 = clone(gg1);
-//     for (ii=0; ii<ndd; ii++){ gg2(ii) = DD_out(ii); }
-
-// 		// out[0] = wrap(gg2);
-// 		// out[1] = R_NilValue;
-// 		// out[2] = R_NilValue;
-// 		// return out;
-// 		List value=List::create(Named("p",       wrap(gg2)),      
-// 														Named("mu",      R_NilValue),
-// 														Named("Sigma",   R_NilValue), 
-// 														Named("gentype", "discrete"));
-// 		return value;
-
-
-
-//   } else {
-//     // mat QQ = as<arma::mat>(parms["K"]);
-//     // mat LL = as<arma::mat>(parms["h"]);
-// 		mat QQ = parms["K"];
-// 		mat LL = parms["h"];
-// 		mat QQ_out = inv_sympd( QQ );
-//     mat LL_out = QQ_out * LL;
-//     int ii, ndd = LL_out.n_cols, Q =QQ_out.n_rows;
-//     rowvec DD_out  = rowvec(ndd);
-		
-//     if (strcmp(gentype.c_str(),"mixed")==0){
-//       //Rcpp::Rcout << "generator: mixed" << std::endl;      
-//       vec dd = vec(Q);
-//       arma::vec DD = as<arma::vec>(parms["g"]);
-			
-//       // vec quad = vec(ndd);
-// 			// for (ii=0; ii<ndd; ii++){
-// 			// 	dd       = LL.col(ii);
-// 			// 	quad(ii) = DD(ii) + as_scalar(dd.t() * QQ_out * dd)/2;
-//       // }
-
-
-// 			mat tmp = ( QQ_out * LL ); 
-// 			mat qmat = LL % tmp; 
-// 			rowvec quad2 = sum(qmat, 0); // same as colSums
-      
-
-// 			for (ii=0; ii<ndd; ii++){
-// 				quad2(ii) = DD(ii) + quad2(ii)/2;
-// 			}
-// 			// Rf_PrintValue( wrap( quad ));
-// 			// Rf_PrintValue( wrap( quad2 ));
-
-
-
-// 			//			double mm = mean(quad);
-// 			double mm2 = mean(quad2);
-			
-// 			// Rcout << "mm=" << mm << " mm2=" << mm2 << std::endl;
-//       // for (ii=0; ii<ndd; ii++){ DD_out(ii) = exp(quad(ii)-mm); }
-// 			DD_out = exp(quad2-mm2);
-// 			// double ss = sum(DD_out);
-// 			// for (ii=0; ii<ndd; ii++) {DD_out(ii) = DD_out(ii)/ss;}
-// 			// Rcout << sum(DD_out) << std::endl;
-// 			DD_out = DD_out / sum(DD_out);
-
-// 			//Rcout << sum(DD_out) << std::endl;
-
-//       NumericVector gg1 = parms["g"];
-//       NumericVector gg2 = clone(gg1);
-//       for (ii=0; ii<ndd; ii++){ gg2(ii) = DD_out(ii); }
-
-// 			// out[0] = wrap(gg2);
-// 			// out[1] = wrap(LL_out);
-// 			// out[2] = wrap(QQ_out);
-// 			// return out;
-// 			List value=List::create(Rcpp::Named("p",       wrap(gg2)),
-// 																Rcpp::Named("mu",      wrap(LL_out)),
-// 																Rcpp::Named("Sigma",   wrap(QQ_out)),
-// 																Rcpp::Named("gentype", gentype.c_str())	);	
-// 			return value;
-//     } else {
-// 			// out[0] = 1;
-// 			// out[1] = wrap(LL_out);
-// 			// out[2] = wrap(QQ_out);			
-// 			// return out;
-// 			List value=List::create(Rcpp::Named("p",       1),
-// 															Rcpp::Named("mu",      wrap(LL_out)),
-// 															Rcpp::Named("Sigma",   wrap(QQ_out)),
-// 															Rcpp::Named("gentype", gentype.c_str())	);	
-// 			return value;
-//     } 
-//   }
-// }
-
-
-// //[[Rcpp::export]]
-// List normalize_ghkParms_FAIL(List parms){
-
-// 	List out=clone(parms);
-
-//   std::string gentype = as<std::string>(parms["gentype"]); 
-
-// 	NumericVector gg= parms[0]; // g  
-// 	if (strcmp(gentype.c_str(),"discrete")==0){
-// 		gg=gg/sum( gg );
-// 		out[0] = gg;	
-// 	} else {
-// 		mat h2 = parms[1];
-// 		mat K2 = parms[2];
-// 		int Q  = K2.n_rows;
-// 		double logdetK, sign;
-// 		log_det(logdetK, sign, K2);
-// 		//Rcout << "logdetK= " << logdetK << std::endl;
-// 		mat mu = inv_sympd( K2 ) * h2;
-// 		// Rf_PrintValue( wrap( mu ) );
-// 		mat qmat = h2 % mu ;
-// 		rowvec quad = sum(qmat, 0); // same as colSums
-// 		//Rf_PrintValue( wrap(quad) );
-		
-// 		NumericVector quad2 = wrap(quad);
-// 		NumericVector zzz   = gg + quad2/2;
-// 		NumericVector ppp   = exp(zzz - mean(zzz));
-// 		NumericVector pppn  = ppp / sum( ppp );
-// 		NumericVector gnew = log(pppn) + (logdetK - Q*log(2*3.141593) - quad2)/2;
-		
-// 		gnew.attr("dim")      = gg.attr("dim");
-// 		gnew.attr("dimnames") = gg.attr("dimnames");
-// 	 	out[0] = gnew;
-// 	}
-// 	return out;
-// } 
-
 //[[Rcpp::export]]
-List normalize_ghkParms_(List parms){
+List parm_normalize_ghk_(List parms){
 
 	NumericVector gg= parms[0]; // g
 
@@ -621,66 +397,6 @@ List normalize_ghkParms_(List parms){
 } 
 
 
-
-
-
-
-
-// SEXP solveSPD (arma::mat X ){
-//   //arma::mat X    = Rcpp::as<arma::mat>(X_);
-//   arma::mat Xinv = arma::inv_sympd(X);
-//   // arma::mat Xinv = arma::inv( arma::sympd(X) );
-//   return(Rcpp::wrap(Xinv));
-// }
-
-
-
-
-
-
-
-
-// //[[Rcpp::export]]
-// List normalize_ghkParms_OLD(List parms){
-
-// 	//Rcout << "here1" << std::endl;
-
-// 	NumericVector gg= parms[0]; // g
-
-// 	mat h2 = parms[1];
-// 	mat K2 = parms[2];
-// 	int Q  = K2.n_rows;
-// 	double logdetK, sign;
-// 	log_det(logdetK, sign, K2);
-// 	//Rcout << "logdetK= " << logdetK << std::endl;
-
-
-// 	mat mu = inv_sympd( K2 ) * h2;
-// 	// Rf_PrintValue( wrap( mu ) );
-// 	mat qmat = h2 % mu ;
-// 	rowvec quad = sum(qm, 0); // same as colSums
-// 	//Rf_PrintValue( wrap(quad) );
-
-// 	//Rcout << "here2" << std::endl;
-
-// 	NumericVector quad2 = wrap(quad);
-// 	NumericVector zzz   = gg + quad2/2;
-// 	NumericVector ppp   = exp(zzz - mean(zzz));
-// 	NumericVector pppn  = ppp / sum( ppp );
-
-// 	//Rcout << "here3" << std::endl;
-
-// 	NumericVector gnew = log(pppn) + (logdetK - Q*log(2*3.141593) - quad2)/2;
-	
-// 	gnew.attr("dim")      = gg.attr("dim");
-// 	gnew.attr("dimnames") = gg.attr("dimnames");
-	
-// 	//Rcout << "here4" << std::endl;
-
-// 	List out=clone(parms);
-// 	out[0] = gnew;
-// 	return out;
-// } 
 
 
 

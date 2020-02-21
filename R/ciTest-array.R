@@ -1,32 +1,17 @@
-## ########################################################
-##
-## CIP test in a table
-## <x>  : table
-##
-## ########################################################
-
 ## FIXME: citest_array:
 ## FIXME: Clean up code;
 ## FIXME: use modern tabXXX functions;
 ## FIXME: add parametric bootstrap
 
+###################################################################################
+#'
 #' @title Test for conditional independence in a contingency table
-#' 
 #' @description Test for conditional independence in a contingency table
 #'     represented as an array.
+#' @name citest-array
+#' 
+###################################################################################
 #'
-#' @name citest_array
-#' 
-#' @details \code{set} can be 1) a vector or 2) a right-hand sided formula in
-#'     which variables are separated by '+'. In either case, it is tested if the
-#'     first two variables in the \code{set} are conditionally independent given
-#'     the remaining variables in \code{set}.  (Notice an abuse of the '+'
-#'     operator in the right-hand sided formula: The order of the variables does
-#'     matter.)
-#' 
-#' If \code{set} is \code{NULL} then it is tested whether the first two
-#' variables are conditionally independent given the remaining variables.
-#' 
 #' @param x An array of counts with named dimnames.
 #' @param set A specification of the test to be made. The tests are of the form u
 #'     and v are independent condionally on S where u and v are variables and S
@@ -38,18 +23,31 @@
 #'     \code{"chisq"}, \code{"mc"} (for Monte Carlo) and \code{"smc"} for
 #'     sequential Monte Carlo.
 #' 
-#' @param adjust.df Logical. Should degrees of freedom be adjusted for sparsity?
-#' @param slice.info Logical. Should slice info be stored in the output?
-#' @param L Number of extreme cases as stop criterion if method is \code{"smc"}
-#'     (sequential Monte Carlo test); ignored otherwise.
-#' @param B Number (maximum) of simulations to make if method is \code{"mc"} or
-#'     \code{"smc"} (Monte Carlo test or sequential Monte Carlo test); ignored
-#'     otherwise.
+#' @param adjust.df Logical. Should degrees of freedom be adjusted for
+#'     sparsity?
+#' @param slice.info Logical. Should slice info be stored in the
+#'     output?
+#' @param L Number of extreme cases as stop criterion if method is
+#'     \code{"smc"} (sequential Monte Carlo test); ignored otherwise.
+#' @param B Number (maximum) of simulations to make if method is
+#'     \code{"mc"} or \code{"smc"} (Monte Carlo test or sequential
+#'     Monte Carlo test); ignored otherwise.
 #' @param ...  Additional arguments.
+
+#' @details \code{set} can be 1) a vector or 2) a right-hand sided formula in
+#'     which variables are separated by '+'. In either case, it is tested if the
+#'     first two variables in the \code{set} are conditionally independent given
+#'     the remaining variables in \code{set}.  (Notice an abuse of the '+'
+#'     operator in the right-hand sided formula: The order of the variables does
+#'     matter.)
+#' 
+#' If \code{set} is \code{NULL} then it is tested whether the first two
+#' variables are conditionally independent given the remaining variables.
+#' 
+
 #' @return An object of class `citest` (which is a list).
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{ciTest}}, \code{\link{ciTest.data.frame}},
-#'     \code{\link{ciTest_df}}, \code{\link{ciTest.list}},
+#' @seealso \code{\link{ciTest}}, \code{\link{ciTest_df}},
 #'     \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 #' @keywords htest
 #' @examples
@@ -84,9 +82,8 @@
 #' # 2) Do at most B*10 simulations divided equally over each slice, but stop
 #' # when at most L extreme values are found
 #' ciTest(lizard, set=c("diam", "height", "species"), method="smc", B=400)
-#'
-#' 
-#' @rdname citest_array
+
+#' @rdname citest-array
 ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df=TRUE, slice.info=TRUE, L=20, B=200, ...){
 
     statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
@@ -96,13 +93,13 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
         set <- names( dimnames(x) )
     } else {
         if ( inherits(set, "integer") || inherits(set, "numeric") ){
-            x   <- .tableMargin(x, set)
+            x   <- tabMarg(x, set)
         } else
             if (inherits(set,c("formula","character"))){
                 set <- unlist(rhsFormula2list(set))
                 vn  <- names(dimnames(x))
                 set <- vn[pmatch(set, vn)]
-                x   <- .tableMargin(x, set)
+                x   <- tabMarg(x, set)
             }
     }
 
@@ -137,20 +134,22 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     dim.w <- di[2]
     dim.R  <- prod(di[-(1:2)])
     
-    t.uR <- .tableMargin(x, c(u, R))
-    t.wR <- .tableMargin(x, c(w, R))
+    t.uR <- tabMarg(x, c(u, R))
+    t.wR <- tabMarg(x, c(w, R))
 
+    str(list(t.uR=t.uR, t.wR=t.wR, R=R, vn=vn))
     fit.table <- fit2way_(t.uR, t.wR, R, vn)
+    print(fit.table)
     
     ## Evaluate test statistic
     ## FIXME There are functions for that in other functions
-    if (statistic=="DEV"){             ## Deviance
+    if (statistic == "DEV"){           ## Deviance
         tobs  <- 2 * x * log(x / fit.table)
     } else {                           ## Pearson X2
         tobs <- (x - fit.table)^2 / fit.table   
     }
     tobs[!is.finite(tobs)] <- 0
-    
+
     tobsGlobal <- sum(tobs)
 
     ## Calculate df with or without adjustment for sparsity
@@ -259,8 +258,8 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     
     ## Marginal tables for (v1,R) and (v2,R) as matrices. Each row
     ## is a configuration of R
-    t1R  <-  .tableMargin(x, v1R)
-    t2R  <-  .tableMargin(x, v2R)
+    t1R  <-  tabMarg(x, v1R)
+    t2R  <-  tabMarg(x, v2R)
     t1R  <-  matrix(t1R, nrow=dim.R, byrow=TRUE)
     t2R  <-  matrix(t2R, nrow=dim.R, byrow=TRUE)
     xmat <-  matrix(x,   nrow=dim.R, byrow=TRUE)
@@ -309,97 +308,3 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     ans
 }
 
-
-
-
-
-
-
-
-
-## .CI_X2_fast <- function(x, statistic="DEV", adjust.df=TRUE, slice.info=TRUE){
-    
-##     vn    <- names(dimnames(x))
-##     di    <- dim(x)
-##     u     <- vn[1]
-##     w     <- vn[2]
-##     R     <- vn[-(1:2)]
-##     dim.u <- di[1]
-##     dim.w <- di[2]
-##     dim.R  <- prod(di[-(1:2)])
-##     dim12  <-  dim(x)[1:2]
-    
-##     tuR <- gRbase::ar_marg(x, c(u, R))
-##     twR <- gRbase::ar_marg(x, c(w, R))
-##     tuR  <-  matrix(tuR, nrow=dim.R, byrow=TRUE)
-##     twR  <-  matrix(twR, nrow=dim.R, byrow=TRUE)
-##     xmat <-  matrix(x,   nrow=dim.R, byrow=TRUE)
-    
-##     ## Find observed statistics for each slice
-##     tobs.slice <- vector("numeric", dim.R)
-##     dofa.slice <- vector("numeric", dim.R)
-##     dofu.slice <- vector("numeric", dim.R)
-    
-##     dofu <- (dim.u - 1) * (dim.w - 1) 
-##     for (ii in seq_len(dim.R)){
-##         r.sum    <- tuR[ii, ]
-##         c.sum    <- twR[ii, ]
-##         expected <- outer(r.sum, c.sum) / sum(r.sum)
-##         expected[!is.finite(expected)] <- 0
-##         mm       <- xmat[ii, ]
-##         dim(mm)  <- dim12
-##         tobs <- .statFun(mm, expected)
-##         tobs.slice[ii] <- tobs
-##         r.df <- if((rs <- sum(rowSums(mm)>0)) == 0) 0 else (rs - 1)
-##         c.df <- if((cs <- sum(colSums(mm)>0)) == 0) 0 else (cs - 1)
-##         dofa <- r.df * c.df
-##         dofa.slice[ii] <- dofa
-##         dofu.slice[ii] <- dofu
-##     }
-    
-##     cbind(tobs.slice, dofa.slice, dofu.slice)
-## }
-
-
-
-
-
-
-
-
-    ## if (length(R)){
-    ##     t.R   <- .tableMargin(x, R)
-    ##     fit.table <- tablePerm(tableOp(tableOp(t.uR, t.wR), t.R, "/"), vn)
-    ## } else {
-    ##     fit.table <- tablePerm(tableOp(t.uR, t.wR), vn)/sum(x)
-    ## }
-
-
-
-##        if (!is.null(dim(zzz)))
-##            dim.v1.adj  <- rowSums(zzz)
-##        else
-##            dim.v1.adj  <- sum(zzz)
-        ##
-        
-##        if (!is.null(dim(zzz)))
-##            dim.v2.adj  <- rowSums(zzz)
-##        else
-##            dim.v2.adj  <- sum(zzz)
-##        
-
-
-
-    ##Fit table
-    ## if (length(R)){
-    ##     t.R       <- .tableMargin(x, R)  ## FIXME: send R into fit2way
-    ##     fit.table <- fit2way1_(t.uR, t.wR, t.R, vn)
-    ## } else {
-    ##     fit.table <- fit2way2_(t.uR, t.wR, vn)
-    ## }
-
-    ## ft1 <<- fit.table
-
-    ## ft2 <<- fit2way_(t.uR, t.wR, R, vn)
-
-    ## Compute fitted table for u _|_ w | R:

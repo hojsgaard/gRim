@@ -900,7 +900,7 @@ being represented as a list:
 
 @
 <<print=T>>=
-loglinGenDim(dm2$glist, reinis)
+dim_loglin(dm2$glist, reinis)
 @ %def
 
 % Consider the model for the \code{mildew} data given by the formula

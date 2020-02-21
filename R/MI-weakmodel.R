@@ -18,10 +18,8 @@ weakMarginalModel<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=2)
                 "mixed"      ={.weak.modelmarg.mix   (Mparms,  disc, cont, details)},         
                 "continuous" ={.weak.modelmarg.cont  (Mparms,        cont, details)})
 
-  if (type=="ghk")
-    return(pms2ghkParms(ans))
-  else
-    return(ans)
+  if (type=="ghk") parm_pms2ghk(ans)
+  else ans
 }
 
 ### (Discrete)-generator
@@ -30,7 +28,7 @@ weakMarginalModel<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=2)
 
   .infoPrint(details,2, "Finding weak marginal (model-discrete):  Ad.idx: ", Ad.idx, "\n")
 
-  p.A <- .tableMargin(Mparms$p, Ad.idx)
+  p.A <- tabMarg(Mparms$p, Ad.idx)
   res <- list(p=p.A, mu=NULL, Sigma=NULL, gentype="discrete",  
               Ad.idx=Ad.idx, N=Mparms$N)
   res
@@ -53,7 +51,7 @@ weakMarginalModel<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=2)
 ### Discrete part
   ppp        <- Mparms[['p']]
   #cat(sprintf("sum (ppp): %f\n", sum(ppp)))
-  p.A        <- .tableMargin(ppp, Ad.idx)
+  p.A        <- tabMarg(ppp, Ad.idx)
 ##   p.A.vec    <- as.numeric(p.A)
 ##   p.notA.A   <- tableOp2(Mparms[['p']], p.A, op=`/`, restore=TRUE)
   

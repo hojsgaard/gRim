@@ -8,6 +8,8 @@
 #'     say u and v, given a set of variables, say S. The deviance, Wilcoxon,
 #'     Kruskal-Wallis and Jonkheere-Terpstra tests are supported.  Asymptotic
 #'     and Monte Carlo p-values are computed.
+#'
+#' @name citest-ordinal
 #' 
 #' @details The deviance test is appropriate when u and v are nominal; Wilcoxon,
 #'     when u is binary and v is ordinal; Kruskal-Wallis, when u is nominal and
@@ -53,7 +55,8 @@
 #' ciTest_ordinal(dumpDF, c(2,1,3), stat="jt", N=1000)
 #' ciTest_ordinal(dumpDF, c("Operation","Symptom","Centre"), stat="jt", N=1000)
 #' ciTest_ordinal(dumpDF, ~ Operation + Symptom + Centre, stat="jt", N=1000)
-#' 
+
+
 #' @export ciTest_ordinal
 ciTest_ordinal <- function(x, set=NULL, statistic="dev", N=0, ...){
 

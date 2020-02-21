@@ -14,7 +14,6 @@ setAs("mModel", "graphNEL",
       function(from){ugList(from$glist, result="graphNEL")})
 
 
-
 setAs("dModel", "matrix",
       function(from){ugList(from$glist, result="matrix")})
 
@@ -23,7 +22,6 @@ setAs("cModel", "matrix",
 
 setAs("mModel", "matrix",
       function(from){ugList(from$glist, result="matrix")})
-
 
 
 setAs("dModel", "igraph",

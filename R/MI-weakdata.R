@@ -22,13 +22,13 @@ weakMarginalData <- function(cgdata, disc=NULL, cont=NULL, type="pms", details=2
     #aaa <<- ans
     #print(type)
     ans
-    if (type == "ghk") pms2ghkParms(ans) else ans
+    if (type == "ghk") parm_pms2ghk(ans) else ans
 }
 
 .weak.datamarg.disc <- function(cgdata, Ad.idx, details=2){
   .infoPrint(details,5, "Finding weak marginal (data-discrete):   Ad.idx: ", Ad.idx, "\n")
   
-  p   <- .tableMargin(cgdata$n.obs, Ad.idx)  
+  p   <- tabMarg(cgdata$n.obs, Ad.idx)  
   res <- list(p=p / sum(p), mu=NULL, Sigma=NULL, gentype="discrete", N=cgdata[['N']], Ad.idx=Ad.idx)
   ##class(res) <- c("pms", "MIparms")
   res
@@ -51,7 +51,7 @@ weakMarginalData <- function(cgdata, disc=NULL, cont=NULL, type="pms", details=2
     ## print("HERE2")
     ## print(.disc.levels(cgdata)); print(cgdata$n.obs)
         
-    p.A   <- .tableMargin(p.tab, Ad.idx)
+    p.A   <- tabMarg(p.tab, Ad.idx)
     
     flevels   <- .disc.levels(cgdata)
     A.levels  <- flevels[Ad.idx]

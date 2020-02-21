@@ -271,7 +271,7 @@ forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", se
 # obs: A named array
 .iloglin <- function(obs, ...){
     vn <- names(dimnames(obs))
-    fit <- lapply(vn, function(v) {ar_marg(obs, v)})
+    fit <- lapply(vn, function(v) {tabMarg(obs, v)})
     n <- sum(obs)
     s <- lapply(fit, function(f) sum(f * log(f)))
     tt <- obs * log(obs)

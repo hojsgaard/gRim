@@ -11,10 +11,7 @@
 #' @description Generic function for conditional independence test. Specializes
 #'     to specific types of data.
 #'
-#' @name citest_general
-#' 
-#' @aliases ciTest ciTest.data.frame ciTest.table ciTest.list print.citest
-#'     summary.citest
+#' @name citest-generic
 #' 
 #' @param x An object for which a test for conditional independence is to be
 #'     made. See 'details' for valid types of \code{x}.
@@ -41,16 +38,16 @@
 #'  1. a right-hand sided
 #'     formula in which variables are separated by '+'.
 #'
-#'  In either case, it is
-#'     tested if the first two variables in the \code{set} are conditionally
-#'     independent given the remaining variables in \code{set}.  (Notice an
-#'     abuse of the '+' operator in the right-hand sided formula: The order of
-#'     the variables does matter.)
+#' In either case, it is tested if the first two variables in the
+#' \code{set} are conditionally independent given the remaining
+#' variables in \code{set}.  (Notice an abuse of the '+' operator in
+#' the right-hand sided formula: The order of the variables does
+#' matter.)
 #'
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{ciTest.table}}, \code{\link{ciTest_table}},
-#'     \code{\link{ciTest.data.frame}}, \code{\link{ciTest_df}},
-#'     \code{\link{ciTest.list}}, \code{\link{ciTest_mvn}},
+#' @seealso \code{\link{ciTest_table}},
+#'     \code{\link{ciTest_df}},
+#'     \code{\link{ciTest_mvn}},
 #'     \code{\link{chisq.test}}
 #' @keywords htest
 #' @examples
@@ -65,7 +62,8 @@
 #' ciTest(cov.wt(carcass, method='ML'), set=~Fat11 + Meat11 + Fat12)
 #' ciTest(reinis, set=~smo + phy + sys)
 #' ciTest(milkcomp1, set=~tre + fat + pro)
-#' 
+
+
 #' @export ciTest
 ciTest <- function(x, set=NULL, ...){
   UseMethod("ciTest")
@@ -85,7 +83,7 @@ ciTest.data.frame <- function(x, set=NULL, ...){
   ciTest_df(x, set, ...)
 }
 
-
+#' @export
 print.citest <- function(x, ...){
     if (length(x$varNames) > 2){
         cat("Testing", x$varNames[1], "_|_", x$varNames[2], "|",x$varNames[-(1:2)],"\n")
@@ -104,6 +102,7 @@ print.citest <- function(x, ...){
 }
 
 ## FIXME: Do we need summary.citest??
+#' @export
 summary.citest <- function(object,...){
     print( object )
     if ( !is.null(object$slice) ){
@@ -119,12 +118,25 @@ summary.citest <- function(object,...){
 ## CIP test in data.frame
 ## <x> : data.frame
 ##
-## ########################################################
 
-#' Test for conditional independence in a dataframe
-#' 
-#' Test for conditional independence in a dataframe.
-#' 
+
+#############################################################################
+#'
+#' @title Test for conditional independence in a dataframe
+#' @description Test for conditional independence in a dataframe.
+#' @name citest-df
+#'
+#############################################################################
+#'
+#' @param x A dataframe.
+#' @param set A specification of the test to be made. The tests are of
+#'     the form u and v are independent condionally on S where u and v
+#'     are variables and S is a set of variables. See 'details' for
+#'     details about specification of \code{set}.
+#' @param \dots Additional arguments.
+#' @return An object of class `citest` (which is a list).
+#' @details
+#'
 #' \code{set} can be 1) a vector or 2) a right-hand sided formula in which
 #' variables are separated by '+'. In either case, it is tested if the first
 #' two variables in the \code{set} are conditionally independent given the
@@ -143,16 +155,9 @@ summary.citest <- function(object,...){
 #' \code{n.obs} by calling \code{cov.wt(x[,set], method='ML')}. This list is
 #' then passed on to \code{ciTest_mvn()} which makes the test.
 #' 
-#' @param x A dataframe.
-#' @param set A specification of the test to be made. The tests are of the form
-#'     u and v are independent condionally on S where u and v are variables and
-#'     S is a set of variables. See 'details' for details about specification of
-#'     \code{set}.
-#' @param \dots Additional arguments.
-#' @return An object of class `citest` (which is a list).
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{ciTest}}, \code{\link{ciTest.table}},
-#'     \code{\link{ciTest_table}}, \code{\link{ciTest.list}},
+#'
+#' @seealso \code{\link{ciTest}}, \code{\link{ciTest_table}},
 #'     \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 #' @keywords htest
 #' @examples
@@ -160,8 +165,8 @@ summary.citest <- function(object,...){
 #' data(milkcomp1)
 #' ciTest(milkcomp1, set=~tre + fat + pro)
 #' ciTest_df(milkcomp1, set=~tre + fat + pro)
-#' 
-#' @export ciTest_df
+
+#' @export 
 ciTest_df <- function(x, set=NULL,...){
     
     if (is.null(set)) set <- names(x)
