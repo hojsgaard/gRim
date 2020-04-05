@@ -11,37 +11,36 @@
 #'     shortcuts.
 #' @param interactions The maximum order of interactions allowed;
 #'     useful in connection with model specification shortcuts.
+#'
+#' @examples
+#' vn <- c("me", "ve", "al", "an", "st")
+#' form1 <- ~me:ve:al + ve:al + an
+#' parse_gm_formula(form1, varnames=vn)
+#' parse_gm_formula(~.^1, varnames=vn)
+#' parse_gm_formula(~.^., varnames=vn)
+#'
+#' vn2 <- vn[1:3]
+#' parse_gm_formula(~.^1, varnames=vn, marginal=vn2)
+#' parse_gm_formula(~.^., varnames=vn, marginal=vn2)
+
+
+#' @export
 parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NULL)
 {
     
     if (!inherits(formula, c("formula", "list"))) stop("Invalid formula specification")
-
-    used.var <- if (length(marginal) > 0)  marginal  else  varnames 
     
-    clformula <- class(formula) ##; cat("class(formula) :", clformula, "\n")
+    used.var <- if (length(marginal) > 0) marginal else varnames 
     
-    switch(clformula,
+    switch(class(formula),
            "formula"={
-               pow <- .extract.power(formula)
-               ##cat(sprintf("A formula is given; power=%d\n", pow))
-               if (is.na(pow))
-                   glist <- rhsFormula2list(formula) ##cat("A proper formula\n")
-               else {
-                   if (identical(pow, -1L)){
-                       glist <- list(used.var)         ##cat("The saturated model\n")
-                   } else {
-                       if (identical(pow, 1L)){
-                           glist <- as.list(used.var)  ##cat("The independence model\n")
-                       } else {
-                           pow   <- min(c(pow, length(used.var)))
-                           glist <- combnPrim(used.var, pow, simplify=FALSE)
-                       }               
-                   }
-               }
+               glist <- .do.formula(formula, used.var)               
            },
            "list"={
                glist <- formula
            })
+
+    
     glist <- removeRedundant(glist)    
     glist <- .check.glist(glist, used.var)  
     
@@ -53,6 +52,27 @@ parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NUL
     value
 }
 
+
+.do.formula <- function(formula, used.var){
+
+    pow <- .extract.power(formula)
+    ##cat(sprintf("A formula is given; power=%d\n", pow))
+    if (is.na(pow))
+        glist <- rhsFormula2list(formula) ##cat("A proper formula\n")
+    else {
+        if (identical(pow, -1L)){
+            glist <- list(used.var)         ##cat("The saturated model\n")
+        } else {
+            if (identical(pow, 1L)){
+                glist <- as.list(used.var)  ##cat("The independence model\n")
+            } else {
+                pow   <- min(c(pow, length(used.var)))
+                glist <- combnPrim(used.var, pow, simplify=FALSE)
+            }               
+        }
+    }
+    glist     
+}
 
 .check.glist <- function(glist, used.var){
 

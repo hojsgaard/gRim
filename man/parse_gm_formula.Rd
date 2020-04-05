@@ -21,3 +21,14 @@ useful in connection with model specification shortcuts.}
 \description{
 Parse graphical model formula to internal representation
 }
+\examples{
+vn <- c("me", "ve", "al", "an", "st")
+form1 <- ~me:ve:al + ve:al + an
+parse_gm_formula(form1, varnames=vn)
+parse_gm_formula(~.^1, varnames=vn)
+parse_gm_formula(~.^., varnames=vn)
+
+vn2 <- vn[1:3]
+parse_gm_formula(~.^1, varnames=vn, marginal=vn2)
+parse_gm_formula(~.^., varnames=vn, marginal=vn2)
+}
