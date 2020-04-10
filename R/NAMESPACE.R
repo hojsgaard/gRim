@@ -1,4 +1,3 @@
-
 #' @useDynLib gRim
 
 ## Vanilla R imports (and exports)
@@ -8,7 +7,10 @@
 #'     ftable getCall logLik loglin na.omit pchisq pf pnorm r2dtable
 #'     terms update update.formula xtabs
 #' @importFrom utils combn str
-## #' @importFrom graphics plot
+#' 
+#' @importMethodsFrom stats4 plot
+#' @exportMethod plot
+#' 
 
 ## To make available in vignette 
 #' @importFrom magrittr   "%>%"
@@ -34,8 +36,6 @@
 #' @importFrom graph edges nodes
 
 #' @importMethodsFrom Rgraphviz plot
-#' @exportMethod plot
-
 
 .dumfunction_afterimportFrom <- function(){}
 
