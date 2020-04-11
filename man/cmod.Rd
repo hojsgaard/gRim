@@ -2,6 +2,7 @@
 % Please edit documentation in R/iModel-cmod.R
 \name{cmod}
 \alias{cmod}
+\alias{extract_cmod_data}
 \title{Graphical Gaussian model}
 \usage{
 cmod(formula, data, marginal = NULL, fit = TRUE, details = 0)

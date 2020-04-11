@@ -14,7 +14,7 @@
 #'     saturated model as \code{~.^.}. The \code{marginal} argument can be used
 #'     for specifying the independence or saturated models for only a subset of
 #'     the variables.
-#' 
+#' @aliases extract_cmod_data
 #' @param formula Model specification in one of the following forms: 1) a
 #'     right-hand sided formula, 2) as a list of generators.
 #'     Notice that there are certain model specification shortcuts,
@@ -48,12 +48,11 @@
 #'  fixin=matrix(c("LeanMeat", "Meat11", "Meat12", "Meat13", "LeanMeat", "Fat11", "Fat12", "Fat13"),
 #'  ncol=2))
 #' 
-#' @export cmod
+#' @export cmod 
 
 cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
 
-    dd <- .extract_cmod_data(data)
-
+    dd <- extract_cmod_data(data)
     vn <- colnames(dd$S)
     ans      <- parse_gm_formula(formula, vn, marginal)
     ## Get varNames in the order matching to the data:
@@ -77,8 +76,8 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
     if (fit) fit(res) else res
 }
 
-
-.extract_cmod_data <- function(data){
+#' @export
+extract_cmod_data <- function(data){
     if (inherits(data, "data.frame")){
         data <- cov.wt(data, method="ML")
     } else
