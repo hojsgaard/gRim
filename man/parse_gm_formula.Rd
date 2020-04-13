@@ -4,7 +4,12 @@
 \alias{parse_gm_formula}
 \title{Parse graphical model formula}
 \usage{
-parse_gm_formula(formula, varnames, marginal = NULL, interactions = NULL)
+parse_gm_formula(
+  formula,
+  varnames = NULL,
+  marginal = NULL,
+  interactions = NULL
+)
 }
 \arguments{
 \item{formula}{A right hand sided formula or a list.}
@@ -23,12 +28,29 @@ Parse graphical model formula to internal representation
 }
 \examples{
 vn <- c("me", "ve", "al", "an", "st")
+
 form1 <- ~me:ve:al + ve:al + an
+form2 <- ~me:ve:al + ve:al + s
+form3 <- ~me:ve:al + ve:al + anaba
 parse_gm_formula(form1, varnames=vn)
+parse_gm_formula(form2, varnames=vn)
+## parse_gm_formula(form3, varnames=vn)
+parse_gm_formula(form1)
+parse_gm_formula(form2)
+parse_gm_formula(form3)
+
+parse_gm_formula(~.^1)
+parse_gm_formula(~.^.)
+
 parse_gm_formula(~.^1, varnames=vn)
 parse_gm_formula(~.^., varnames=vn)
+parse_gm_formula(~.^., varnames=vn, interactions=3)
 
 vn2 <- vn[1:3]
+## parse_gm_formula(form1, varnames=vn, marginal=vn2)
+## parse_gm_formula(form2, varnames=vn, marginal=vn2)
+## parse_gm_formula(form3, varnames=vn, marginal=vn2)
 parse_gm_formula(~.^1, varnames=vn, marginal=vn2)
 parse_gm_formula(~.^., varnames=vn, marginal=vn2)
+
 }

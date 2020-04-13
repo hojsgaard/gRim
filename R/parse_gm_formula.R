@@ -14,27 +14,47 @@
 #'
 #' @examples
 #' vn <- c("me", "ve", "al", "an", "st")
+#'
 #' form1 <- ~me:ve:al + ve:al + an
+#' form2 <- ~me:ve:al + ve:al + s
+#' form3 <- ~me:ve:al + ve:al + anaba
 #' parse_gm_formula(form1, varnames=vn)
+#' parse_gm_formula(form2, varnames=vn)
+#' ## parse_gm_formula(form3, varnames=vn)
+
+#' parse_gm_formula(form1)
+#' parse_gm_formula(form2)
+#' parse_gm_formula(form3)
+#'
+#' parse_gm_formula(~.^1)
+#' parse_gm_formula(~.^.)
+#'
 #' parse_gm_formula(~.^1, varnames=vn)
 #' parse_gm_formula(~.^., varnames=vn)
-#'
+#' parse_gm_formula(~.^., varnames=vn, interactions=3)
+#' 
 #' vn2 <- vn[1:3]
+#' ## parse_gm_formula(form1, varnames=vn, marginal=vn2)
+#' ## parse_gm_formula(form2, varnames=vn, marginal=vn2)
+#' ## parse_gm_formula(form3, varnames=vn, marginal=vn2)
 #' parse_gm_formula(~.^1, varnames=vn, marginal=vn2)
 #' parse_gm_formula(~.^., varnames=vn, marginal=vn2)
+#' 
 
 
 #' @export
-parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NULL)
+parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interactions=NULL)
 {
+
+    varnames <- if (length(marginal) > 0) marginal else varnames 
+
+    if (!is.atomic(varnames)) stop("'varnames' must be atomic\n")
     
     if (!inherits(formula, c("formula", "list"))) stop("Invalid formula specification")
-    
-    used.var <- if (length(marginal) > 0) marginal else varnames 
-    
+        
     switch(class(formula),
            "formula"={
-               glist <- .do.formula(formula, used.var)               
+               glist <- .do.formula(formula, varnames)               
            },
            "list"={
                glist <- formula
@@ -42,7 +62,7 @@ parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NUL
 
     
     glist <- removeRedundant(glist)    
-    glist <- .check.glist(glist, used.var)  
+    glist <- .check.glist(glist, varnames)  
     
     if (!is.null(interactions))
         glist <- .set.interactions(glist, interactions)
@@ -53,41 +73,48 @@ parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NUL
 }
 
 
-.do.formula <- function(formula, used.var){
+.do.formula <- function(formula, varnames=NULL){
 
+    ## 'formula' is a right hand sided formula.
     pow <- .extract.power(formula)
     ##cat(sprintf("A formula is given; power=%d\n", pow))
-    if (is.na(pow))
-        glist <- rhsFormula2list(formula) ##cat("A proper formula\n")
-    else {
-        if (identical(pow, -1L)){
-            glist <- list(used.var)         ##cat("The saturated model\n")
+
+    if (is.na(pow)){
+        return(rhsFormula2list(formula)) ##cat("A proper formula\n")
+    }
+
+    if (is.null(varnames))
+        stop("'formula' is special, and 'varnames' is needed\n")
+    
+    if (identical(pow, -1L)){
+        glist <- list(varnames)         ##cat("The saturated model\n")
+    } else {
+        if (identical(pow, 1L)){
+            glist <- as.list(varnames)  ##cat("The independence model\n")
         } else {
-            if (identical(pow, 1L)){
-                glist <- as.list(used.var)  ##cat("The independence model\n")
-            } else {
-                pow   <- min(c(pow, length(used.var)))
-                glist <- combnPrim(used.var, pow, simplify=FALSE)
-            }               
-        }
+            pow   <- min(c(pow, length(varnames)))
+            glist <- combnPrim(varnames, pow, simplify=FALSE)
+        }               
     }
     glist     
 }
 
-.check.glist <- function(glist, used.var){
+.check.glist <- function(glist, varnames){
 
-
-    if (any(is.na(pmatch(unlist(glist), used.var, 
-                         duplicates.ok = TRUE)))) 
+    if (is.null(varnames)) return(glist)
+        
+    ## It is allowed to abbreviate variable names; they are matched
+    ## against names in varnames
+    if (any(is.na(pmatch(unlist(glist), varnames, duplicates.ok = TRUE)))) 
         stop("An invalid variable specification has been found\n")
     glist <- lapply(glist, function(x) {
-        ii <- pmatch(x, used.var)
-        used.var[ii]
+        ii <- pmatch(x, varnames)
+        varnames[ii]
     })
     
     modnames <- unique.default(unlist(glist))
-
-    if (any(is.na(match(modnames, used.var))))
+    
+    if (any(is.na(match(modnames, varnames))))
         stop("Variables in model not contained in the variable set. Perhaps a problem with 'marginal'?")
     
     glist
@@ -121,10 +148,8 @@ parse_gm_formula <- function (formula, varnames, marginal=NULL, interactions=NUL
 
     rest <- gsub("\\.\\^", "", form.str)
     pp <- strsplit(rest, " ")[[1]][1]
-    pow <- if (identical(pp, "."))
-               -1L
-           else
-               as.integer(pp)
+    pow <- if (identical(pp, ".")) -1L
+           else as.integer(pp)
     
     if (identical(pow, 0L))
         pow <- 1L
