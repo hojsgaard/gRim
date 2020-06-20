@@ -3,26 +3,30 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
     
     switch(name,
            "CGstats"=,
-           "cgstats"={object$datainfo$CGstats},
+           "cgstats"              ={object$datainfo$CGstats},
            "SSD"=,
-           "ssd"={object$datainfo$CGstats$SSD},
+           "ssd"                  ={object$datainfo$CGstats$SSD},
            "SS"=,
-           "ss"={object$datainfo$CGstats$SS},
+           "ss"                   ={object$datainfo$CGstats$SS},
            "center"               ={object$datainfo$CGstats$center},
+
            "disc.names"           =object$datainfo$disc.names,
            "cont.names"           =object$datainfo$cont.names,
-           "glist"                =object$glist,
-           "varNames"             =object$varNames,
            "S"                    =object$datainfo$S,
            "n"                    =object$datainfo$n,
            "data"                 =object$datainfo$data,
+
+           "varNames"             =object$varNames,
+                      
            "dimension"            =object$fitinfo$dimension,
            "dev"                  =object$fitinfo$dev,
            "logL"                 =object$fitinfo$logL,
            "aic"                  =object$fitinfo$aic,
            "bic"                  =object$fitinfo$bic,
-           "isGraphical"          =object$properties["isg"],
-           "isDecomposable"       =object$properties["issd"]
+           
+           "glist"                =object$modelinfo$glist,
+           "isGraphical"          =object$modelinfo$properties["isg"],
+           "isDecomposable"       =object$modelinfo$properties["issd"]
            )
 }
 
@@ -33,6 +37,14 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
         getCliques(object)
     else stop("Do not know what to do\n")
 }
+
+".glist<-" <- function(object, value){
+    if (inherits(object, "iModel")){
+        object$modelinfo$glist <- value
+        object
+    } else stop("Do not know what to do\n")
+}
+
 
 .amat <- function(object, vn = NULL, result = "matrix") {
     if (inherits(object, c("list", "formula"))){
@@ -80,7 +92,6 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
   dim(parms[[1]])
 }
 
-
 .rhsf2char <- function(f) {
   unlist(rhsf2list(f))
 }
@@ -95,8 +106,9 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
   x
 }
 
-.toString <- function(x, col=' '){
-  paste(x, collapse=col)
+
+.toString <- function(x, col=','){
+  paste0(x, collapse=col)
 }
 
 ## Remove e and all higher order terms containing e from gen
@@ -153,10 +165,6 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
 
 ### Known issues: The function should check that SS is of the right form
 ### (homogeneous and simplify)
-
-.toString <- function(x, col=' '){
-  paste(x, collapse=col)
-}
 
 print.MIparms <- function(x,simplify=TRUE,useN=FALSE, ...){
 

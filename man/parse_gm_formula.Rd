@@ -39,8 +39,8 @@ parse_gm_formula(form1)
 parse_gm_formula(form2)
 parse_gm_formula(form3)
 
-parse_gm_formula(~.^1)
-parse_gm_formula(~.^.)
+## parse_gm_formula(~.^1)
+## parse_gm_formula(~.^.)
 
 parse_gm_formula(~.^1, varnames=vn)
 parse_gm_formula(~.^., varnames=vn)

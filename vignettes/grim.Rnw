@@ -34,6 +34,7 @@ prettyDate <- format(Sys.Date())
 
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 \SweaveOpts{prefix.string=figures/GRIM, keep.source=T}
 \setkeys{Gin}{width=0.5\textwidth,height=2in} %sæt figurstørrelse i Sweave
 \renewenvironment{Schunk}{\linespread{.85}\scriptsize}{}
@@ -530,7 +531,7 @@ models.
 
 @
 <<print=T>>=
-ed.in <- getInEdges(ugList(dm5$glist), type="decomposable")
+ed.in <- getInEdges(ugList(terms(dm5)), type="decomposable")
 @ %def
 
 The \code{getOutEdges()} function will return a list of all the edges
@@ -544,7 +545,7 @@ models.
 
 @
 <<print=T>>=
-ed.out <- getOutEdges(ugList(dm5$glist), type="decomposable")
+ed.out <- getOutEdges(ugList(terms(dm5)), type="decomposable")
 @ %def
 
 
@@ -569,7 +570,7 @@ For example:
 
 @
 <<>>=
-testInEdges(dm5, getInEdges(ugList(dm5$glist), type="decomposable"),
+testInEdges(dm5, getInEdges(ugList(terms(dm5)), type="decomposable"),
              k=log(sum(reinis)))
 @ %def
 
@@ -900,7 +901,7 @@ being represented as a list:
 
 @
 <<print=T>>=
-dim_loglin(dm2$glist, reinis)
+dim_loglin(terms(dm2), reinis)
 @ %def
 
 % Consider the model for the \code{mildew} data given by the formula
@@ -966,7 +967,7 @@ names(dm3)
 
 @
 <<>>=
-str(dm3$glist)
+str(terms(dm3))
 @ %def
 
 @

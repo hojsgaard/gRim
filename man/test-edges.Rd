@@ -70,11 +70,19 @@ improvement has been found.}
 \code{testOutEdges}).}
 }
 \value{
-A matrix.
+A dataframe with test statistics (p-value or change in
+AIC), edges and logical telling if the edge can be deleted.
 }
 \description{
 Test edges in graphical models with p-value/AIC
 value. The models must be \code{iModel}s.
+}
+\details{
+\itemize{
+\item testIn: Function which tests whether each edge in "edgeList" can
+be delete from model "object"
+\item testOut: Is similar but in the other direction.
+}
 }
 \examples{
 

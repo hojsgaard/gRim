@@ -36,7 +36,7 @@
 #' ## entirely identical.
 #' data(math)
 #' ddd <- cov.wt(math, method="ML")
-#' glist <- list(c("al","st","an"), c("me","ve","al"))
+#' glist <- list(c("al", "st", "an"), c("me", "ve", "al"))
 #' ggmfit (ddd$cov, ddd$n.obs, glist)
 #' ggmfitr(ddd$cov, ddd$n.obs, glist)
 #' 
@@ -71,7 +71,7 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
   ## Numerical (indices) representation of glist
   glist.num <- lapply(glist, match, data.vn)
 
-  glen    <- sapply(glist.num,length)
+  glen    <- sapply(glist.num, length)
   ng      <- length(glist.num)
 
   clist.num   <- lapply(glist.num, function(x) vn[-x])  

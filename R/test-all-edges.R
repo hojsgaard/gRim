@@ -1,6 +1,4 @@
 
-## testIn:  Function which tests whether each edge in "edgeList" can be delete from model "object"
-## testOut: Is similar but in the other direction.
 
 ## Author: Søren Højsgaard
 
@@ -8,9 +6,6 @@
 ## object   : imod-object
 ## edgeList : A list of edges; each edge is a vector
 
-## Output
-## A dataframe with test statistics (p-value or change in AIC), edges and logical
-## telling if the edge can be deleted. 
 
 ## Known issues
 ## It is not tested whether edges in edgeList are in the model.
@@ -29,6 +24,13 @@
 #' @param edgeMAT A `p * 2` matrix with edges
 #' @param criterion Either \code{"aic"} or \code{"test"} (for
 #'     significance test)
+#'
+#' @details
+#'
+#' * testIn: Function which tests whether each edge in "edgeList" can
+#'     be delete from model "object"
+#'
+#' * testOut: Is similar but in the other direction.
 #' 
 #' @param k Penalty term when \code{criterion="aic"}. Only k=2 gives
 #'     genuine AIC.
@@ -44,7 +46,9 @@
 #' @param \dots Further arguments to be passed on to \code{testdelete}
 #'     (for \code{testInEdges}) and \code{testadd} (for
 #'     \code{testOutEdges}).
-#' @return A matrix.
+#' @return A dataframe with test statistics (p-value or change in
+#'     AIC), edges and logical telling if the edge can be deleted.
+#' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{getEdges}}, \code{\link{testadd}},
 #'     \code{\link{testdelete}}
@@ -143,10 +147,6 @@ testOutEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL,
     testFun(object, edgeMAT, comp.op=comp.op, crit.str=crit.str, alpha=alpha, k=k, amat=amat, vn=vn, ...)
 }
 
-
-## if (is.null((amat <- list(...)$amat))){
-##     amat <- .as_amat(getmi(object, "glist")) ## FIXME replace .as_amat with gRbase function
-## }
     
 
 ## Loop gennem alle kanter i edgeMAT (der er p x 2 character matrix)

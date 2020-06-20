@@ -89,7 +89,8 @@ they are not considered for addition.}
 \code{testInEdges}) and \code{testadd} (for \code{testOutEdges}).}
 }
 \description{
-Stepwise model selection in (graphical) interaction models
+Stepwise model selection in (graphical) interaction
+models
 }
 \examples{
 

@@ -53,7 +53,7 @@ C-version).
 ## entirely identical.
 data(math)
 ddd <- cov.wt(math, method="ML")
-glist <- list(c("al","st","an"), c("me","ve","al"))
+glist <- list(c("al", "st", "an"), c("me", "ve", "al"))
 ggmfit (ddd$cov, ddd$n.obs, glist)
 ggmfitr(ddd$cov, ddd$n.obs, glist)
 

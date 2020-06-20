@@ -197,7 +197,7 @@ testadd.iModel <- function(object, edge, k=2, details=1, ...){
     .is_valid_edge(edge, object)
         
     if (is.null((amat <- list(...)$amat)))
-        amat <- glist2adjMAT(object$glist)  ## FIXME use better function
+        amat <- glist2adjMAT(.glist(object))  ## FIXME use better function
         
     if (amat[edge[1], edge[2]] != 0)
         stop(cat("edge:", edge, "already in model\n"))
@@ -211,7 +211,7 @@ testadd.iModel <- function(object, edge, k=2, details=1, ...){
         
         ## Is model graphical? Is model decomposable?
         cliq <- maxCliqueMAT(amat)$maxCliques
-        isgraph <- length(cliq) == length(object$glist)
+        isgraph <- length(cliq) == length(.glist(object))
         isdecomp <- length(mcsMAT(amat)) > 0
         
         ## Is edge only in one clique in decomposable model?
@@ -238,6 +238,8 @@ testadd.iModel <- function(object, edge, k=2, details=1, ...){
 
 
 
+#' @method print testdelete
+#' @export 
 print.testdelete <- function(x,  ...){
 
   cat(sprintf("dev: %8.3f df:%3i p.value: %7.5f AIC(k=%3.1f): %6.1f edge: %s \n",
@@ -255,7 +257,8 @@ print.testdelete <- function(x,  ...){
   invisible(x)
 }
 
-
+#' @method print testadd
+#' @export 
 print.testadd <- function(x,  ...){
 
   cat(sprintf("dev: %8.3f df:%3i p.value: %7.5f AIC(k=%3.1f): %6.1f edge: %s \n",

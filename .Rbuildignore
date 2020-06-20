@@ -3,3 +3,10 @@
 LICENSE
 NAMESPACE_OLD
 devel/
+vignettes/*.aux
+vignettes/*.log
+vignettes/*.pdf
+vignettes/*.tex
+vignettes/*.toc
+vignettes/.Rdata
+vignettes/.Rhistory
