@@ -65,7 +65,7 @@ stepwise.iModel <- function(object,
     criterion  <- match.arg(criterion, c("aic",        "test"))
     search     <- match.arg(search,    c("headlong",   "all"))
     
-    if (isGSD_glist(.glist(object))[2]){  ## FIXME .glist is ugly
+    if (isGSD_glist(.glist(object))[2]){  
         type <- match.arg(type,      c("decomposable", "unrestricted"))
     } else {
         type <- "unrestricted"
@@ -296,7 +296,7 @@ forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", se
     if (!isg) c(isg = FALSE, issd = FALSE)
     else
         c(isg = TRUE,
-          issd = length(mcsmarkedMAT(amat, discrete = discrete)) > 0)
+          issd = length(mcs_markedMAT(amat, discrete = discrete)) > 0)
 } 
 
 

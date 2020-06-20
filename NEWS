@@ -1,5 +1,10 @@
-gRim v0.2.2  (Release date: 2020-XX-XX)
+gRim v0.2.2  (Release date: 2020-06-20)
 =======================================
+
+Fixes
+
+  * Package went of cran bacause of warnings fixed late during corona
+    period. Fixed now.
 
 Changes:
 

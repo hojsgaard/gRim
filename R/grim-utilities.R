@@ -137,7 +137,7 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
 ## delete.term(list(c(1,2,3,4),c(2,3,4,5)),c(1,2,3))
 
 .delete.term <-  function(glist, e){
-  idx<-isin(glist,e,TRUE)
+  idx <- isin(glist, e, TRUE)
   zzz <- unlist(
                 lapply(1:length(glist), function(i){
                   if (idx[i]==1)
@@ -145,14 +145,14 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
                   else
                     glist[i]
                 }), recursive=FALSE)
-  ans <- removeRedundant(zzz)
+  ans <- remove_redundant(zzz)
   ans
 }
 
 ## Add e interaction to x
 ##
 .add.term <- function(glist,e){
-  removeRedundant(c(glist,list(e)))
+  remove_redundant(c(glist, list(e)))
 }
 
 

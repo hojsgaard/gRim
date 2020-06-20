@@ -45,7 +45,7 @@ CGstats <- function(object, varnames=NULL, homogeneous=TRUE, simplify=TRUE){
   UseMethod("CGstats")
 }
 
-## FIXME: CGstats: Determination of cont.names, cont.idx is dubious
+## FIXME: CGstats: Determination of cont.names, cont.idx is fragile
 #' @export
 CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify=TRUE){
 

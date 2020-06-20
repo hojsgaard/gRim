@@ -53,7 +53,7 @@ The workhorses are \code{getInEdgesMAT()} and \code{getOutEdgesMAT()} and
 these work on adjacency matrices.
 
 Regarding the argument \code{discrete}, please see the documentation of
-\code{\link[gRbase]{mcsmarked}}.
+\code{\link[gRbase:graph-mcs]{mcs_marked}}.
 }
 \note{
 These functions work on undirected graphs. The behaviour is
@@ -112,8 +112,7 @@ getEdges(UG, type="decomposable", discrete=c("a","b"))
 
 }
 \seealso{
-\code{\link{edgeList}}, \code{\link{nonEdgeList}},
-\code{\link{mcsmarked}}
+\code{\link{edgeList}}, \code{\link{nonEdgeList}}.
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}
