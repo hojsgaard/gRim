@@ -1,0 +1,22 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {2}Introductory examples}{2}
+\contentsline {subsection}{\numberline {2.1}A Discrete Model}{2}
+\contentsline {subsection}{\numberline {2.2}Model specification shortcuts}{4}
+\contentsline {subsection}{\numberline {2.3}Plotting models}{5}
+\contentsline {subsection}{\numberline {2.4}A Continuous Model}{5}
+\contentsline {subsection}{\numberline {2.5}A Mixed Model}{6}
+\contentsline {section}{\numberline {3}Model editing - \texttt {update()}}{7}
+\contentsline {section}{\numberline {4}Testing for conditional independence}{8}
+\contentsline {section}{\numberline {5}Fundamental methods for inference}{10}
+\contentsline {subsection}{\numberline {5.1}Testing for addition and deletion of edges}{10}
+\contentsline {subsection}{\numberline {5.2}Finding edges}{11}
+\contentsline {subsection}{\numberline {5.3}Testing several edges}{12}
+\contentsline {section}{\numberline {6}Stepwise model selection}{12}
+\contentsline {subsection}{\numberline {6.1}Backward search}{13}
+\contentsline {subsection}{\numberline {6.2}Forward search}{13}
+\contentsline {subsection}{\numberline {6.3}Fixing edges/terms in model as part of model selection}{14}
+\contentsline {section}{\numberline {7}Further topics on models for contingency tables}{15}
+\contentsline {subsection}{\numberline {7.1}Adjusting for sparsity}{15}
+\contentsline {subsection}{\numberline {7.2}Dimension of a log--linear model}{15}
+\contentsline {section}{\numberline {8}Miscellaneous}{15}
+\contentsline {subsection}{\numberline {8.1}The Model Object}{15}
