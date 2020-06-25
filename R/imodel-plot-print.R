@@ -24,7 +24,7 @@ iplot.iModel <- function(x,...){
          },
          "mModel"={
            V(ig)$color <- "white"
-           disc.idx <- match(x$datainfo$disc.names, V(ig)$name) #-1
+           disc.idx <- match(datainfo(x)$disc.names, V(ig)$name) #-1
            V(ig)[disc.idx]$color <- "grey"
          })
 
@@ -47,8 +47,8 @@ plot.iModel <- function(x,...){
            names(fillv) <- x$varNames
          },
          "mModel"={
-           dv <- x$datainfo$disc.names
-           cv <- x$datainfo$cont.names
+           dv <- datainfo(x)$disc.names
+           cv <- datainfo(x)$cont.names
            fillv  <- c(rep("lightgray", length(dv)), rep("transparent", length(cv)))
            names(fillv) <- c(dv,cv)
          })
@@ -67,14 +67,14 @@ print.iModel <- function(x, ...){
   cat(sprintf(" graphical : %5s  decomposable : %5s\n", x$isGraphical, x$isDecomposable))
 
   if (x$isFitted){
-    dimension <- x$fitinfo$dimension
+    dimension <- fitinfo(x)$dimension
     #cat("Fit info: \n")
     cat(sprintf(" -2logL    : %14.2f mdim : %4d aic : %12.2f \n",
-                -2*x$fitinfo$logL,       dimension["mod.dim"], x$fitinfo$aic))
+                -2*fitinfo(x)$logL,       dimension["mod.dim"], fitinfo(x)$aic))
     cat(sprintf(" ideviance : %14.2f idf  : %4d bic : %12.2f \n",
-                x$fitinfo$ideviance,  dimension["idf"], x$fitinfo$bic))
+                fitinfo(x)$ideviance,  dimension["idf"], fitinfo(x)$bic))
     cat(sprintf(" deviance  : %14.2f df   : %4d \n",
-                x$fitinfo$dev,        dimension["df"]))
+                fitinfo(x)$dev,        dimension["df"]))
   }
     
   return(invisible(x))
@@ -91,17 +91,17 @@ print.dModel <- function(x, ...){
   if (x$isFitted){    
     ## Print warnings about sparsity and adjusments of df's
     ##
-    if ( (!x$fitinfo$sparseinfo["df.ok"]) | (!x$fitinfo$sparseinfo["chi2.ok"])) {
+    if ( (!fitinfo(x)$sparseinfo["df.ok"]) | (!fitinfo(x)$sparseinfo["chi2.ok"])) {
       cat("Notice: Table is sparse\n")
-      if (!x$fitinfo$sparseinfo["chi2.ok"])
+      if (!fitinfo(x)$sparseinfo["chi2.ok"])
         cat(sprintf("  Asymptotic chi2 distribution may be questionable.\n"))
       
-      if (!x$fitinfo$sparseinfo["df.ok"])
+      if (!fitinfo(x)$sparseinfo["df.ok"])
         cat(sprintf("  Degrees of freedom can not be trusted.\n"))
       
-      if (x$fitinfo$sparseinfo["sparse.df.ok"] & !x$fitinfo$sparseinfo["df.ok"]){
+      if (fitinfo(x)$sparseinfo["sparse.df.ok"] & !fitinfo(x)$sparseinfo["df.ok"]){
         cat(sprintf("  Model dimension adjusted for sparsity : %d\n",
-                    x$fitinfo$dimension["mod.dim.adj"]))
+                    fitinfo(x)$dimension["mod.dim.adj"]))
       }
     }
   }

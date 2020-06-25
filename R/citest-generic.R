@@ -1,11 +1,3 @@
-## ##################################################################
-##
-## Testing for condional independence CIP for various data types
-## <x> : data
-## <set>: NULL, a vector or a formula
-##
-## ##################################################################
-
 #' @title Generic function for conditional independence test
 #' 
 #' @description Generic function for conditional independence test. Specializes
@@ -111,12 +103,6 @@ summary.citest <- function(object,...){
     invisible( object )
 }
 
-
-## ########################################################
-##
-## CIP test in data.frame
-## <x> : data.frame
-##
 
 
 #############################################################################

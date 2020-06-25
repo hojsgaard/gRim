@@ -69,7 +69,8 @@ print.MIfit <- function(x,...){
     
 ### Find weak marginal model for each generator
 ###
-    WMDghk <- .getWeakMarginalDataList(getmi(object, "cgstats"),
+    ##str(list(Ad.list=Ad.list, Ac.list=Ac.list))
+    WMDghk <- weak_marginal_data_list(getmi(object, "cgstats"),
                                        Ad.list, Ac.list, type="ghk", details=details)
 
     ## The new version of ghk2pmsParms_ is really a timesaver here
@@ -185,7 +186,7 @@ print.MIfit <- function(x,...){
         Ac.idx    <- Ac.list[[ii]]
         EEghk     <- WMDghk[[ii]]
         EEpms     <- WMDpms[[ii]]
-        AApms     <- weakMarginalModel(Mparms, disc=Ad.idx, cont=Ac.idx, type="pms", details=details)
+        AApms     <- weak_marginal_model(Mparms, disc=Ad.idx, cont=Ac.idx, type="pms", details=details)
         AAghk     <- parm_pms2ghk(AApms)
         zzz       <- .innerloop(Mparms, Cparms, Ad.idx, Ac.idx,
                                 EEghk, EEpms, AAghk, AApms, CGstats, scale, prev.logL, details)
@@ -297,24 +298,6 @@ print.MIfit <- function(x,...){
 
 
 
-.getWeakMarginalDataList <- function(CGstats, Ad.list, Ac.list, type="ghk", details=0){
-
-    #details <- 1
-    .infoPrint(details,1,"getWeakMarginalDataList: Finding weak (empirical) marginals for each generator\n")
-    #str(CGstats);
-    #print(CGstats$n.obs)
-    
-    ans <- vector("list", length(Ad.list))
-    for (ii in 1:length(Ad.list)){
-        EE.mm <- weakMarginalData(CGstats, disc=Ad.list[[ii]], cont=Ac.list[[ii]],
-                                  type=type, details=details)
-        ans[[ii]] <- EE.mm
-    }
-    #print("getWeakMarginalDataList - exit"); #str(CGstats);
-    #print(CGstats$n.obs)
-    ans
-}
-
 
 
 
@@ -345,7 +328,7 @@ print.MIfit <- function(x,...){
   d.parms.crit <- 0.00001
 
     #print(gt)
-  if (details>=5){
+  if (details >= 6){
     cat("PRE UPDATED marginal OBSERVED // FITTED values - moment form\n")
     print(rbind(.as.matrix(parm_ghk2pmsFUN(EEghk)),.as.matrix(parm_ghk2pmsFUN(AAghk))))
   }
@@ -429,7 +412,7 @@ print.MIfit <- function(x,...){
     res <- Cparms
   }
 
-  if (details>=5){
+  if (details>=6){
     cat("POST UPDATE Cparms // Mparms:\n");
     MM   <- parm_ghk2pmsFUN(Cparms)
     MM$p <- MM$p * MM$N
@@ -554,10 +537,6 @@ print.MIfit <- function(x,...){
   ##class(ans) <- c("pms","MIparms")
   return(ans)
 }
-
-
-
-
 
 
 print_generator <- function(a, b){

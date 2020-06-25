@@ -36,6 +36,9 @@ one clique only then the test is made in the marginal model
 given by that clique. In that case, if the model is a
 log-linear model then degrees of freedom are adjusted for
 sparsity
+
+If model is decomposable and edge is in one clique only,
+then degrees of freedom are adjusted for sparsity
 }
 \examples{
 

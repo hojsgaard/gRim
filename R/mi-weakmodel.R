@@ -4,10 +4,10 @@
 
 ### Mparms: pmS parms
 
-## FIXME: weakMarginalModel:
+## FIXME: weak_marginal_model:
 ## FIXME:   We carry N to all marginal model parameters, not a big deal but it would be cleaner if we didn't
 
-weakMarginalModel<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=2){
+weak_marginal_model<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=2){
   ##Mparms <- unclass(Mparms)
   .infoPrint(details,15,
              cat("Finding weak marginal (model)",

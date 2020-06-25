@@ -102,10 +102,12 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
 
     switch(method,
            "CHISQ"={
-               .CI_X2_prim(x, statistic=statistic, adjust.df=adjust.df, slice.info=slice.info)
+               .CI_X2_prim(x, statistic=statistic, adjust.df=adjust.df,
+                           slice.info=slice.info)
            },
            "MC"=,"SMC"={
-               .CI_SMC_prim(x, statistic=statistic, method=method, slice.info=slice.info, L=L, B=B)
+               .CI_SMC_prim(x, statistic=statistic, method=method,
+                            slice.info=slice.info, L=L, B=B)
            }
            )
 }
@@ -136,7 +138,6 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
 
     ##str(list(t.uR=t.uR, t.wR=t.wR, R=R, vn=vn))
     fit.table <- fit2way_(t.uR, t.wR, R, vn)
-    ##print(fit.table)
     
     ## Evaluate test statistic
     ## FIXME There are functions for that in other functions
@@ -205,12 +206,12 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
                    slice <- zzz$slice
                }
                repeat{
-                   if (tot[1] > L)
-                       break
+                   if (tot[1] > L) break
                    zzz<- .CI_MC_prim(x, statistic=statistic, B=B, slice.info=slice.info)
                    tot <- tot + as.numeric(zzz[c("n.extreme","B")])
                    if (slice.info){
-                       slice[,"n.extreme"] <- slice[,"n.extreme"] + zzz$slice[,"n.extreme"]
+                       slice[,"n.extreme"] <- slice[,"n.extreme"] +
+                           zzz$slice[,"n.extreme"]
                    }
                }
                
@@ -232,13 +233,15 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
 .CI_MC_prim <- function(x, statistic="DEV", B=100, slice.info=FALSE){
 
     statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
-    
-    .devFun2 <- function(obs, fit){ # Calculates deviance for independence model in r x c table
+
+    # Calculates deviance for independence model in r x c table
+    .devFun2 <- function(obs, fit){ 
         ii  <- obs * fit > 0
         2 * sum(obs[ii] * log(obs[ii] / fit[ii]))
     }
-    
-    .X2Fun2 <- function(obs, fit){ # Calculates deviance for independence model in r x c table
+
+    # Calculates deviance for independence model in r x c table
+    .X2Fun2 <- function(obs, fit){ 
         ii  <- obs * fit > 0
         a   <- (obs - fit)^2 / fit
         sum(a[ii])

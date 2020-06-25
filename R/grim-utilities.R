@@ -249,14 +249,15 @@ print.MIparms <- function(x,simplify=TRUE,useN=FALSE, ...){
 ## Get the generator type ("discrete", "continuous", "mixed")
 ##
 .genType <- function(dd, cc){
-  if (length(dd)==0){
-    if (length(cc)>0){
+    ##cat(".genType: disc=", toString(dd), " cont=", toString(cc), "\n")
+    if (length(dd) == 0){
+    if (length(cc) > 0){
       "continuous"
     } else {
       stop("Generator must have a discrete and/or continuous part\n")
     }
   } else {
-    if (length(cc)>0){
+    if (length(cc) > 0){
       "mixed"
     } else {
       "discrete"

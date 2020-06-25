@@ -1,23 +1,4 @@
-#########################################################################
-###
-### Get edges *in* or *not in* a graph
-###
-### Input: Various formats
-### Output: A p * 2 matrix
-###
-### getInEdges: if type="decomposable" then the edges returned are those
-### edges e for which the graph is decomposable if e is removed. If
-### type="unrestricted" then all edges are returned
-###
-### getOutEdges: if type="decomposable" then the edges returned are those
-### edges e for which the graph is decomposable if e is added. If
-### type="unrestricted" then all edges are returned
-###
-### Known issues: None
-###
-##########################################################################
-
-#' @title Find edges in a graph and edges not in an undirected graph.
+#' @title Find edges in a graph or edges not in an undirected graph.
 #' 
 #' @description Returns the edges of a graph (or edges not in a graph) where the
 #'     graph can be either a graphNEL object, a list of generators or an
@@ -57,6 +38,7 @@
 #'     represent continuous variables.
 #' @param \dots Additional arguments; currently not used.
 #' @return A p * 2 matrix with edges.
+#' 
 #' @note These functions work on undirected graphs. The behaviour is
 #'     undocumented for directed graphs.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}

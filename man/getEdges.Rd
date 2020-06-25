@@ -10,7 +10,7 @@
 \alias{getEdgesMAT}
 \alias{getInEdgesMAT}
 \alias{getOutEdgesMAT}
-\title{Find edges in a graph and edges not in an undirected graph.}
+\title{Find edges in a graph or edges not in an undirected graph.}
 \usage{
 getEdges(object, type = "unrestricted", ingraph = TRUE, discrete = NULL, ...)
 }

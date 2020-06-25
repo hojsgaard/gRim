@@ -71,8 +71,8 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
     
     upd   <- .cModel_finalize(ans$glist, vn)  ## NOTE not .glist here
     res$modelinfo <- upd  
+
     class(res) <- c("cModel", "iModel")
-    
     if (fit) fit(res) else res
 }
 

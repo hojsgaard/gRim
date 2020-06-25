@@ -62,7 +62,7 @@ mmod_dimension <- function(object){
 
   ## quadratic dimension
   ## -------------------
-  uuu      <- glist2adjMAT(qqq)
+  uuu      <- glist2adjMAT(qqq)  ## FIXME
   quad.dim <- sum(uuu[upper.tri(uuu)]) + nrow(uuu)
   ##cat(sprintf("CHK: quad.dim=%i\n", quad.dim))
 
@@ -126,68 +126,3 @@ mmod_dimension <- function(object){
 }
 
 
-
-
-
-
-##       browser()
-##       idx  <- any(unlist(lapply(lll, function(xx) any(match(xx, cvar)))))
-##       cat(sprintf("  .. cvar=%s\n", cvar))
-##       if (is.na(idx)){
-##         zzz <- 1
-##       } else {
-##         aaa  <- lll[idx][!unlist(lapply(lll[idx], is.null))]      
-##         print(aaa)
-##         aaa  <- lapply(aaa, function(xx) xx[-1])
-##         print(aaa)
-##         if (length(aaa)>0){
-##           aaa.num <- lapply(aaa, match, disc.names)
-##           print(aaa.num)
-##           zzz     <- .loglinDim(aaa.num, disc.dim) + 1
-##         }
-##       }
-
-## MIdimension <- function(object){
-
-##   lll <- object$dlq$linear
-##   ddd <- object$dlq$discrete
-##   qqq <- object$dlq$quadratic
-  
-##   cont.names   <- object$cont.names
-##   disc.names   <- object$disc.names
-##   disc.levels  <- object$disc.levels
-  
-##   d.dim <- c(lapply(disc.levels, length), recursive=TRUE)
-  
-##   ## discrete dimension
-##   ddd.num <- lapply(ddd, match, disc.names)
-##   disc.dim <- .loglinDim(ddd.num, d.dim)
-##   ## linear dimension
-##   lin.dim <- 0
-##   for (ii in seq_along(cont.names)){
-##     cont <- cont.names[ii]
-##     idx <- unlist(lapply(lll, function(xx) any(match(xx, cont))))
-##     aaa<- lll[idx][!unlist(lapply(lll[idx], is.null))]
-##     aaa<- lapply(aaa, function(xx) xx[-1])
-##     #print(aaa)
-##     if (length(aaa)>0){
-##       aaa.num <- lapply(aaa, match, disc.names)
-##       #print(aaa.num)
-##       zzz <- .loglinDim(aaa.num, d.dim)
-##       lin.dim <- lin.dim + zzz
-##     }
-##   }
-##   ## quadratic dimension
-##   uuu <- ugListMAT(qqq)
-##   quad.dim <- sum(uuu[upper.tri(uuu)]) + nrow(uuu)
-  
-##   mod.dim <- disc.dim + lin.dim + quad.dim
-  
-##   ## saturated dimension
-##   sat.dim <- (length(cont.names)+1)*(prod(d.dim)-1) + length(cont.names)*(length(cont.names)+1)/2
-
-##   ## independence dimension
-##   i.dim <- sum(d.dim - 1) + 2*length(cont.names)
-  
-##   c(mod.dim=mod.dim, sat.dim=sat.dim, i.dim=i.dim, df=sat.dim-mod.dim, idf=mod.dim-i.dim)
-## }

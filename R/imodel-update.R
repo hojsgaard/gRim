@@ -16,8 +16,10 @@
 #' @export
 update.iModel <- function(object, items, fit=TRUE, details=0, ...){
 
-    glist           <- modify_glist(.glist(object), items)
+    ## cat("update.iModel: before \n"); print(.glist(object))
+    glist            <- modify_glist(.glist(object), items)
     .glist(object)   <- glist
+    ## cat("update.iModel: after \n"); print(.glist(object))
     
     switch(class(object)[1],
            "dModel"={
@@ -30,8 +32,8 @@ update.iModel <- function(object, items, fit=TRUE, details=0, ...){
                upd <- .mModel_finalize(glist, object$varNames, object$datainfo)
            } )
 
-    object[ names(upd) ] <- upd
-
+    ##object[ names(upd) ] <- upd
+    object$modelinfo <- upd    
     if (fit) fit(object) else object
 }
 
@@ -372,78 +374,6 @@ dropTerm_glist <- function(glist, e){
     ##cat("On exit:\n"); print(items)
     items
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##modify_glist <- function(glist, items, details=0){
-##  glist   <- lapply(glist, as.character)
-##  ## Here; whatever the input format is "taken apart into lists":
-##  cat("modify_glist items (before): "); print(items)
-##
-##  items   <- .parse.change.list(items, details)
-##  action  <- names(items)
-##  cat("modify_glist items (after) : "); print(items)
-##  for (i in seq_along(items)){
-##    curr.action  <- action[ i ]
-##    curr.item    <- items[[ i ]]
-##    glist        <- .modify_glistPrim(glist, curr.action, curr.item, details)
-##  }
-##  glist
-##}
-##
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

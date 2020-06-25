@@ -23,20 +23,20 @@
 #' @examples
 #' 
 #' data(milkcomp)
-#' # milkcomp <- subset(milkcomp, (treat %in% c("a","b")) & (lactime %in% c("t1", "t2")))
+#' # milkcomp <- subset(milkcomp, (treat %in% c("a", "b")) & (lactime %in% c("t1", "t2")))
 #' # milkcomp <- milkcomp[,-1]
-#' # milkcomp$treat 		<- factor(milkcomp$treat)
+#' # milkcomp$treat 	<- factor(milkcomp$treat)
 #' # milkcomp$lactime 	<- factor(milkcomp$lactime)
 #' 
 #' CGstats(milkcomp)
-#' CGstats(milkcomp, c(1,2))
-#' CGstats(milkcomp, c("lactime","treat"))
-#' CGstats(milkcomp, c(3,4))
-#' CGstats(milkcomp, c("fat","protein"))
+#' CGstats(milkcomp, c(1, 2))
+#' CGstats(milkcomp, c("lactime", "treat"))
+#' CGstats(milkcomp, c(3, 4))
+#' CGstats(milkcomp, c("fat", "protein"))
 #' 
-#' CGstats(milkcomp, c(2,3,4), simplify=FALSE)
-#' CGstats(milkcomp, c(2,3,4), homogeneous=FALSE)
-#' CGstats(milkcomp, c(2,3,4), simplify=FALSE, homogeneous=FALSE)
+#' CGstats(milkcomp, c(2, 3, 4), simplify=FALSE)
+#' CGstats(milkcomp, c(2, 3, 4), homogeneous=FALSE)
+#' CGstats(milkcomp, c(2, 3, 4), simplify=FALSE, homogeneous=FALSE)
 #' 
 #' 
 #' 
@@ -53,15 +53,15 @@ CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify
     
     use.idx <- if (is.numeric(varnames)) varnames
                else match(varnames, names(object))
+    
+    zz <- unlist(lapply(object, is.numeric))
+    cont.idx <- intersect(which(zz),  use.idx)
+    disc.idx <- intersect(which(!zz), use.idx)
   
-  zz <- unlist(lapply(object, is.numeric))
-  cont.idx <- intersect(which(zz),  use.idx)
-  disc.idx <- intersect(which(!zz), use.idx)
-  
-  cont.names <- names(zz)[cont.idx]
-  disc.names <- names(zz)[disc.idx]
-
-  CGstats_internal(object, disc.names, cont.names, homogeneous, simplify)
+    cont.names <- names(zz)[cont.idx]
+    disc.names <- names(zz)[disc.idx]
+    
+    CGstats_internal(object, disc.names, cont.names, homogeneous, simplify)
 }
 
 ## October 2015: New implementation of CGstats_internal
@@ -71,7 +71,7 @@ CGstats.data.frame <- function(object, varnames=NULL, homogeneous=TRUE, simplify
 ## #' @param disc.names Vector of names of discrete variables
 ## #' @param cont.names Vector of names of continuous variables
 CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneous=TRUE, simplify=TRUE){
-
+    
     if (length(cont.names) == 0) {        
         xt    <- xtabs(~., data=object[, disc.names, drop=FALSE])
         ans   <- list(n.obs=xt)

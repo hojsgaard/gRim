@@ -50,7 +50,7 @@ ciTest_mvn(cov.wt(carcass, method='ML'), set=~Fat11+Meat11+Fat12)
 
 }
 \seealso{
-\code{\link{ciTest}} \code{\link{ciTest_table}},
+\code{\link{ciTest}}, \code{\link{ciTest_table}},
 \code{\link{ciTest_df}},
 \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
 }

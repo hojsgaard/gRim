@@ -1,9 +1,3 @@
-
-
-
-
-
-
 ## #' Stepwise model selection in (graphical) interaction models
 ## #' 
 ## #' Stepwise model selection in (graphical) interaction models

@@ -50,10 +50,10 @@ Specification of log--linear (graphical) model. The
 model for 'd'iscrete variables
 }
 \details{
-The independence model can be specified as \code{~.^1} and the
-saturated model as \code{~.^.}.  Setting e.g. \code{interactions=3}
-implies that there will be at most three factor interactions in the
-model.
+The independence model can be specified as \code{~.^1} and
+\code{~.^.} specifies the saturated model.  Setting
+e.g. \code{interactions=3} implies that there will be at most
+three factor interactions in the model.
 
 Data can be specified as a table of counts or as a dataframe. If
 data is a dataframe then it will be converted to a table (using

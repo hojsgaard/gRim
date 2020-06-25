@@ -12,18 +12,17 @@
 
 #' @rdname imodel-general
 logLik.iModel <- function(object, ...){
-    val <- object$fitinfo$logL
-    attr(val, "df") <- unname( object$fitinfo$dimension["mod.dim"] )
-    attr(val, "nobs") <- sum(object$datainfo$data)
+    val <- fitinfo(object)$logL
+    attr(val, "df") <- unname(fitinfo(object)$dimension["mod.dim"] )
+    attr(val, "nobs") <- sum(datainfo(object)$data)
     class(val) <- "logLik"
     val
 }
 
-
 #' @rdname imodel-general
 extractAIC.iModel <- function(fit, scale, k = 2, ...){
-    unname(c(fit$fitinfo$dimension["mod.dim"],
-             -2*fit$fitinfo$logL + k*fit$fitinfo$dimension["mod.dim"]))
+    unname(c(fitinfo(fit)$dimension["mod.dim"],
+             -2 * fitinfo(fit)$logL + k * fitinfo(fit)$dimension["mod.dim"]))
 }
 
 #' @rdname imodel-general
@@ -97,9 +96,9 @@ modelProperties <- function(object){
 modelProperties.dModel <- function(object){
     x <- terms( object )
     vn <- unique(unlist(x))
-    amat <- glist2adjMAT(x, vn = vn)
+    amat <- glist2adjMAT(x, vn = vn)  ## FIXME glist2adjMAT
     cliq <- maxCliqueMAT(amat)[[1]]
-    isg <- all(unlist(lapply(cliq, function(cq) isin(x, cq))))
+    isg <- all(unlist(lapply(cliq, function(cq) isin(x, cq))))  ## FIXME isin
     isd <- if (isg) {
                length(mcsMAT(amat)) > 0
            }

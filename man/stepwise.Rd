@@ -2,11 +2,14 @@
 % Please edit documentation in R/test-stepwise.R
 \name{stepwise}
 \alias{stepwise}
+\alias{drop_func}
 \alias{stepwise.iModel}
 \alias{backward}
 \alias{forward}
 \title{Stepwise model selection in (graphical) interaction models}
 \usage{
+drop_func(criterion)
+
 \method{stepwise}{iModel}(
   object,
   criterion = "aic",
@@ -52,9 +55,9 @@ forward(
 )
 }
 \arguments{
-\item{object}{An \code{iModel} model object}
-
 \item{criterion}{Either \code{"aic"} or \code{"test"} (for significance test)}
+
+\item{object}{An \code{iModel} model object}
 
 \item{alpha}{Critical value for deeming an edge to be significant/
 insignificant. When \code{criterion="aic"}, \code{alpha} defaults to 0;

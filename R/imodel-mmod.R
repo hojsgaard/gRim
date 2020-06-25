@@ -31,7 +31,6 @@
 #' 
 #' ### FIXME: To be written
 
-
 #' @export mmod
 mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
   {
@@ -43,7 +42,7 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
         marginal <- intersect(data.names, marginal)
     
     flist <- parse_gm_formula(formula, data.names, marginal) 
-    glist <- flist$glist
+    ##glist <- flist$glist
     
 ### Extract the relevant columns of the dataframe. Discrete variables
 ### appear to the left of continuous variables
@@ -53,32 +52,30 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
     .infoPrint(details, "mmod: .cont.names :", datainfo$cont.names, "\n")
 
     varNames  <- datainfo$data.names    
-    res <- list(glist          = glist,
-                varNames       = varNames,
-                datainfo       = datainfo,
-                fitinfo        = NULL,
-                isFitted       = FALSE)
-    
-    upd <- .mModel_finalize(glist, varNames, datainfo)    
-    res$modelinfo <- upd
-    #res[names(upd)] <- upd
-    class(res) <- c("mModel","iModel")
+    res <- list(##glist          = glist,
+        modelinfo      = NULL,
+        varNames       = varNames,
+        datainfo       = datainfo,
+        fitinfo        = NULL,
+        isFitted       = FALSE)
 
+    class(res) <- c("mModel", "iModel")
+    upd <- .mModel_finalize(flist$glist, varNames, datainfo)    
+    res$modelinfo <- upd
+    
     if (fit) fit(res) else res
 }
 
 .mModel_finalize <- function(glist, varNames, datainfo){
 
-    zzz <- isGSD_glist(glist, discrete=datainfo$disc.names)
+    properties <- isGSD_glist(glist, discrete=datainfo$disc.names)
     glistNUM <- .glistNUM(glist, varNames)    
     modelinfo <- .mModelinfo(glist, datainfo)
 
-    ret      <- list(glist = glist,
-                     glistNUM = glistNUM, 
-                     properties     = zzz)
-    c(ret, modelinfo)
-}
 
+    ##print("mModel_finalize"); print(glist); print(glistNUM)
+    c(list(glist=glist, glistNUM=glistNUM, properties=properties), modelinfo)
+}
 
 .mModelinfo <- function(glist, datainfo){
     .mModelinfoPrimitive(glist, datainfo$data.names, datainfo$disc.indic)

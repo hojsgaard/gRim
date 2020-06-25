@@ -112,8 +112,8 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
     
     upd <- .dModel_finalize(ans$glist, varNames) ## NOTE not .glist
     res$modelinfo  <- upd    
+
     class(res) <- c("dModel", "iModel")
-    
     if (fit) fit(res) else res
 }
 
@@ -123,6 +123,9 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
          glistNUM   = .glistNUM(glist, varNames),
          properties = isGSD_glist(glist))
 }
+
+
+
 
 
 #' @export
@@ -297,9 +300,6 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
 
   sparseinfo
 }
-
-
-
 
 
 #' @method residuals "dModel"

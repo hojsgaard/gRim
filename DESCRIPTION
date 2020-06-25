@@ -16,6 +16,8 @@ Depends:
     R (>= 3.6.0),
     methods,
     gRbase (>= 1.8-6.6)
+Suggests:
+    testthat (>= 2.1.0)
 Imports:
     graph,
     Rgraphviz,

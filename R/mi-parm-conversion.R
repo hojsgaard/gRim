@@ -239,12 +239,6 @@ parm_moment2pms <- function(SS){
 }
 
 
-
-
-
-
-
-
 ### Normalizes ghK representation
 ###
 .normalize.ghkParms <- function(parms){
@@ -301,23 +295,3 @@ parm_moment2pms <- function(SS){
 
 
 
-
-## pms2ghkParms <- function(parms){
-## ##   cat("----------------\npms2ghkParms\n")
-## ##   str(parms)
-
-##   res <- .Call("C_pms2ghk", parms)
-##   val <- c(res, parms[-(1:4)])
-##   val
-
-## ##   .pms2ghkParms(parms)
-
-## }
-
-## ghk2pmsParms <- function(parms){
-## ##   cat("----------------\nghk2pmsParms\n")
-## ##   str(parms)
-##   res <- .Call("C_ghk2pms", parms)
-##   val <- c(res, parms[-(1:4)])
-##   val
-## }

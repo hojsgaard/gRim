@@ -9,7 +9,7 @@ citEntry(entry = "Book",
   address      = "New York",
   year         = "2012",
   note         = "ISBN 978-1-4614-2298-3",
-  doi          = "10.1007/978-1-4614-2299-0"
+  doi          = "10.1007/978-1-4614-2299-0",
 
   textVersion  =
       paste("Højsgaard, Søren; Edwards, David; Lauritzen, Steffen (2012)",

@@ -2,13 +2,25 @@
 ### weak.marginal for data
 ###
 
-### cgdata: Heterogeneous CGstats
-weakMarginalData <- function(cgdata, disc=NULL, cont=NULL, type="pms", details=2){
-    ## cat("weakMarginalData - entry\n"); #str(cgdata)
-    ## print(cgdata$n.obs)
 
-    ##details=6
-    ##cgdata <- unclass(cgdata)
+
+weak_marginal_data_list <- function(CGstats, Ad.list, Ac.list, type="ghk", details=0){
+
+    .infoPrint(details,1,"weak_marginal_data_list: Finding weak (empirical) marginals for each generator\n")
+    
+    ans <- vector("list", length(Ad.list))
+    for (ii in 1:length(Ad.list)){
+        EE.mm <- weak_marginal_data(CGstats, disc=Ad.list[[ii]], cont=Ac.list[[ii]],
+                                  type=type, details=details)
+        ans[[ii]] <- EE.mm
+    }
+    ans
+}
+
+
+### cgdata: Heterogeneous CGstats
+weak_marginal_data <- function(cgdata, disc=NULL, cont=NULL, type="pms", details=2){
+    ## cat("weak_marginal_data - entry\n"); #str(cgdata)
     .infoPrint(details,5,
                cat("Finding weak marginal (data)",
                    "     disc:",disc, "cont:", cont, "type:", .genType(disc,cont),"\n"))
@@ -19,10 +31,6 @@ weakMarginalData <- function(cgdata, disc=NULL, cont=NULL, type="pms", details=2
                   "mixed"      ={.weak.datamarg.mix (cgdata, disc, cont, details)},
                   "continuous" ={.weak.datamarg.cont(cgdata,       cont, details)})
 
-    #cat("ans:----------------\n"); print(ans)
-    #aaa <<- ans
-    #print(type)
-    ans
     if (type == "ghk") parm_pms2ghk(ans) else ans
 }
 

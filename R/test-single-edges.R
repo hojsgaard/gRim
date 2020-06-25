@@ -1,12 +1,3 @@
-################################################################
-##
-## Test deletion of 'edge' from model 'object'
-##
-## If model is decomposable and edge is in one clique only, then
-## degrees of freedom are adjusted for sparsity
-##
-################################################################
-
 #' @title Test deletion of edge from an interaction model
 #' 
 #' @description Tests if an edge can be deleted from an interaction
@@ -29,7 +20,9 @@
 #' @param \dots Further arguments to be passed on to the underlying
 #'     functions for testing.
 #' @return A list.
-#'
+#' @details If model is decomposable and edge is in one clique only,
+#'     then degrees of freedom are adjusted for sparsity
+#' 
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
 #' @seealso \code{\link{testadd}}
 #' @keywords models htest
@@ -117,16 +110,6 @@ testdelete.iModel <- function(object, edge, k=2, details=1, ...){
     ret
 }
 
-
-#####################################################################
-##
-## Test addition of 'edge' to model 'object'
-##
-## If new model is decomposable and edge is in one clique only, then
-## degrees of freedom are adjusted for sparsity
-##
-#####################################################################
-
 #' @title Test addition of edge to graphical model
 #' 
 #' @description Performs a test of addition of an edge to a graphical
@@ -203,8 +186,8 @@ testadd.iModel <- function(object, edge, k=2, details=1, ...){
         stop(cat("edge:", edge, "already in model\n"))
 
     ##model.type="mModel"
-    if (model.type == "mModel")
-        ans <- .test_delete_edge(object, edge, details)
+    if (identical(model.type, "mModel"))
+        ans <- .test_add_edge(object, edge, details)
     else {   
         ## Add edge to model FIXME: Fails if amat is sparse!
         amat[edge[1], edge[2]] <- amat[edge[2], edge[1]] <- 1L
