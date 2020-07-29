@@ -93,7 +93,7 @@ parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interaction
             glist <- as.list(varnames)  ##cat("The independence model\n")
         } else {
             pow   <- min(c(pow, length(varnames)))
-            glist <- combnPrim(varnames, pow, simplify=FALSE)
+            glist <- combn_prim(varnames, pow, simplify=FALSE)
         }               
     }
     glist     
@@ -126,7 +126,7 @@ parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interaction
     if (length(ss) <= interactions){
         list(ss)
     } else {
-        combnPrim(ss, interactions, simplify=FALSE)
+        combn_prim(ss, interactions, simplify=FALSE)
     }
   })
   remove_redundant(unlist(zz, recursive=FALSE))

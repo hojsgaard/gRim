@@ -161,7 +161,7 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
     ind.dim.unadj   <- sum(dim(getmi(object, "data")) - 1)
     
     if (getmi(object, "isDecomposable")){
-        rr <- ripMAT(glist2adjMAT(getmi(object, "glist")))
+        rr <- ripMAT(.glist2adjMAT(getmi(object, "glist")))
         dim.adj   <- .dim_loglin_decomp(rr$cliques, rr$separators,
                                    tableinfo=getmi(object, "data"), adjust=TRUE)
         dim.unadj <- .dim_loglin_decomp(rr$cliques, rr$separators,

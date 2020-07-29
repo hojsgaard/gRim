@@ -61,7 +61,7 @@ update.iModel <- function(object, items, fit=TRUE, details=0, ...){
 
 triangulate.dModel <- function(object, ...){
     cl <- getCall(object)
-    cq <- getCliques(triangulate(glist2adjMAT(terms(object))))
+    cq <- getCliques(triangulate(.glist2adjMAT(terms(object))))
     ff <- list2rhsf(cq)
     cl$formula <- ff
     eval(cl, parent.frame())
@@ -236,10 +236,11 @@ modify_glist <- function(glist, items, details=0){
 }
 
 .add.term_glist <- function(glist, term){
-  if (isin( glist, term ))
-    glist
-  else
-    remove_redundant( c(list(term), glist) )
+    ##if (isin( glist, term ))
+    if (is_inset(term, glist))
+        glist
+    else
+        remove_redundant( c(list(term), glist) )
 }
 
 .drop.term_glist <- function(glist, term){
@@ -261,7 +262,7 @@ modify_glist <- function(glist, items, details=0){
         if (subsetof( term, gen )){
             ##cat("term is subset of gen...\n")
             changed[ i ] <- 1
-            lower <- combnPrim(gen, length(gen)-1, simplify=FALSE)
+            lower <- combn_prim(gen, length(gen)-1, simplify=FALSE)
             ##cat("lower:\n"); print(lower)
             if ( length(term) == length(gen) ){
                 extra[[ count ]] <- lower

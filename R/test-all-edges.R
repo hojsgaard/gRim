@@ -82,7 +82,7 @@ testInEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL, 
     criterion <- match.arg(criterion, c("aic", "test"))
     
     vn   <- getmi(object, "varNames")
-    amat <- glist2adjMAT(getmi(object, "glist"), vn=vn)
+    amat <- .glist2adjMAT(getmi(object, "glist"), vn=vn)
 
     if (is.null(alpha))
         alpha <- if (criterion=="aic") 0 else 0.05
@@ -104,7 +104,7 @@ testOutEdges <- function(object, edgeMAT=NULL, criterion="aic", k=2, alpha=NULL,
     criterion <- match.arg(criterion, c("aic", "test"))
 
     vn   <- getmi(object, "varNames")
-    amat <- glist2adjMAT(getmi(object, "glist"), vn=vn)
+    amat <- .glist2adjMAT(getmi(object, "glist"), vn=vn)
             
     if (is.null(alpha))
         alpha <- if (criterion=="aic") 0 else 0.05

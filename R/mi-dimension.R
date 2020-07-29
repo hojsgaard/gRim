@@ -62,7 +62,7 @@ mmod_dimension <- function(object){
 
   ## quadratic dimension
   ## -------------------
-  uuu      <- glist2adjMAT(qqq)  ## FIXME
+  uuu      <- .glist2adjMAT(qqq)  ## FIXME
   quad.dim <- sum(uuu[upper.tri(uuu)]) + nrow(uuu)
   ##cat(sprintf("CHK: quad.dim=%i\n", quad.dim))
 

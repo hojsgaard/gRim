@@ -81,7 +81,7 @@ weak_marginal_model<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=
     quad2          <- .vMMt(p.jia, mu.dif2) #.colmult(p.j, mu.dif) %*% t(mu.dif)
     QQ             <- QQ + quad2 
     mu.A.marg[,ii] <- mu.iA2        
-    ia             <- nextCell(ia, A.levels)
+    ia             <- next_cell(ia, A.levels)
   }
   
 ###   QQ           <- matrix(QQ, nr=len.Ac) 

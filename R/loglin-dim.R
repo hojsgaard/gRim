@@ -84,7 +84,7 @@ dim_loglin <- function(glist, tableinfo){
 #' @export
 #' @rdname loglin-dim
 dim_loglin_decomp <- function(glist, tableinfo, adjust=TRUE){
-    rr <- ripMAT(glist2adjMAT(glist))  ## FIXME glist2adjMAT should go...
+    rr <- ripMAT(.glist2adjMAT(glist))  ## FIXME glist2adjMAT should go...
     .dim_loglin_decomp(rr$cliques, rr$separators, tableinfo=tableinfo, adjust=adjust)
 }
 

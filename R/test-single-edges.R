@@ -90,7 +90,8 @@ testdelete.iModel <- function(object, edge, k=2, details=1, ...){
         ## Is edge only in one clique in decomposable model?
         onlyinone <- FALSE
         if (isdecomp){
-            idx   <- isin (cliq, edge, index=TRUE)
+            ##idx   <- isin (cliq, edge, index=TRUE)
+            idx   <- is_inset (edge, cliq, index=TRUE)
             onlyinone <- sum(idx) == 1
         }
         
@@ -180,7 +181,7 @@ testadd.iModel <- function(object, edge, k=2, details=1, ...){
     .is_valid_edge(edge, object)
         
     if (is.null((amat <- list(...)$amat)))
-        amat <- glist2adjMAT(.glist(object))  ## FIXME use better function
+        amat <- .glist2adjMAT(.glist(object))  ## FIXME use better function
         
     if (amat[edge[1], edge[2]] != 0)
         stop(cat("edge:", edge, "already in model\n"))
@@ -200,7 +201,8 @@ testadd.iModel <- function(object, edge, k=2, details=1, ...){
         ## Is edge only in one clique in decomposable model?
         onlyinone <- FALSE
         if (isdecomp){
-            idx   <- isin (cliq, edge, index=TRUE)
+            ##idx   <- isin (cliq, edge, index=TRUE)
+            idx   <- is_inset (edge, cliq, index=TRUE)            
             onlyinone <- sum(idx) == 1
         }
         
@@ -395,7 +397,7 @@ print.testadd <- function(x,  ...){
     
 ##     ## ----- START USING amat
 ##     if (is.null((amat <- list(...)$amat)))
-##         amat <- glist2adjMAT(object$glist)
+##         amat <- .glist2adjMAT(object$glist)
 
 ##     ## Is edge is in model? stop if not
 ##     if (!subsetof(edge, colnames(amat)))

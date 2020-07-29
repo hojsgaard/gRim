@@ -112,7 +112,7 @@ weak_marginal_data <- function(cgdata, disc=NULL, cont=NULL, type="pms", details
         mu.dif  <- mu.jia - mu.ia
         quad    <- .vMMt(n.jia, mu.dif)
         QQ      <- QQ + (sum.ssd.j + quad)/n.tot
-        ia <- nextCell(ia, A.levels) ## FIXME Think that A.levels and flevels are always same, but do check!
+        ia <- next_cell(ia, A.levels) ## FIXME Think that A.levels and flevels are always same, but do check!
     }
     
     rownames(mu.A.marg) <- rownames(Sigma.A.marg)

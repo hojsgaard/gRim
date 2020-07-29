@@ -96,9 +96,10 @@ modelProperties <- function(object){
 modelProperties.dModel <- function(object){
     x <- terms( object )
     vn <- unique(unlist(x))
-    amat <- glist2adjMAT(x, vn = vn)  ## FIXME glist2adjMAT
+    amat <- .glist2adjMAT(x, vn = vn)  ## FIXME glist2adjMAT
     cliq <- maxCliqueMAT(amat)[[1]]
-    isg <- all(unlist(lapply(cliq, function(cq) isin(x, cq))))  ## FIXME isin
+    ##isg <- all(unlist(lapply(cliq, function(cq) isin(x, cq))))  ## FIXME isin
+    isg <- all(unlist(lapply(cliq, function(cq) is_inset(cq, x))))  ## FIXME isin
     isd <- if (isg) {
                length(mcsMAT(amat)) > 0
            }

@@ -30,6 +30,9 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
            )
 }
 
+## Gammel strøm fra gRbase
+.glist2adjMAT <- g_ugl2M_
+
 .glist <- function(object){
     if (inherits(object, "iModel"))
         getmi(object, "glist")
@@ -61,7 +64,7 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
 
 .glist2amat <- function (glist, vn = NULL, result = "matrix") {
     #cat("caller of .glist2amat: ", deparse(sys.calls()[[sys.nframe()-1]]), "\n")
-    glist2adjMAT(glist, vn = vn, result = result)
+    .glist2adjMAT(glist, vn = vn, result = result)
 }
 
 .as_amat <- function(x, vn=NULL){
@@ -125,7 +128,8 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
     x2 <- unlist(lapply(le:(lx-1), function(l) combn(gen,l, simplify=FALSE)),
                  recursive=FALSE)
 
-    i <- isin(x2, e, TRUE)
+    ##i <- isin(x2, e, TRUE)
+    i <- is_inset(e, x2, TRUE)
     ans <- x2[i==0]
   }
   ans
@@ -137,7 +141,8 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
 ## delete.term(list(c(1,2,3,4),c(2,3,4,5)),c(1,2,3))
 
 .delete.term <-  function(glist, e){
-  idx <- isin(glist, e, TRUE)
+    ##idx <- isin(glist, e, TRUE)
+    idx <- is_inset(e, glist, TRUE)
   zzz <- unlist(
                 lapply(1:length(glist), function(i){
                   if (idx[i]==1)
