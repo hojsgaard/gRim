@@ -145,40 +145,36 @@ modify_glist <- function(glist, items, details=0){
     
     action <- names( items )
     
-  items <- lapply( items, .doInput )
-  ## cat("modify_glist items (after .doInput): "); print(items)
-  names( items ) <- action
-
-  items   <- .parse.change.list(items, details)
-
-  ## cat("modify_glist items (after parse change) : "); print(items)
-  for (i in seq_along(items)){
-    curr.action  <- action[ i ]
-    curr.item    <- items[[ i ]]
-    glist        <- .modify_glistPrim(glist, curr.action, curr.item, details)
-  }
-  glist
+    items <- lapply(items, .do_input)
+    ## cat("modify_glist items (after .do_input): "); print(items)
+    names( items ) <- action
+    
+    items   <- .parse.change.list(items, details)
+    
+    ## cat("modify_glist items (after parse change) : "); print(items)
+    for (i in seq_along(items)){
+        curr.action  <- action[ i ]
+        curr.item    <- items[[ i ]]
+        glist        <- .modify_glist_internal(glist, curr.action, curr.item, details)
+    }
+    glist
 }
 
 ### Updates a glist (generating class) with the elements in
 ### curr.item. These can be of the type curr.action where valid
 ### choices are add.edge, drop.edge, add.term and drop.term
 ###
-.modify_glistPrim <- function(glist, curr.action, curr.item, details=0){
-    fname <- paste(".",curr.action,"_glist",sep="")
-    #cat(sprintf("fname: %s\n", fname))
+.modify_glist_internal <- function(glist, curr.action, curr.item, details=0){
+    fname <- paste(".", curr.action, "_glist", sep="")
     ## .infoPrint(details,1,cat(sprintf("action: %s \n", curr.action)))
 
     for (k in seq_along(curr.item)){
         curr <- curr.item[[ k ]]
         ##cat(sprintf("action: %s item: %s\n", fname, paste(curr, collapse=" ")))
         glist <- do.call(fname, list(glist, curr))
-        ##print(glist)
     }
     glist
 }
-
-
 
 .add.edge_glist <- function(glist, ee){
     extra <- list()
@@ -188,7 +184,7 @@ modify_glist <- function(glist, items, details=0){
         if (ee[1] %in% glist[[i]]){
             for (j in ss){
                 if (ee[2] %in% glist[[ j ]]){
-                    zz <- intersectPrim(glist[[i]], glist[[ j ]])
+                    zz <- intersectPrim(glist[[ i ]], glist[[ j ]])
                     extra[[ count ]] <- unique.default(c(ee, zz))
                     count <- count + 1
                 }
@@ -199,11 +195,76 @@ modify_glist <- function(glist, items, details=0){
 }
 
 
+## .drop.edge_glist <- function(glist, ee){
+##   .drop.term_glist(glist, ee)
+## }
+
+.drop.edge_glist <- function(glist, ee){
+
+    location <- which(is_inset(ee, glist, index=TRUE) > 0)
+
+    for (ii in location){
+
+        gterm <- glist[[ii]]
+        new.gterm <- list (setdiff(gterm, ee[1]), setdiff(gterm, ee[2]))
+        glist[[ii]]  <- new.gterm
+    }
+
+    glist <- c(unlist(glist[location], recursive=FALSE), glist[-location])
+    remove_redundant(glist)
+}
 
 
+.add.term_glist <- function(glist, term){
+    if (is_inset(term, glist)) glist
+    else remove_redundant( c(list(term), glist) )
+}
+
+.drop.term_glist <- function(glist, term){
+    #cat(".drop.term_glist\n")  #print(glist); print(term)
+    extra   <- list()
+    count   <- 1
+    changed <- rep(0, length(glist))
+
+    ## If the i'th generator 'gen.i' contains 'term' then gen.i will
+    ## be marked with a 1, and otherwise with a 0.
+
+    ## If gen.i and term are identical, then gen.i will be expanded to
+    ## all terms one order lower; these will be included in the output
+    ## whereas gen.i itself will not.
+
+    for (i in seq_along(glist)){
+        gen <- glist[[ i ]]
+        ## cat("term:\n"); print(term); cat("gen:\n"); print(gen)
+        if (subsetof(term, gen)){
+            ##cat("term is subset of gen...\n")
+            changed[ i ] <- 1
+            
+            lower <- combn_prim(gen, length(gen)-1, simplify=FALSE)
+            ##cat("lower:\n"); print(lower)
+            if (length(term) == length(gen)){
+                extra[[ count ]] <- lower
+            } else {
+                keep   <- unlist(lapply(lower, function(s) !subsetof(term, s)), use.names=FALSE)
+                ##print(keep)
+                lower <- lower[ keep ]
+                extra[[ count ]] <- lower
+            }
+            count <- count + 1
+        }
+    }
+
+    glist.new <- c(glist[changed==0], unlist(extra, recursive=FALSE, use.names=FALSE))
+    remove_redundant(glist.new)
+}
 
 
-.doInput <- function( e ){
+.aedge_glist <- .add.edge_glist
+.dedge_glist <- .drop.edge_glist
+.aterm_glist <- .add.term_glist
+.dterm_glist <- .drop.term_glist
+
+.do_input <- function( e ){
     cls <- class(e)
     if (cls == "data.frame" || cls == "matrix"){
         e <- as.matrix( e )
@@ -222,118 +283,14 @@ modify_glist <- function(glist, items, details=0){
 ### e6 <- as.data.frame(e5)
 ### e7 <- list(e1, e2)
 ##
-### .doInput( e1 )
-### .doInput( e2 )
-### .doInput( e3 )
-### .doInput( e4 )
-### .doInput( e5 )
-### .doInput( e6 )
-### .doInput( e7 )
+### .do_input( e1 )
+### .do_input( e2 )
+### .do_input( e3 )
+### .do_input( e4 )
+### .do_input( e5 )
+### .do_input( e6 )
+### .do_input( e7 )
 ##
-
-.drop.edge_glist <- function(glist, ee){
-  .drop.term_glist(glist, ee)
-}
-
-.add.term_glist <- function(glist, term){
-    ##if (isin( glist, term ))
-    if (is_inset(term, glist))
-        glist
-    else
-        remove_redundant( c(list(term), glist) )
-}
-
-.drop.term_glist <- function(glist, term){
-    #cat(".drop.term_glist\n")  #print(glist); print(term)
-    extra <- list()
-    count <- 1
-    changed <- rep(0, length(glist))
-
-    ## If the i'th generator 'gen.i' contains 'term' then gen.i will
-    ## be marked with a 1, and otherwise with a 0.
-
-    ## If gen.i and term are identical, then gen.i will be expanded to
-    ## all terms one order lower; these will be included in the output
-    ## whereas gen.i itself will not.
-
-    for (i in seq_along(glist)){
-        gen <- glist[[ i ]]
-        ## cat("term:\n"); print(term); cat("gen:\n"); print(gen)
-        if (subsetof( term, gen )){
-            ##cat("term is subset of gen...\n")
-            changed[ i ] <- 1
-            lower <- combn_prim(gen, length(gen)-1, simplify=FALSE)
-            ##cat("lower:\n"); print(lower)
-            if ( length(term) == length(gen) ){
-                extra[[ count ]] <- lower
-            } else {
-                keep   <- unlist(lapply(lower, function(s) !subsetof(term, s)), use.names=FALSE)
-                ##print(keep)
-                lower <- lower[ keep ]
-                extra[[ count ]] <- lower
-            }
-            count <- count + 1
-        }
-    }
-
-    glist.new <- c(glist[ changed==0 ], unlist(extra, recursive=FALSE, use.names=FALSE))
-    remove_redundant( glist.new )
-}
-
-
-.aedge_glist <- .add.edge_glist
-.dedge_glist <- .drop.edge_glist
-.aterm_glist <- .add.term_glist
-.dterm_glist <- .drop.term_glist
-
-
-.preprocess <- function(e){
-    if( class(e)=="data.frame" ){
-        e <- as.matrix( e )
-    }
-    if (class(e)=="matrix"){
-        if (ncol(e) !=2 )
-            stop("matrix of edges must have two columns\n")
-        e <- rowmat2list( e )
-    }
-    if (!is.list(e))
-        e <- list(e)
-    e
-}
-
-addEdge_glist <- function(glist, e){
-    e <- .preprocess( e )
-    for (i in seq_along(e))
-        glist <- .add.edge_glist( glist, e[[i]] )
-    glist
-}
-
-dropEdge_glist <- function(glist, e){
-    e <- .preprocess( e )
-    for (i in seq_along(e))
-        glist <- .drop.edge_glist( glist, e[[i]] )
-    glist
-}
-
-addTerm_glist <- function(glist, e){
-    if (!is.list(e))
-        e <- list(e)
-    for (i in seq_along(e))
-        glist <- .add.term_glist( glist, e[[i]] )
-    glist
-}
-
-dropTerm_glist <- function(glist, e){
-    if (!is.list(e))
-        e <- list(e)
-
-    for (i in seq_along(e))
-        glist <- .drop.term_glist( glist, e[[i]] )
-    glist
-}
-
-
-
 
 
 ### An ad.list can have elements with names add.edge, drop.edge,
@@ -360,8 +317,8 @@ dropTerm_glist <- function(glist, e){
         zzz
     }
     nam   <- names(items)
-    valid <- c("add.edge","drop.edge","add.term","drop.term",
-               "aedge","dedge","aterm","dterm")
+    valid <- c("add.edge", "drop.edge", "add.term", "drop.term",
+               "aedge",    "dedge",     "aterm",    "dterm")
 
     for (i in 1:length(items)){
         curr.action <- nam[i]
@@ -378,6 +335,55 @@ dropTerm_glist <- function(glist, e){
 
 
 
+
+## ###### SEEMS UNUSED ######
+
+## .preprocess <- function(e){
+##     if( class(e)=="data.frame" ){
+##         e <- as.matrix( e )
+##     }
+##     if (class(e)=="matrix"){
+##         if (ncol(e) !=2 )
+##             stop("matrix of edges must have two columns\n")
+##         e <- rowmat2list( e )
+##     }
+##     if (!is.list(e))
+##         e <- list(e)
+##     e
+## }
+
+## addEdge_glist <- function(glist, e){
+##     e <- .preprocess( e )
+##     for (i in seq_along(e))
+##         glist <- .add.edge_glist( glist, e[[i]] )
+##     glist
+## }
+
+## dropEdge_glist <- function(glist, e){
+##     e <- .preprocess( e )
+##     for (i in seq_along(e))
+##         glist <- .drop.edge_glist( glist, e[[i]] )
+##     glist
+## }
+
+## addTerm_glist <- function(glist, e){
+##     if (!is.list(e))
+##         e <- list(e)
+##     for (i in seq_along(e))
+##         glist <- .add.term_glist( glist, e[[i]] )
+##     glist
+## }
+
+## dropTerm_glist <- function(glist, e){
+##     if (!is.list(e))
+##         e <- list(e)
+
+##     for (i in seq_along(e))
+##         glist <- .drop.term_glist( glist, e[[i]] )
+##     glist
+## }
+
+## ###### END ######
 
 
 
