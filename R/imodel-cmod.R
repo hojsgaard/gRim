@@ -95,11 +95,11 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
 fit.cModel <- function(object, engine="ggmfit", start=NULL, ...){
 
     fitfun <- if (identical(engine, "ggmfit")) ggmfit else ggmfitr
-
+    
     ff <- fitfun(object$datainfo$S, n.obs=object$datainfo$n.obs,
-                        glist=object$modelinfo$glist,
-                        start=start, details=0,...)
-
+                 glist=object$modelinfo$glist,
+                 start=start, details=0,...)
+    
     ## ideviance to independence model  
     idev  <-  ff$n.obs * (log(ff$detK) + sum(log(diag(ff$S))))  
     idim      <-  ff$nvar 
@@ -107,7 +107,7 @@ fit.cModel <- function(object, engine="ggmfit", start=NULL, ...){
     dim.unadj <-  sat.dim - ff$df
     
     idf       <-  (dim.unadj - idim)
-    logL.sat  <-  ff$logL + ff$dev/2
+    logL.sat  <-  ff$logL + ff$dev / 2
     
     aic       <-  -2 * ff$logL + 2 * dim.unadj
     bic       <-  -2 * ff$logL + log(ff$n.obs) * dim.unadj
@@ -119,7 +119,7 @@ fit.cModel <- function(object, engine="ggmfit", start=NULL, ...){
                   dimension=dimension)
     
     ff$S <- ff$n.obs <- ff$dev <- ff$df <- NULL
-    ans <- c(ff, ans)
+    ans  <- c(ff, ans)
     
     object$fitinfo  <- ans
     object$isFitted <- TRUE

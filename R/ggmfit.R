@@ -116,87 +116,84 @@ ggmfitr <- function(S, n.obs, glist, start=NULL,
 {
 
     ##
-## Calculate logL for N(0,\Sigma) model.
-##
-## Sigma = Covariance matrix parameter
-## K     = Sigma inverse
-## S     = sample covariance matrix
-## n     = sample size
-##
-ell <- function(Sigma, S, n){
-
-    shdet <- function(Sigma){
-        prod(eigen(Sigma)[[1]])
+    ## Calculate logL for N(0,\Sigma) model.
+    ##
+    ## Sigma = Covariance matrix parameter
+    ## K     = Sigma inverse
+    ## S     = sample covariance matrix
+    ## n     = sample size
+    ##
+    ell <- function(Sigma, S, n){
+        
+        shdet <- function(Sigma){
+            prod(eigen(Sigma)[[1]])
+        }
+        p <- dim(S)[1]
+        const <- -n * p/2 * log(2 * pi)
+        const - n/2 * log(shdet(Sigma)) - n/2 * sum(diag( solve(Sigma) %*% S )) 
     }
-    p <- dim(S)[1]
-    const <- -n * p/2 * log(2 * pi)
-    const - n/2 * log(shdet(Sigma)) - n/2 * sum(diag( solve(Sigma) %*% S )) 
-}
-
-ellK <- function (K, S, n)
-{
-    value <- (n/2) * (log(det(K)) - sum(rowSums(K * S)))
-    value
-}
-
-
     
-  if (is.null(start)){
-    K     <- diag(1/diag(S))
-  } else {
-    K     <- start
-  }
-
-  dimnames(K)<-dimnames(S)
-  vn <- colnames(S); #print(vn)
-
-  x <- lapply(glist, match, vn)
+    ellK <- function (K, S, n)
+    {
+        value <- (n/2) * (log(det(K)) - sum(rowSums(K * S)))
+        value
+    }
+    
+    if (is.null(start)){
+        K     <- diag(1/diag(S))
+    } else {
+        K     <- start
+    }
+    
+    dimnames(K) <- dimnames(S)
+    vn <- colnames(S); #print(vn)
+    x  <- lapply(glist, match, vn)
   
-  varIndex=1:nrow(K)
-  itcount=0
+    varIndex = 1:nrow(K)
+    itcount = 0
 
-  if (length(x)){
-    my.complement <- function(C) return(setdiff(varIndex,C))
-    x.complements <- lapply(x, my.complement)
+    if (length(x)){
+        my.complement <- function(C) return(setdiff(varIndex,C))
+        x.complements <- lapply(x, my.complement)
                                         #print("x"); print(x)
                                         #print("x.comp");print(x.complements)
     
     if(length(x.complements[[1]])==0){
-      return(list(K=solve(S)))
+        return(list(K=solve(S)))
     }
-    logLvec <- NULL
-    repeat {    
-
+        logLvec <- NULL
+        repeat {    
+            
       for(j in 1:length(x)){
-        C     <- x[[j]]
-        notC  <- x.complements[[j]]
-        #print(C); print(S[C,C,drop=FALSE])
-        K[C,C] <- solve( S[C,C,drop=FALSE] ) +
-          K[C,notC,drop=FALSE]%*%solve(K[notC,notC,drop=FALSE])%*%K[notC,C,drop=FALSE]
-        #print(K)
+          C     <- x[[j]]
+          notC  <- x.complements[[j]]
+                                        #print(C); print(S[C,C,drop=FALSE])
+          K[C,C] <- solve( S[C,C,drop=FALSE] ) +
+              K[C,notC,drop=FALSE]%*%solve(K[notC,notC,drop=FALSE])%*%K[notC,C,drop=FALSE]
+                                        #print(K)
       }
-      logL <- ellK(K,S,n.obs)
-      logLvec <- c(logLvec, logL)
-      itcount <- itcount+1
-      if (itcount>1){
-        if (logL - prevlogL < eps){  
-          converged=TRUE
-          break
-        }
-      } else {
-        if (itcount==iter){
-          converged=FALSE
-          break
-        } 
-      }
-      prevlogL <- logL
-    }    
-  }
-
-  df <- sum(K[upper.tri(K)] == 0)
-  #ans <- list(K=K, logL=logL, converged=converged, itcount=itcount)
-  ans <- list(dev=-2*logL, df=df, logL=logL, K=K, S=S,n.obs=n.obs,
-              itcount=itcount, converged=converged,logLvec=logLvec)
-  return(ans)
+            logL <- ellK(K,S,n.obs)
+            logLvec <- c(logLvec, logL)
+            itcount <- itcount+1
+            if (itcount>1){
+                if (logL - prevlogL < eps){  
+                    converged=TRUE
+                    break
+                }
+            } else {
+                if (itcount==iter){
+                    converged=FALSE
+                    break
+                } 
+            }
+            prevlogL <- logL
+        }    
+    }
+    
+    df <- sum(K[upper.tri(K)] == 0)
+                                        #ans <- list(K=K, logL=logL, converged=converged, itcount=itcount)
+    ans <- list(dev=-2*logL, df=df, logL=logL, K=K, S=S,n.obs=n.obs,
+                itcount=itcount, converged=converged, logLvec=logLvec)
+    return(ans)
 }
 
