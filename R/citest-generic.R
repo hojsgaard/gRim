@@ -67,6 +67,11 @@ ciTest.table <- function(x, set=NULL, ...){
 }
 
 #' @export
+ciTest.array <- function(x, set=NULL, ...){
+  ciTest_table(x, set, ...)
+}
+
+#' @export
 ciTest.list <- function(x, set=NULL, ...){
   ciTest_mvn(x, set, ...)
 }
