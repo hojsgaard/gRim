@@ -1,5 +1,14 @@
+#####################################################################
+#' @title Get information about mixed interaction model objects
+#' @description General functions related to iModels
+#' @name imodel-info 
+#####################################################################
+#'
+#' @param object An \code{iModel} object.
+#' @param name The slot / information to be extracted.
 
-getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss", "center")){
+#' @rdname imodel-info
+getmi <- function(object, name){
     
     switch(name,
            "CGstats"=,
@@ -26,7 +35,9 @@ getmi <- function(object, name=c("CGstats", "cgstats", "SSD", "ssd", "SS", "ss",
            
            "glist"                =object$modelinfo$glist,
            "isGraphical"          =object$modelinfo$properties["isg"],
-           "isDecomposable"       =object$modelinfo$properties["issd"]
+           "isDecomposable"       =object$modelinfo$properties["issd"],
+
+           "ug" = ug(object$modelinfo$glist)
            )
 }
 

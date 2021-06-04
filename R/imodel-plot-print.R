@@ -8,7 +8,7 @@
 
 #' @method iplot iModel
 #' @export
-iplot.iModel <- function(x,...){
+iplot.iModel <- function(x, ...){
   ig <- ugList(.glist(x), result="igraph")
   V(ig)$label <- V(ig)$name
   V(ig)$size  <- 50
@@ -35,7 +35,7 @@ iplot.iModel <- function(x,...){
 
 #' @method plot iModel
 #' @export
-plot.iModel <- function(x,...){
+plot.iModel <- function(x, ...){
   uG <- ugList(.glist(x))
   switch(class(x)[1],
          "dModel"={
