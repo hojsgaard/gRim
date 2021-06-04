@@ -7,6 +7,7 @@
 #' @param object An \code{iModel} object.
 #' @param name The slot / information to be extracted.
 
+#' @export
 #' @rdname imodel-info
 getmi <- function(object, name){
     
