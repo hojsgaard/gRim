@@ -72,49 +72,52 @@
 #' @export dmod
 dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, details=0, ...){
 
-    if (!inherits(data, c("data.frame", "table")))
-      stop("data must be either a dataframe or a table \n")
+    .call <- match.call()
+    if (!inherits(data, c("data.frame", "table", "array")))
+      stop("data must be either a dataframe, a table or an array \n")
   
     if (inherits(data, "data.frame")){
         is_data.frame <- TRUE
         varNames <- names(data)
     } else {
+        stopifnot("'data' is not named array"=is_named_array_(data))
         is_data.frame <- FALSE
         varNames <- names(dimnames(data))
     }
     
     if (length(marginal) > 0){
-        zzz  <- unlist(lapply(marginal, pmatch, varNames))
-        zzz  <- zzz[!is.na(zzz)]
-        marginal <- varNames[zzz]
+        idx  <- unlist(lapply(marginal, pmatch, varNames))
+        idx  <- idx[!is.na(idx)]
+        marginal <- varNames[idx]
     }
     
-    ans <- parse_gm_formula(formula, varNames, marginal, interactions)
-    
+    mod_form <- parse_gm_formula(formula, varNames, marginal, interactions)
     
     if (is_data.frame){
-        data <- xtabs(~., data=data[ans$varNames])
+        data <- xtabs(~., data=data[mod_form$varNames])
     } else {
-        if (length(ans$varNames) != length(varNames)){
-            ## FIXME: Looks strange: as.table(tabMarg(data, ans$varNames))
-            data <- as.table(tabMarg(data, ans$varNames))
+        if (length(mod_form$varNames) != length(varNames)){
+            ## FIXME: Looks strange: as.table(tabMarg(data, mod_form$varNames))
+            data <- as.table(tabMarg(data, mod_form$varNames))
         }
     }
     varNames     <- names(dimnames(data))
     
-    res <- list(
+    out <- list(
         modelinfo = NULL,
         varNames  = varNames,
         datainfo  = list(data=data),
         fitinfo   = NULL,
-        isFitted  = FALSE
+        isFitted  = FALSE,
+        .call     = .call
+        
     )
     
-    upd <- .dModel_finalize(ans$glist, varNames) ## NOTE not .glist
-    res$modelinfo  <- upd    
+    upd <- .dModel_finalize(mod_form$glist, varNames) ## NOTE not .glist
+    out$modelinfo  <- upd    
 
-    class(res) <- c("dModel", "iModel")
-    if (fit) fit(res) else res
+    class(out) <- c("dModel", "iModel")
+    if (fit) fit(out) else out
 }
 
 
@@ -140,87 +143,105 @@ fitted.dModel <- function(object,...){
 }
 
 
-#' @export
-fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
-
-  ## FIXME: At some point we should allow for data in the form of a dataframe
-  ##
-  switch(engine,
-         "loglin"={llfit <- loglin(getmi(object, "data"), getmi(object, "glist"),
-                                   fit=TRUE,  print=print, eps=0.10, ...)
-                                   names(llfit)[1] <- 'dev'  ## loglin() calls this slot 'lrt'
-               })
-
-    vn <- getmi(object, "varNames")
-    
-    ## Calculate df's and adjusted df's. Requires data, glist
+get_model_dimensions <- function(object){
+    vn <- getmi(object, "varNames")    
     glistNUM <- .glistNUM(getmi(object, "glist"), vn)
-    
-    sat.dim.unadj   <- prod(dim(getmi(object, "data"))) - 1
-    sat.dim.adj     <- sum(getmi(object, "data") > 0) - 1
-    ind.dim.unadj   <- sum(dim(getmi(object, "data")) - 1)
-    
     if (getmi(object, "isDecomposable")){
         rr <- ripMAT(.glist2adjMAT(getmi(object, "glist")))
         dim.adj   <- .dim_loglin_decomp(rr$cliques, rr$separators,
-                                   tableinfo=getmi(object, "data"), adjust=TRUE)
+                                        tableinfo=getmi(object, "data"), adjust=TRUE)
         dim.unadj <- .dim_loglin_decomp(rr$cliques, rr$separators,
-                                   tableinfo=getmi(object, "data"), adjust=FALSE)
+                                        tableinfo=getmi(object, "data"), adjust=FALSE)
     } else {
         dim.adj   <- NA
         dim.unadj <- .dim_loglin(glistNUM, dim(getmi(object, "data")))
     }
+
+    list(dim.unadj=dim.unadj, dim.adj=dim.adj)
     
-    df.adj       <- sat.dim.adj   - dim.adj
-    df.unadj     <- sat.dim.unadj - dim.unadj
+}
 
-    ## FIXME: SILLY to call loglin to fit independence model, but it is faster than
-    ## a simple R implementation.
-    #indep.model  <- loglin(getmi(object, "data"), as.list(vn), iter=1, print=FALSE)
-    #ideviance    <-  -(llfit$dev - indep.model$lrt)
-    #idf          <-  -(llfit$df - indep.model$df)
+#' @export
+fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
 
-    indep.stat  <- loglin(getmi(object, "data"), as.list(vn), iter=1, print=FALSE)[c("lrt", "df")]
+    ## FIXME: At some point we should allow for data in the form of a dataframe
+
+    vn <- getmi(object, "varNames")
+    
+    sat.dim.unadj   <- prod(dim(getmi(object, "data"))) - 1
+    sat.dim.adj     <- sum(getmi(object, "data") > 0) - 1
+    ind.dim.unadj   <- sum(dim(getmi(object, "data")) - 1)
+
+    mod_dims <- get_model_dimensions(object)
+    
+    switch(engine,
+           "loglin"={llfit <- loglin(getmi(object, "data"), getmi(object, "glist"),
+                                     fit=TRUE, ## Needed to compute deviance
+                                     print=print, eps=0.10, ...)
+                                     
+                                     names(llfit)[1] <- 'dev'      ## loglin() calls this slot 'lrt'
+                                     llfit
+           })
+
+    indep.stat   <- loglin(getmi(object, "data"), as.list(vn), iter=1, print=FALSE)[c("lrt", "df")]
     ideviance    <-  -(llfit$dev - indep.stat$lrt)
     idf          <-  -(llfit$df - indep.stat$df)
-    
-    ii <- getmi(object, "data") * llfit$fit > 0
-    llfit$logL      <- sum(getmi(object, "data")[ii] * log(llfit$fit[ii] / sum(llfit$fit)))
-    llfit$ideviance <- ideviance
 
-    extra1 <- list(dim.unadj = dim.unadj,
-                   dim.adj   = dim.adj,
-                   df.unadj  = df.unadj,
-                   df.adj    = df.adj,
-                   idf       = idf,
-                   ideviance = ideviance)
-    
-    dimension <- c(mod.dim=dim.unadj, sat.dim=sat.dim.unadj,
-                   i.dim=ind.dim.unadj, df=df.unadj, idf=idf,
-                   mod.dim.adj = dim.adj,
-                   sat.dim.adj = sat.dim.adj,
-                   df.adj      = df.adj  )
+    Nobs <- sum(getmi(object, "data"))
+    llfit$logL      <- sum(getmi(object, "data") * log(llfit$fit), na.rm=TRUE) - Nobs * log(Nobs)
     
     llfit$df        <- NULL
-    llfit$fit <- NULL
-    llfit$aic       <- -2 * llfit$logL + 2 * dimension['mod.dim']
-    llfit$bic       <- -2 * llfit$logL + log(sum(getmi(object, "data"))) * dimension['mod.dim']
+    llfit$fit       <- NULL
+
+    llfit$ideviance <- ideviance
+    llfit$aic       <- -2 * llfit$logL + 2 * mod_dims$dim.unadj
+    llfit$bic       <- -2 * llfit$logL + log(sum(getmi(object, "data"))) * mod_dims$dim.unadj
     
+    df.adj       <- sat.dim.adj   - mod_dims$dim.adj
+    df.unadj     <- sat.dim.unadj - mod_dims$dim.unadj
+
+    dimension <- c(mod.dim     = mod_dims$dim.unadj,
+                   mod.dim.adj = mod_dims$dim.adj,
+                   sat.dim     = sat.dim.unadj,
+                   sat.dim.adj = sat.dim.adj,                   
+                   i.dim       = ind.dim.unadj,
+                   df          = df.unadj,
+                   df.adj      = df.adj,
+                   idf         = idf)
+        
     ## Calculate warning codes for sparsity
     sparseinfo <- .dModel_sparsity (llfit,
                                     getmi(object, "isDecomposable"),
                                     getmi(object, "glist"),
                                     getmi(object, "data"))
     
-    fitinfo <- llfit
-    fitinfo$sparseinfo <- sparseinfo
-    fitinfo$dimension  <- dimension
+    llfit$sparseinfo <- sparseinfo
+    llfit$dimension  <- dimension
     
-    object$fitinfo  <- fitinfo
+    object$fitinfo  <- llfit
     object$isFitted <- TRUE
     class(object)   <- c("dModel", "iModel")
     object
 }
+
+
+
+
+
+    ## extra1 <- list(dim.unadj = mod_dims$dim.unadj,
+                   ## dim.adj   = mod_dims$dim.adj,
+                   ## df.unadj  = df.unadj,
+                   ## df.adj    = df.adj,
+                   ## idf       = idf,
+                   ## ideviance = ideviance)
+
+
+
+    ## FIXME: SILLY to call loglin to fit independence model, but it is faster than
+    ## a simple R implementation.
+    #indep.model  <- loglin(getmi(object, "data"), as.list(vn), iter=1, print=FALSE)
+    #ideviance    <-  -(llfit$dev - indep.model$lrt)
+    #idf          <-  -(llfit$df - indep.model$df)
 
 
 .dModel_sparsity <- function(llfit, isDecomposable, glist, data){
@@ -313,11 +334,12 @@ residuals.dModel <-
     mu <- fitted(object)
     res <- y - mu
     nz <- mu > 0
-    y <- y[nz]
+    y  <- y[nz]
     mu <- mu[nz]
-    res[nz] <- switch(type, deviance = sign(y - mu) * sqrt(2 *
-        abs(y * log((y + (y == 0))/mu) - (y - mu))), pearson = (y -
-        mu)/sqrt(mu), response = y - mu)
+    res[nz] <- switch(type,
+                      deviance = sign(y - mu) * sqrt(2 *
+                                                     abs(y * log((y + (y == 0))/mu) - (y - mu))),
+                      pearson = (y - mu)/sqrt(mu), response = y - mu)
     res
 }
 
