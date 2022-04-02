@@ -84,7 +84,6 @@ effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
     pot.list  <- lapply(cliq, function(cq)
                         parray(cq, levels=vl[cq], values=1, normalize="all"))
 
-
     ##   cat("effloglin\n")
     ##   print(as.data.frame.table(pot.list[[1]]))
 
@@ -119,7 +118,7 @@ effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
 
         if (print)
             cat("max deviation (obs-fitted):", max(max.dif), "\n")
-        if (max(max.dif) < eps || itcount >= iter)
+        if ((max(max.dif) < eps) || (itcount >= iter))
             break()
         itcount <- itcount + 1L
     }
@@ -136,12 +135,12 @@ effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
 ### Create full joint:
     if (fit){
         pjoint <- prob.list[[1]]
-        if (length(prob.list)>1){
+        if (length(prob.list) > 1){
             for (ii in 2:length(prob.list)){
-                pjoint <- tableOp(pjoint, tableOp(prob.list[[ii]],
-                                                  tabMarg(prob.list[[ii]], rip$sep[[ii]]),
-                                                  ##tabMarg(prob.list[[ii]], rip$sep[[ii]]),
-                                                  "/"),"*")
+                pjoint <- tableOp(pjoint,
+                                  tableOp(prob.list[[ii]],
+                                          tabMarg(prob.list[[ii]], rip$sep[[ii]]), "/"),
+                                  "*")
             }
         }
         ##pjoint <- tablePerm(pjoint, vn)*Nobs

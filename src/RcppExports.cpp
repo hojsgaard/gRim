@@ -7,6 +7,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // fit2way_
 NumericVector fit2way_(const NumericVector& tab1, const NumericVector& tab2, const CharacterVector& R, const CharacterVector& vn);
 RcppExport SEXP _gRim_fit2way_(SEXP tab1SEXP, SEXP tab2SEXP, SEXP RSEXP, SEXP vnSEXP) {

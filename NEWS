@@ -1,4 +1,15 @@
+gRim 0.2.7 (Release date: 2022-03-14)
+=======================================
+
+* fixed minor things in documentation etc.
+
+gRim 0.2.6 (Release date: 2022-03-14)
+=======================================
+Changes:
+  * fixed logical issue related to && or ||
+
 gRim v0.2.5  (Release date: 2020-08-01)
+=======================================
 
 Changes
 

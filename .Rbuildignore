@@ -10,3 +10,6 @@ vignettes/*.tex
 vignettes/*.toc
 vignettes/.Rdata
 vignettes/.Rhistory
+cut/
+^CRAN-SUBMISSION$
+^cran-comments\.md$

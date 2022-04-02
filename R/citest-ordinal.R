@@ -282,7 +282,7 @@ ciTest_ordinal <- function(x, set=NULL, statistic="dev", N=0, ...){
   if (!(test %in% c("deviance", "wilcoxon", "kruskal", "jt"))){
     stop("test incorrectly specified")
   }
-  if (class(dataset)=="data.frame") {
+  if (inherits(dataset, "data.frame")) {
     d1 <- nlevels(dataset[,c1])
     d2 <- nlevels(dataset[,c2])
     ds <- dataset[,c(c1,c2,S)]
@@ -496,40 +496,63 @@ ciTest_ordinal <- function(x, set=NULL, statistic="dev", N=0, ...){
          return(c(ans)) 
          }  
 
-  if (!(class(dataset) %in% c("data.frame", "table"))) stop("dataset incorrectly specified")
-  if (!(test %in% c("deviance", "wilcoxon", "kruskal", "jt"))) stop("test incorrectly specified")
-  if (class(dataset)=="data.frame") {
-       d1 <- nlevels(dataset[,c1]); d2 <- nlevels(dataset[,c2]); ds <- dataset[,c(c1,c2,S)]
-     } else { d1 <- dim(dataset)[c1]; d2 <- dim(dataset)[c2]; ds <- apply(dataset, c(c1,c2,S), sum)}
-  if ((d1<=1) | (d2<=1)) stop("invalid factor(s)") 
-  if (is.null(S)) rv <- NULL else rv <- 3:(length(S)+2)
-  ft <- ftable(ds, col.vars=2:1, row.vars <- rv)    
-  dim(ft) <- c(length(ft)/(d1*d2), d1*d2) 
-  if (test=="deviance") obs <- LRT(ft, d1, d2) else {
-  if (test=="wilcoxon") obs <- wilcoxon(ft, d1, d2) else {
-  if (test=="kruskal")  obs <- kruskal(ft,d1,d2) else obs <- jt(ft,d1,d2)}}
-  if (N==0) return(obs) else {
-    rcsums <- apply(ft, 1, rcsum, d1, d2)
-    if (test=="deviance") {
-       strata.stats <- apply(rcsums, 2, rdev, d1, d2, N) 
-       mc.P <- sum(rowSums(strata.stats) >= obs$deviance)/N
-       return(c(obs, montecarlo.P=mc.P))   
+    if (!(class(dataset) %in% c("data.frame", "table"))) stop("dataset incorrectly specified")
+    if (!(test %in% c("deviance", "wilcoxon", "kruskal", "jt"))) stop("test incorrectly specified")
+
+    if (inherits(dataset, "data.frame")) {
+        d1 <- nlevels(dataset[,c1]);
+        d2 <- nlevels(dataset[,c2]);
+        ds <- dataset[,c(c1, c2, S)]
     } else {
-    if  (test=="wilcoxon") {
-        strata.stats <- apply(rcsums, 2, wdev, d1, d2, N)
-        mc.P <- sum(abs(rowSums(strata.stats)-obs$EW) >= abs(obs$W-obs$EW))/N
-        return(c(obs, montecarlo.P=mc.P))
-    } else {
-    if  (test=="kruskal") {
-        strata.stats <- apply(rcsums, 2, kdev, d1, d2, N)
-        mc.P <- sum((rowSums(strata.stats) >= obs$KW))/N
-        return(c(obs, montecarlo.P=mc.P))
-    } else {
-        strata.stats <- apply(rcsums, 2, jtdev, d1, d2, N)
-        mc.P <- sum((rowSums(strata.stats)-obs$EJT) >= abs(obs$JT-obs$EJT))/N 
-        return(c(obs, montecarlo.P=mc.P))
-    }}
-    }}
+        d1 <- dim(dataset)[c1];
+        d2 <- dim(dataset)[c2];
+        ds <- apply(dataset, c(c1, c2, S), sum)
+    }
+    
+    if ((d1<=1) | (d2<=1)) stop("invalid factor(s)") 
+    if (is.null(S)) rv <- NULL else rv <- 3:(length(S) + 2)
+    ft <- ftable(ds, col.vars=2:1, row.vars <- rv)    
+    dim(ft) <- c(length(ft) / (d1 * d2), d1 * d2) 
+
+    if (test=="deviance")
+        obs <- LRT(ft, d1, d2)
+    else {
+        if (test=="wilcoxon")
+            obs <- wilcoxon(ft, d1, d2)
+        else {
+            if (test=="kruskal")
+                obs <- kruskal(ft,d1,d2)
+            else
+                obs <- jt(ft,d1,d2)
+        }
+    }
+
+    if (N==0)
+        return(obs)
+    else {
+        rcsums <- apply(ft, 1, rcsum, d1, d2)
+        if (test=="deviance") {
+            strata.stats <- apply(rcsums, 2, rdev, d1, d2, N) 
+            mc.P <- sum(rowSums(strata.stats) >= obs$deviance) / N
+            return(c(obs, montecarlo.P=mc.P))   
+        } else {
+            if  (test=="wilcoxon") {
+                strata.stats <- apply(rcsums, 2, wdev, d1, d2, N)
+                mc.P <- sum(abs(rowSums(strata.stats) - obs$EW) >= abs(obs$W - obs$EW)) / N
+                return(c(obs, montecarlo.P=mc.P))
+            } else {
+                if  (test=="kruskal") {
+                    strata.stats <- apply(rcsums, 2, kdev, d1, d2, N)
+                    mc.P <- sum((rowSums(strata.stats) >= obs$KW)) / N
+                    return(c(obs, montecarlo.P=mc.P))
+                } else {
+                    strata.stats <- apply(rcsums, 2, jtdev, d1, d2, N)
+                    mc.P <- sum((rowSums(strata.stats) - obs$EJT) >= abs(obs$JT - obs$EJT)) / N 
+                    return(c(obs, montecarlo.P=mc.P))
+                }
+            }
+        }
+    }
 }
 
 

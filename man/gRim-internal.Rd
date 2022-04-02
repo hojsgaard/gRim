@@ -6,7 +6,6 @@
 \alias{normalize_ghkParms_}
 \alias{update_ghkParms_}
 
-\alias{getmi}
 
 \alias{dModel}
 \alias{cModel}

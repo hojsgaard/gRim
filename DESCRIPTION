@@ -1,5 +1,5 @@
 Package: gRim
-Version: 0.2.6.9005
+Version: 0.2.7
 Title: Graphical Interaction Models
 Author: Søren Højsgaard <sorenh@math.aau.dk>
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
@@ -10,7 +10,7 @@ Description: Provides the following types of models: Models for contingency
     package and the book by Højsgaard, Edwards and Lauritzen (2012,
     <doi:10.1007/978-1-4614-2299-0>); see 'citation("gRim")' for details.
 License: GPL (>= 2)
-URL: http://people.math.aau.dk/~sorenh/software/gR/
+URL: https://people.math.aau.dk/~sorenh/software/gR/
 Encoding: UTF-8
 Depends:
     R (>= 3.6.0),
@@ -29,5 +29,5 @@ Imports:
 ByteCompile: yes
 biocViews: 
 LinkingTo: Rcpp (>= 0.11.1), RcppArmadillo, RcppEigen, gRbase (>= 1.8-6.6)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
