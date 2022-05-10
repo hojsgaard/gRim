@@ -47,6 +47,7 @@ glist <-list(c("smoke", "mental"), c("mental", "phys"),
 stab <- lapply(glist, function(gg) tabMarg(reinis, gg))
 fv3 <- effloglin(stab, glist, print=FALSE)
 
+
 }
 \references{
 Radim Jirousek and Stanislav Preucil (1995). On the

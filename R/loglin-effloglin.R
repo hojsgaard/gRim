@@ -41,6 +41,7 @@
 #' 
 #' stab <- lapply(glist, function(gg) tabMarg(reinis, gg))
 #' fv3 <- effloglin(stab, glist, print=FALSE)
+#'
 #' 
 #' @export effloglin
 effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
@@ -84,11 +85,12 @@ effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
     pot.list  <- lapply(cliq, function(cq)
                         parray(cq, levels=vl[cq], values=1, normalize="all"))
 
-    ##   cat("effloglin\n")
+    ##cat("effloglin\n")
     ##   print(as.data.frame.table(pot.list[[1]]))
 
     ## ## Potential list over cliques
     ## Clique marginals
+
     prob.list  <- propagateLS(pot.list, rip, initialize=TRUE)
 
     itcount  <- 1L
