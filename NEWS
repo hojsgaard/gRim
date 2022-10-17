@@ -1,21 +1,29 @@
+gRim 0.2.10 (Release date: 2022-10-09)
+=======================================
+
+  * Removed Danish writing from comments.
+
+
 gRim 0.2.7 (Release date: 2022-03-14)
 =======================================
 
-* fixed minor things in documentation etc.
+  * fixed minor things in documentation etc.
 
 gRim 0.2.6 (Release date: 2022-03-14)
 =======================================
-Changes:
-  * fixed logical issue related to && or ||
 
-gRim v0.2.5  (Release date: 2020-08-01)
+Changes:
+
+  * fixed logical issue related to logical AND and logical OR
+
+gRim 0.2.5  (Release date: 2020-08-01)
 =======================================
 
 Changes
 
-* More cleaning up relative to gRbase
+  * More cleaning up relative to gRbase
 
-gRim v0.2.4  (Release date: 2020-XX-XX)
+gRim 0.2.4  (Release date: 2020-07-07)
 =======================================
 
 Changes:
@@ -25,9 +33,10 @@ Changes:
   * testthat added
 
 Fixes:
+
   * forward model selection based on (A)IC was wrong. Has been fixed.
 
-gRim v0.2.3  (Release date: 2020-06-20)
+gRim 0.2.3  (Release date: 2020-06-20)
 =======================================
 
 Fixes
@@ -40,8 +49,7 @@ Changes:
   * parse_gm_formula made visible
 
 
-
-gRim v0.2.1  (Release date: 2020-02-21)
+gRim 0.2.1  (Release date: 2020-02-21)
 =======================================
 
 Changes:
@@ -52,7 +60,7 @@ Changes:
   * Modifications to avoid warnings with new gRbase package.
   * Improved usage of new gRbase functionality; results in speed up
 
-gRim v0.2-0 (Release date: 2017-03-31)
+gRim 0.2-0 (Release date: 2017-03-31)
 ======================================
 
 Changes:

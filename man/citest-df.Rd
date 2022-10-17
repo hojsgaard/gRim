@@ -24,23 +24,23 @@ An object of class \code{citest} (which is a list).
 Test for conditional independence in a dataframe.
 }
 \details{
-\code{set} can be 1) a vector or 2) a right-hand sided formula in which
-variables are separated by '+'. In either case, it is tested if the first
-two variables in the \code{set} are conditionally independent given the
-remaining variables in \code{set}.  (Notice an abuse of the '+' operator in
-the right-hand sided formula: The order of the variables does matter.)
-
-If \code{set} is \code{NULL} then it is tested whether the first two
+\itemize{
+\item \code{set} can be 1) a vector or 2) a right-hand sided formula in
+which variables are separated by '+'. In either case, it is tested
+if the first two variables in the \code{set} are conditionally
+independent given the remaining variables in \code{set}.  (Notice
+an abuse of the '+' operator in the right-hand sided formula: The
+order of the variables does matter.)
+\item If \code{set} is \code{NULL} then it is tested whether the first two
 variables are conditionally independent given the remaining variables.
-
-If \code{set} consists only of factors then \code{x[,set]} is converted to a
+\item If \code{set} consists only of factors then \code{x[,set]} is converted to a
 contingency table and the test is made in this table using
 \code{ciTest_table()}.
-
-If \code{set} consists only of numeric values and integers then
+\item If \code{set} consists only of numeric values and integers then
 \code{x[,set]} is converted to a list with components \code{cov} and
 \code{n.obs} by calling \code{cov.wt(x[,set], method='ML')}. This list is
 then passed on to \code{ciTest_mvn()} which makes the test.
+}
 }
 \examples{
 

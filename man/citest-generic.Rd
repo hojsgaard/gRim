@@ -28,11 +28,11 @@ to specific types of data.
 \details{
 \code{x} can be
 \enumerate{
-\item a table,
-\item a dataframe whose columns are
-numerics and factors or
-\item a list with components \code{cov} and
-\code{n.obs}.
+\item a table (an array). In this case \code{ciTest_table} is called.
+\item a dataframe whose columns are numerics and factors. In this
+case \code{ciTest_df} is called.
+\item a list with components \code{cov} and \code{n.obs}. In this
+case \code{ciTest_mvn} is called.
 }
 
 \code{set} can be

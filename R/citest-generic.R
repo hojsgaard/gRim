@@ -18,11 +18,13 @@
 #' @return An object of class `citest` (which is a list).
 #'
 #' @details \code{x} can be
-#'  1. a table,
-#'  1. a dataframe whose columns are
-#'     numerics and factors or
-#'  1. a list with components \code{cov} and
-#'     \code{n.obs}.
+#'  1. a table (an array). In this case `ciTest_table` is called. 
+#' 
+#'  1. a dataframe whose columns are numerics and factors. In this
+#'  case `ciTest_df` is called.
+#' 
+#'  1. a list with components \code{cov} and \code{n.obs}. In this
+#'     case `ciTest_mvn` is called.
 #'
 #' @details
 #'  \code{set} can be
@@ -71,10 +73,13 @@ ciTest.array <- function(x, set=NULL, ...){
   ciTest_table(x, set, ...)
 }
 
-#' @export
+## FIXME THIS IS NOT TOO GOOD
+
+#' @export 
 ciTest.list <- function(x, set=NULL, ...){
   ciTest_mvn(x, set, ...)
 }
+
 #' @export
 ciTest.data.frame <- function(x, set=NULL, ...){
   ciTest_df(x, set, ...)
@@ -127,20 +132,21 @@ summary.citest <- function(object,...){
 #' @return An object of class `citest` (which is a list).
 #' @details
 #'
-#' \code{set} can be 1) a vector or 2) a right-hand sided formula in which
-#' variables are separated by '+'. In either case, it is tested if the first
-#' two variables in the \code{set} are conditionally independent given the
-#' remaining variables in \code{set}.  (Notice an abuse of the '+' operator in
-#' the right-hand sided formula: The order of the variables does matter.)
+#' * \code{set} can be 1) a vector or 2) a right-hand sided formula in
+#' which variables are separated by '+'. In either case, it is tested
+#' if the first two variables in the \code{set} are conditionally
+#' independent given the remaining variables in \code{set}.  (Notice
+#' an abuse of the '+' operator in the right-hand sided formula: The
+#' order of the variables does matter.)
 #' 
-#' If \code{set} is \code{NULL} then it is tested whether the first two
+#' * If \code{set} is \code{NULL} then it is tested whether the first two
 #' variables are conditionally independent given the remaining variables.
 #' 
-#' If \code{set} consists only of factors then \code{x[,set]} is converted to a
+#' * If \code{set} consists only of factors then \code{x[,set]} is converted to a
 #' contingency table and the test is made in this table using
 #' \code{ciTest_table()}.
 #' 
-#' If \code{set} consists only of numeric values and integers then
+#' * If \code{set} consists only of numeric values and integers then
 #' \code{x[,set]} is converted to a list with components \code{cov} and
 #' \code{n.obs} by calling \code{cov.wt(x[,set], method='ML')}. This list is
 #' then passed on to \code{ciTest_mvn()} which makes the test.
@@ -197,7 +203,7 @@ ciTest_df <- function(x, set=NULL,...){
 
     obj <- mmod(list(set), data=x)
     ans <- testdelete(obj, set[1:2])
-    ans <- ans[c(1,3,2)] ## FIXME: This is fragile
+    ans <- ans[c(1, 3, 2)] ## FIXME: This is fragile
     ans$method   <- "CHISQ"
     ans$statname <- "DEV"
     ans$varNames <- set
