@@ -13,3 +13,4 @@ vignettes/.Rhistory
 cut/
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
+vignettes_bak

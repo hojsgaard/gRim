@@ -1,7 +1,7 @@
 #' @title Find edges in a graph or edges not in an undirected graph.
 #' 
 #' @description Returns the edges of a graph (or edges not in a graph) where the
-#'     graph can be either a graphNEL object, a list of generators or an
+#'     graph can be either an igraph object, a list of generators or an
 #'     adjacency matrix.
 #'
 #' @name getEdges
@@ -28,8 +28,8 @@
 #' @aliases getEdges getEdges.list getEdges.graphNEL getEdges.matrix getInEdges
 #'     getOutEdges getEdgesMAT getInEdgesMAT getOutEdgesMAT
 #' 
-#' @param object An object representing a graph; either a generator list, a
-#'     graphNEL object or an adjacency matrix.
+#' @param object An object representing a graph; either a generator list, an
+#'     igraph object or an adjacency matrix.
 #' @param type Either "unrestricted" or "decomposable"
 #' @param ingraph If TRUE the result is the edges in the graph; if FALSE the
 #'     result is the edges not in the graph.
@@ -46,9 +46,9 @@
 #' @keywords utilities
 #' @examples
 #' 
-#' gg     <- ug(~a:b:d + a:c:d + c:e)
+#' gg     <- ug(~a:b:d + a:c:d + c:e, result="igraph")
 #' glist  <- getCliques(gg)
-#' adjmat <- as.adjMAT(gg)
+#' adjmat <- as(gg, "matrix")
 #' 
 #' #### On a glist
 #' getEdges(glist)
@@ -79,8 +79,8 @@
 #' 
 #' 
 #' ## Marked graphs; vertices a,b are discrete; c,d are continuous
-#' UG <- ug(~a:b:c + b:c:d)
-#' disc <- c("a","b")
+#' UG <- ug(~a:b:c + b:c:d, result="igraph")
+#' disc <- c("a", "b")
 #' getEdges(UG)
 #' getEdges(UG, discrete=disc)
 #' ## Above: same results; there are 5 edges in the graph
@@ -97,72 +97,78 @@
 #' 
  
 #' @export getEdges
-getEdges <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
+getEdges <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...) {
     UseMethod("getEdges")
 }
 
 ##' @export
-getEdges.iModel <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
+getEdges.iModel <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...) {
     getEdgesMAT(.glist2adjMAT(terms(object)), type=type, ingraph=ingraph, discrete=discrete, ...)
 }
 
-##' @export
-getEdges.graphNEL <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
-    getEdgesMAT(as.adjMAT(object), type=type, ingraph=ingraph, discrete=discrete, ...)
-}
+## ##' @export
+## getEdges.graphNEL <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...) {
+##     getEdgesMAT(as.adjMAT(object), type=type, ingraph=ingraph, discrete=discrete, ...)
+## }
 
 ##' @export
-getEdges.list <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
+getEdges.igraph <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...) {
+    getEdgesMAT(as(object, "matrix"), type=type, ingraph=ingraph, discrete=discrete, ...)
+}
+
+
+##' @export
+getEdges.list <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...) {
     getEdgesMAT(.glist2adjMAT(object), type=type, ingraph=ingraph, discrete=discrete, ...)
 }
 
 ##' @export
-getEdges.matrix <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
+getEdges.matrix <- function(object, type="unrestricted", ingraph=TRUE, discrete=NULL, ...) {
     getEdgesMAT(object, type=type, ingraph=ingraph, discrete=discrete, ...)    
 }
 
 #' @export
-getInEdges <- function(object, type="unrestricted", discrete=NULL, ...){
+getInEdges <- function(object, type="unrestricted", discrete=NULL, ...) {
     getEdges(object, type=type, ingraph=TRUE, discrete=discrete, ...)
 }
 
 #' @export
-getOutEdges <- function(object, type="unrestricted", discrete=NULL, ...){
+getOutEdges <- function(object, type="unrestricted", discrete=NULL, ...) {
     getEdges(object, type=type, ingraph=FALSE, discrete=discrete, ...)
 }
 
 
 ##########################################################################
 
-getEdgesMAT <- function(adjmat, type="unrestricted", ingraph=TRUE, discrete=NULL, ...){
+getEdgesMAT <- function(adjmat, type="unrestricted", ingraph=TRUE, discrete=NULL, ...) {
     if (ingraph)
         getInEdgesMAT(adjmat, type, discrete, ...)
     else
         getOutEdgesMAT(adjmat, type, discrete, ...)
 }
 
-getInEdgesMAT <- function(adjmat, type="unrestricted", discrete=NULL, ...){
-  type <- match.arg(type, c("unrestricted", "decomposable"))
-  emat <- edgeListMAT(adjmat, matrix=TRUE) #;  print(emat)
-  if (type == "decomposable"){
-      idx <- vector("logical", nrow(emat))    
-      for (ii in seq_len(nrow(emat))){
-        ed <- emat[ii, ] 
+getInEdgesMAT <- function(adjmat, type="unrestricted", discrete=NULL, ...) {
+    type <- match.arg(type, c("unrestricted", "decomposable"))
+    emat <- edgeListMAT(adjmat, matrix=TRUE) #;  print(emat)
+    if (type == "decomposable") {
+        idx <- vector("logical", nrow(emat))    
+        for (ii in seq_len(nrow(emat))){
+            ed <- emat[ii, ] 
         adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 0L
-        idx[ii] <- length(mcs_markedMAT(adjmat, discrete=discrete)) > 0
-        adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 1L
-      }
-      emat <- emat[idx, , drop=FALSE]
+            idx[ii] <- length(mcs_markedMAT(adjmat, discrete=discrete)) > 0
+            adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 1L
+        }
+        emat <- emat[idx, , drop=FALSE]
     }
   emat
 }
 
-getOutEdgesMAT <- function(adjmat, type="unrestricted", discrete=NULL, ...){
+getOutEdgesMAT <- function(adjmat, type="unrestricted", discrete=NULL, ...) {
     type <- match.arg(type, c("unrestricted", "decomposable"))
     emat <- nonEdgeListMAT(adjmat, matrix=TRUE)
-    if (type == "decomposable"){
+    if (type == "decomposable") {
         idx <- vector("logical", nrow(emat))    
-        for (ii in seq_len(nrow(emat))){
+        for (ii in seq_len(nrow(emat))) {
             ed <- emat[ii,]
             adjmat[ed[1], ed[2]] <- adjmat[ed[2], ed[1]] <- 1L
             idx[ii] <- length(mcs_markedMAT(adjmat, discrete=discrete)) > 0

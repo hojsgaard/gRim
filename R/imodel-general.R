@@ -26,7 +26,7 @@ extractAIC.iModel <- function(fit, scale, k = 2, ...){
 }
 
 #' @rdname imodel-general
-summary.iModel <- function(object, ...){
+summary.iModel <- function(object, ...) {
   glist <- getmi(object, "glist")
   isg   <- getmi(object, "isGraphical")
   isd   <- getmi(object, "isDecomposable")

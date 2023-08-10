@@ -132,8 +132,7 @@ stepwise.iModel <- function(object,
 #' @export
 #' @rdname stepwise
 backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", search="all",
-                     steps=1000,  k=2, fixin=NULL, details=1, trace=2, ...)
-{
+                     steps=1000,  k=2, fixin=NULL, details=1, trace=2, ...) {
   type   <- match.arg(type,   c("decomposable", "unrestricted"))
   search <- match.arg(search, c("headlong",     "all"))
   ##details=10
@@ -159,15 +158,16 @@ backward <- function(object, criterion="aic", alpha=NULL, type="decomposable", s
   ##                    "headlong" = {.testInEdges_headlong},
   ##                    "all"      = {.testInEdges_all}) 
   itcount <- 1
-  repeat{
+  repeat {
       ##cat("Iteration", itcount, "\n")
-      amat    <- .as_amat(.glist(object)) ## FIXME generate amat yet another time
+      gg      <- .glist(object)
+      amat    <- .as_amat(gg) ## FIXME generate amat yet another time
       edgeMAT <- getEdges(amat, type=type, ingraph=TRUE, discrete=disc) 
 
       if (!is.null(fmat))
           edgeMAT <- .update_edgeMAT(edgeMAT, fmat, vn)
       
-      if (nrow(edgeMAT) == 0){
+      if (nrow(edgeMAT) == 0) {
           if (details >= 1) cat(sprintf("No edges can be removed\n"))
           break
       } 

@@ -24,17 +24,8 @@
 #' @import gRbase
 #'
 #' @importFrom gRain propagateLS
-#' @importFrom igraph igraph.to.graphNEL igraph.from.graphNEL
+#' @importFrom igraph
 #'     get.adjacency V "V<-" E "E<-" is.directed layout.lgl
 #'     plot.igraph graph.adjacency is.dag
-
-## Bioconductor imports/exports
-## ----------------------------
-
-#' @importClassesFrom graph graphNEL
-#' @importFrom graph edges nodes
-
-#' @importMethodsFrom Rgraphviz plot
-
-.dumfunction_afterimportFrom <- function(){}
+NULL
 

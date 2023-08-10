@@ -15,8 +15,8 @@
 getEdges(object, type = "unrestricted", ingraph = TRUE, discrete = NULL, ...)
 }
 \arguments{
-\item{object}{An object representing a graph; either a generator list, a
-graphNEL object or an adjacency matrix.}
+\item{object}{An object representing a graph; either a generator list, an
+igraph object or an adjacency matrix.}
 
 \item{type}{Either "unrestricted" or "decomposable"}
 
@@ -34,7 +34,7 @@ A p * 2 matrix with edges.
 }
 \description{
 Returns the edges of a graph (or edges not in a graph) where the
-graph can be either a graphNEL object, a list of generators or an
+graph can be either an igraph object, a list of generators or an
 adjacency matrix.
 }
 \details{
@@ -61,9 +61,9 @@ undocumented for directed graphs.
 }
 \examples{
 
-gg     <- ug(~a:b:d + a:c:d + c:e)
+gg     <- ug(~a:b:d + a:c:d + c:e, result="igraph")
 glist  <- getCliques(gg)
-adjmat <- as.adjMAT(gg)
+adjmat <- as(gg, "matrix")
 
 #### On a glist
 getEdges(glist)
@@ -94,8 +94,8 @@ getEdges(adjmat, type="decomposable", ingraph=FALSE)
 
 
 ## Marked graphs; vertices a,b are discrete; c,d are continuous
-UG <- ug(~a:b:c + b:c:d)
-disc <- c("a","b")
+UG <- ug(~a:b:c + b:c:d, result="igraph")
+disc <- c("a", "b")
 getEdges(UG)
 getEdges(UG, discrete=disc)
 ## Above: same results; there are 5 edges in the graph

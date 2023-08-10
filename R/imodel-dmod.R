@@ -39,7 +39,7 @@
 #'     triangulate.dModel
 #' @param formula Model specification in one of the following forms: 1) a
 #'     right-hand sided formula, 2) as a list of generators, 3) an undirected
-#'     graph (represented either as a graphNEL object or as an adjacency
+#'     graph (represented either as an igraph object or as an adjacency
 #'     matrix).  Notice that there are certain model specification shortcuts,
 #'     see Section 'details' below.
 #' @param data Either a table or a dataframe. In the latter case, the dataframe
@@ -70,13 +70,13 @@
 
 
 #' @export dmod
-dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, details=0, ...){
+dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, details=0, ...) {
 
     .call <- match.call()
     if (!inherits(data, c("data.frame", "table", "array")))
       stop("data must be either a dataframe, a table or an array \n")
   
-    if (inherits(data, "data.frame")){
+    if (inherits(data, "data.frame")) {
         is_data.frame <- TRUE
         varNames <- names(data)
     } else {
@@ -85,7 +85,7 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
         varNames <- names(dimnames(data))
     }
     
-    if (length(marginal) > 0){
+    if (length(marginal) > 0) {
         idx  <- unlist(lapply(marginal, pmatch, varNames))
         idx  <- idx[!is.na(idx)]
         marginal <- varNames[idx]
@@ -93,10 +93,10 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
     
     mod_form <- parse_gm_formula(formula, varNames, marginal, interactions)
     
-    if (is_data.frame){
+    if (is_data.frame) {
         data <- xtabs(~., data=data[mod_form$varNames])
     } else {
-        if (length(mod_form$varNames) != length(varNames)){
+        if (length(mod_form$varNames) != length(varNames)) {
             ## FIXME: Looks strange: as.table(tabMarg(data, mod_form$varNames))
             data <- as.table(tabMarg(data, mod_form$varNames))
         }
@@ -121,7 +121,7 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
 }
 
 
-.dModel_finalize<- function(glist, varNames){
+.dModel_finalize<- function(glist, varNames) {
     list(glist      = glist,
          glistNUM   = .glistNUM(glist, varNames),
          properties = isGSD_glist(glist))
@@ -132,8 +132,8 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
 
 
 #' @export
-fitted.dModel <- function(object,...){
-    if ( object$isFitted ){
+fitted.dModel <- function(object,...) {
+    if ( object$isFitted ) {
         object$fitinfo$fit
     } else {
         cl <- object$call
@@ -143,7 +143,7 @@ fitted.dModel <- function(object,...){
 }
 
 
-get_model_dimensions <- function(object){
+get_model_dimensions <- function(object) {
     vn <- getmi(object, "varNames")    
     glistNUM <- .glistNUM(getmi(object, "glist"), vn)
     if (getmi(object, "isDecomposable")){

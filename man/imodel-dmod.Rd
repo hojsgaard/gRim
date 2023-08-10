@@ -22,7 +22,7 @@ dmod(
 \arguments{
 \item{formula}{Model specification in one of the following forms: 1) a
 right-hand sided formula, 2) as a list of generators, 3) an undirected
-graph (represented either as a graphNEL object or as an adjacency
+graph (represented either as an igraph object or as an adjacency
 matrix).  Notice that there are certain model specification shortcuts,
 see Section 'details' below.}
 

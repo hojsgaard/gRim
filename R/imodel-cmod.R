@@ -51,7 +51,7 @@
 #' 
 #' @export cmod 
 
-cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
+cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0) {
 
     dd  <- extract_cmod_data(data)
     vn  <- colnames(dd$S)
@@ -77,7 +77,7 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
 }
 
 
-.cModel_finalize <- function(glist, varNames){
+.cModel_finalize <- function(glist, varNames) {
 
     amat  <- ugList(glist, result="matrix")
     glist <- maxCliqueMAT(amat)[[1]]
@@ -92,7 +92,7 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0){
 
 
 #' @export
-fit.cModel <- function(object, engine="ggmfit", start=NULL, ...){
+fit.cModel <- function(object, engine="ggmfit", start=NULL, ...) {
 
     fitfun <- if (identical(engine, "ggmfit")) ggmfit else ggmfitr
     
@@ -129,15 +129,14 @@ fit.cModel <- function(object, engine="ggmfit", start=NULL, ...){
 
 
 #' @export
-extract_cmod_data <- function(data){
-    if (inherits(data, "data.frame")){
+extract_cmod_data <- function(data) {
+    if (inherits(data, "data.frame")) {
         data <- cov.wt(data, method="ML")
     } else
-        if (inherits(data, "list") && identical(names(data), c("cov", "center", "n.obs"))){
+        if (inherits(data, "list") && identical(names(data), c("cov", "center", "n.obs"))) {
             ## OK
         } else
             stop("Can not proceed...")
-    
             
     names(data)[1] <- "S"
     data

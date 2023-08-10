@@ -45,7 +45,8 @@ getmi <- function(object, name){
 ## Gammel strøm fra gRbase
 .glist2adjMAT <- g_ugl2M_
 
-.glist <- function(object){
+
+.glist <- function(object) {
     if (inherits(object, "iModel"))
         getmi(object, "glist")
     else if (inherits(object, "matrix"))
@@ -53,7 +54,7 @@ getmi <- function(object, name){
     else stop("Do not know what to do\n")
 }
 
-".glist<-" <- function(object, value){
+".glist<-" <- function(object, value) {
     if (inherits(object, "iModel")){
         object$modelinfo$glist <- value
         object
@@ -62,7 +63,7 @@ getmi <- function(object, name){
 
 
 .amat <- function(object, vn = NULL, result = "matrix") {
-    if (inherits(object, c("list", "formula"))){
+    if (inherits(object, c("list", "formula"))) {
         glist <- rhsf2list(object)
         if (is.null(vn))
             vn <- unique.default(c(glist, recursive=TRUE))
@@ -79,7 +80,7 @@ getmi <- function(object, name){
     .glist2adjMAT(glist, vn = vn, result = result)
 }
 
-.as_amat <- function(x, vn=NULL){
+.as_amat <- function(x, vn=NULL) {
     ##cat("caller of .as_amat: ", deparse(sys.calls()[[sys.nframe()-1]]), "\n")
     if (inherits(x, "list")){
         if (is.null(vn)) vn <- unique.default(c(x, recursive=TRUE))
@@ -122,7 +123,7 @@ getmi <- function(object, name){
 }
 
 
-.toString <- function(x, col=','){
+.toString <- function(x, col=',') {
   paste0(x, collapse=col)
 }
 
@@ -130,7 +131,7 @@ getmi <- function(object, name){
 ##
 ## reduceSet(c(1,2,3,4),c(1,2))
 ## reduceSet(c(1,2,3,4),c(1,2,3))
-.reduceSet <- function(gen,e){
+.reduceSet <- function(gen, e) {
   if (length(e)==2){
     i <- match(e,gen)
     ans <- list(gen[-i[1]], gen[-i[2]])
@@ -152,23 +153,23 @@ getmi <- function(object, name){
 ## delete.term(list(c(1,2,3,4),c(2,3,4,5)),c(1,2))
 ## delete.term(list(c(1,2,3,4),c(2,3,4,5)),c(1,2,3))
 
-.delete.term <-  function(glist, e){
+.delete.term <-  function(glist, e) {
     ##idx <- isin(glist, e, TRUE)
     idx <- is_inset(e, glist, TRUE)
-  zzz <- unlist(
-                lapply(1:length(glist), function(i){
-                  if (idx[i]==1)
-                    .reduceSet(glist[[i]],e)
-                  else
-                    glist[i]
-                }), recursive=FALSE)
-  ans <- remove_redundant(zzz)
-  ans
+    zzz <- unlist(
+        lapply(1:length(glist), function(i) {
+            if (idx[i]==1)
+                .reduceSet(glist[[i]],e)
+            else
+                glist[i]
+        }), recursive=FALSE)
+    ans <- remove_redundant(zzz)
+    ans
 }
 
 ## Add e interaction to x
 ##
-.add.term <- function(glist,e){
+.add.term <- function(glist,e) {
   remove_redundant(c(glist, list(e)))
 }
 
@@ -183,48 +184,48 @@ getmi <- function(object, name){
 ### Known issues: The function should check that SS is of the right form
 ### (homogeneous and simplify)
 
-print.MIparms <- function(x,simplify=TRUE,useN=FALSE, ...){
+print.MIparms <- function(x,simplify=TRUE,useN=FALSE, ...) {
 
-  cat(sprintf("MIparms: form=%s\n", class(x)[1]))
-
-##   cat(sprintf("MIparms: form=%s, gentype=%s\n", class(x)[1], x$gentype))
-##   aaa<-unlist(lapply(x, is.null))
-##   cat("MIparms:",class(x)[1], "gentype:", x$gentype, "slots:", names(aaa)[!aaa],"\n")
-
-  xx <- x
-  if (useN)
-    xx[[1]] <- xx[[1]]*xx$N
-
-  if (x$gentype=="discrete"){
-    if (simplify){
-      print(as.numeric(xx[[1]]))
+    cat(sprintf("MIparms: form=%s\n", class(x)[1]))
+    
+    ##   cat(sprintf("MIparms: form=%s, gentype=%s\n", class(x)[1], x$gentype))
+    ##   aaa<-unlist(lapply(x, is.null))
+    ##   cat("MIparms:",class(x)[1], "gentype:", x$gentype, "slots:", names(aaa)[!aaa],"\n")
+    
+    xx <- x
+    if (useN)
+        xx[[1]] <- xx[[1]]*xx$N
+    
+    if (x$gentype=="discrete") {
+        if (simplify) {
+            print(as.numeric(xx[[1]]))
+        } else {
+            print(xx[[1]])
+        }
     } else {
-      print(xx[[1]])
+        if (simplify) {
+            print(rbind(
+                c(as.numeric(xx[[1]]),
+                  rep(NA, ncol(xx[[3]]))),
+                cbind(xx[[2]],xx[[3]]))
+                )
+        } else {
+        print(xx[1:3])
     }
-  } else {
-    if (simplify){
-      print(rbind(
-                  c(as.numeric(xx[[1]]),
-                    rep(NA, ncol(xx[[3]]))),
-                  cbind(xx[[2]],xx[[3]]))
-            )
+    }
+    cat("\n")
+    return(invisible(x))
+}
+
+.as.matrix <- .MIparms2matrix <- function(x,...) {
+    
+    if (x$gentype=="discrete") {
+        matrix(as.numeric(x[[1]]),nrow=1)
     } else {
-      print(xx[1:3])
+        rbind(
+            c(as.numeric(x[[1]]), rep(NA, ncol(x[[3]]))),
+            cbind(x[[2]],x[[3]]))
     }
-  }
-  cat("\n")
-  return(invisible(x))
- }
-
-.as.matrix <- .MIparms2matrix <- function(x,...){
-
-  if (x$gentype=="discrete"){
-    matrix(as.numeric(x[[1]]),nrow=1)
-  } else {
-    rbind(
-          c(as.numeric(x[[1]]), rep(NA, ncol(x[[3]]))),
-          cbind(x[[2]],x[[3]]))
-  }
 }
 
 .logdet <- function(x){
