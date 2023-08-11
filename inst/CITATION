@@ -1,10 +1,10 @@
 citHeader("To cite gRim in publications use:")
 
-citEntry(entry = "Book",
+bibentry(bibtype = "Book",
   title        = "Graphical Models with {R}",
-  author       = personList(as.person("S{\\o}ren H{\\o}jsgaard"),
-                            as.person("David Edwards"),
-			    as.person("Steffen Lauritzen")),
+  author       = c("S{\\o}ren H{\\o}jsgaard",
+                            "David Edwards",
+			    "Steffen Lauritzen"),
   publisher    = "Springer",
   address      = "New York",
   year         = "2012",
