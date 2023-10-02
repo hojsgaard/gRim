@@ -43,26 +43,32 @@
 
 
 #' @export
-parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interactions=NULL)
-{
+parse_gm_formula <- function(formula, varnames=NULL, marginal=NULL, interactions=NULL) {
 
-    varnames <- if (length(marginal) > 0) marginal else varnames 
+    varnames <- if (length(marginal) > 0)
+                    marginal
+                else
+                    varnames 
+    ## Default is that varnames is NULL
 
-    if (!is.atomic(varnames)) stop("'varnames' must be atomic\n")
+    if (!is.null(varnames)) {
+        if (!is.atomic(varnames))
+            stop("'varnames' must be atomic\n")
+    }
     
-    if (!inherits(formula, c("formula", "list"))) stop("Invalid formula specification")
-        
+    if (!inherits(formula, c("formula", "list")))
+        stop("Invalid formula specification")
+    
     switch(class(formula),
            "formula"={
-               glist <- .do.formula(formula, varnames)               
+               glist <- .formula.to.list(formula, varnames)               
            },
            "list"={
                glist <- formula
            })
-
     
     glist <- remove_redundant(glist)    
-    glist <- .check.glist(glist, varnames)  
+    glist <- .check.glist.for.valid.varnames(glist, varnames)  
     
     if (!is.null(interactions))
         glist <- .set.interactions(glist, interactions)
@@ -73,23 +79,23 @@ parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interaction
 }
 
 
-.do.formula <- function(formula, varnames=NULL){
+.formula.to.list <- function(formula, varnames=NULL) {
 
     ## 'formula' is a right hand sided formula.
     pow <- .extract.power(formula)
     ##cat(sprintf("A formula is given; power=%d\n", pow))
-
-    if (is.na(pow)){
+    
+    if (is.na(pow)) {
         return(rhsFormula2list(formula)) ##cat("A proper formula\n")
     }
-
+    
     if (is.null(varnames))
         stop("'formula' is special, and 'varnames' is needed\n")
     
-    if (identical(pow, -1L)){
+    if (identical(pow, -1L)) {
         glist <- list(varnames)         ##cat("The saturated model\n")
     } else {
-        if (identical(pow, 1L)){
+        if (identical(pow, 1L)) {
             glist <- as.list(varnames)  ##cat("The independence model\n")
         } else {
             pow   <- min(c(pow, length(varnames)))
@@ -99,14 +105,16 @@ parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interaction
     glist     
 }
 
-.check.glist <- function(glist, varnames){
+.check.glist.for.valid.varnames <- function(glist, varnames) {
 
     if (is.null(varnames)) return(glist)
         
     ## It is allowed to abbreviate variable names; they are matched
     ## against names in varnames
+    
     if (any(is.na(pmatch(unlist(glist), varnames, duplicates.ok = TRUE)))) 
         stop("An invalid variable specification has been found\n")
+
     glist <- lapply(glist, function(x) {
         ii <- pmatch(x, varnames)
         varnames[ii]
@@ -120,10 +128,9 @@ parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interaction
     glist
 }
 
-
-.set.interactions <- function(glist, interactions){
-  zz <- lapply(glist, function(ss){
-    if (length(ss) <= interactions){
+.set.interactions <- function(glist, interactions) {
+  zz <- lapply(glist, function(ss) {
+    if (length(ss) <= interactions) {
         list(ss)
     } else {
         combn_prim(ss, interactions, simplify=FALSE)
@@ -136,9 +143,10 @@ parse_gm_formula <- function (formula, varnames=NULL, marginal=NULL, interaction
 
 ## .extract.power returns NA if the formula is "standard" or an
 ## integer if it has a "hat"
-.extract.power <- function(form){
+.extract.power <- function(form) {
 
-    if (length(form) == 3) stop("only rhs formula allowed")
+    if (length(form) == 3)
+        stop("only rhs formula allowed")
     
     form.str <- deparse(form[[2]])
 
