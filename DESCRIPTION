@@ -1,5 +1,5 @@
 Package: gRim
-Version: 0.2.11
+Version: 0.3.0
 Title: Graphical Interaction Models
 Author: Søren Højsgaard <sorenh@math.aau.dk>
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
@@ -15,7 +15,7 @@ Encoding: UTF-8
 Depends:
     R (>= 3.6.0),
     methods,
-    gRbase (>= 1.8.6)
+    gRbase (>= 2.0.0)
 Suggests:
     testthat (>= 2.1.0)
 Imports:
@@ -25,7 +25,6 @@ Imports:
     magrittr,    
     Rcpp (>= 0.11.1)
 ByteCompile: yes
-biocViews: 
-LinkingTo: Rcpp (>= 0.11.1), RcppArmadillo, RcppEigen, gRbase (>= 1.8.6)
+LinkingTo: Rcpp (>= 0.11.1), RcppArmadillo, RcppEigen, gRbase (>= 2.0.0)
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)

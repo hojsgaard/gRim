@@ -1,3 +1,10 @@
+gRim 0.3.0 (Release date: 2023-10-02)
+=======================================
+
+  * Now requires gRbase 2.0.0 (which does not depend on Rgraphviz, graph and RBGL)
+
+  * Fixes a bug which arose with recent version of R devel 
+
 gRim 0.2.11 (Release date: 2023-08-10)
 =======================================
 
