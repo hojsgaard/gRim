@@ -1,6 +1,3 @@
-# Functions for calculating exact conditional independence tests for discrete data.
-# Presently supported: deviance and wilcoxon
-
 #' @title A function to compute Monte Carlo and asymptotic tests of conditional
 #'     independence for ordinal and/or nominal variables.
 #' 

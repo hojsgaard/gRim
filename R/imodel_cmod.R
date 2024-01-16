@@ -50,35 +50,41 @@
 #'                  ncol=2))
 #' 
 #' @export cmod 
-
 cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0) {
 
-    dd  <- extract_cmod_data(data)
-    vn  <- colnames(dd$S)
-    ans <- parse_gm_formula(formula, vn, marginal)
+    cmod_data    <- extract_cmod_data(data)
+    nms_in_data  <- colnames(cmod_data$S)
+    
+    zzz <- parse_gm_formula(formula, nms_in_data, marginal)
+    nms_in_model <- zzz$varNames
+    glist        <- zzz$glist
+    
     ## Get varNames in the order matching to the data:
-    vn <- vn[sort(match(ans$varNames, vn))]
+    nms_in_data <- nms_in_data[sort(match(nms_in_model, nms_in_data))]
 
-    datainfo <- list(S=dd$S[vn, vn],
-                     n.obs=dd$n.obs,
-                     data=data)
+    datainfo <- list(S     = cmod_data$S[nms_in_data, nms_in_data],
+                     n.obs = cmod_data$n.obs,
+                     data  = data)
     
     res <- list(modelinfo      = NULL,
-                varNames       = vn,
+                varNames       = nms_in_data,
                 datainfo       = datainfo,
                 fitinfo        = NULL,
                 isFitted       = FALSE)
     
-    upd   <- .cModel_finalize(ans$glist, vn)  ## NOTE not .glist here
+    upd   <- .cModel_finalize(glist, nms_in_data)  
     res$modelinfo <- upd  
 
     class(res) <- c("cModel", "iModel")
-    if (fit) fit(res) else res
+    if (fit)
+        fit(res)
+    else
+        res
 }
-
 
 .cModel_finalize <- function(glist, varNames) {
 
+    ## FIXME: Rethink this
     amat  <- ugList(glist, result="matrix")
     glist <- maxCliqueMAT(amat)[[1]]
     isd   <- length(mcsMAT(amat)) > 0   
@@ -88,14 +94,16 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0) {
          properties  = c(isg=TRUE, issd=isd))                
 }
 
-
+## FIXME: gRips integration:
+## Styr på glist; formentlig liste af generatorer som variabelnavne
 
 
 #' @export
 fit.cModel <- function(object, engine="ggmfit", start=NULL, ...) {
 
     fitfun <- if (identical(engine, "ggmfit")) ggmfit else ggmfitr
-    
+
+    ## Call C or R version of ips
     ff <- fitfun(object$datainfo$S, n.obs=object$datainfo$n.obs,
                  glist=object$modelinfo$glist,
                  start=start, details=0,...)

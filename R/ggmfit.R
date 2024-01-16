@@ -1,11 +1,4 @@
-##############################################################
-##
-## Fit graphical Gaussian model
-##
-## FIXME: Move to gRbase package
-##
-##############################################################
-
+#################################################################################
 #' @title Iterative proportional fitting of graphical Gaussian model
 #' 
 #' @description Fit graphical Gaussian model by iterative proportional fitting.
@@ -13,7 +6,7 @@
 #' @details \code{ggmfit} is based on a C implementation.  \code{ggmfitr} is
 #'     implemented purely in R (and is provided mainly as a benchmark for the
 #'     C-version).
-#' 
+#################################################################################
 #' @aliases ggmfit ggmfitr
 #' @param S Empirical covariance matrix
 #' @param n.obs Number of observations
@@ -35,94 +28,79 @@
 #' ## Notice that the output from the two fitting functions is not
 #' ## entirely identical.
 #' data(math)
-#' ddd <- cov.wt(math, method="ML")
 #' glist <- list(c("al", "st", "an"), c("me", "ve", "al"))
-#' ggmfit (ddd$cov, ddd$n.obs, glist)
-#' ggmfitr(ddd$cov, ddd$n.obs, glist)
+#' d <- cov.wt(math, method="ML")
+#' ggmfit (d$cov, d$n.obs, glist)
+#' ggmfitr(d$cov, d$n.obs, glist)
 #' 
 #' @export ggmfit
 ggmfit <- function(S, n.obs, glist, start=NULL, 
                    eps=1e-12, iter=1000, details=0, ...)
 {
+    
+    glist.num <- glist
+    nms_in_data <- colnames(S)
 
-  #cat("ggmfit:\n"); print(S); print(n.obs); print(glist)
-  
-  glist.save <- glist.num <- glist
-  data.vn    <- colnames(S)
+    ## Numerical (indices) representation of glist
+    glist.num <- lapply(glist, match, nms_in_data)
+    
+    ## The used variables
+    nms_in_model <- unique.default(unlist(glist))       
+    
+    ## Check that the used variables are in S
+    zzz <- match(nms_in_model, nms_in_data)
+    if (any(is.na(zzz)))
+        stop("Variables ", nms_in_model[is.na(zzz)], " not in data\n")
+    
+    ## Get variables in the right order: The order in the S
+    nms_in_model  <-  nms_in_data[sort(zzz)]
+    
+    ## Possibly consider only submatrix of S
+    S <- S[nms_in_model, nms_in_model, drop=FALSE]
+    nms_in_data <- colnames(S)
 
-  ## The used variables
-  usevar <- unique.default(unlist(glist))       
+    if (is.null(start)){
+        start <- diag(1/diag(S))   #print(start)
+    }
+        
 
-  ## Check that the used variables are in S
-  zzz <- match(usevar, data.vn)
-  if (any(is.na(zzz)))
-    stop("Variables ", usevar[is.na(zzz)], " not in data\n")
+    ## Used for calling c-code
+    vn_ <- seq_along(nms_in_data)
+    nvar_ <- length(vn_)
 
-  ## Get variables in the right order: The order in the S
-  usevar  <-  data.vn[sort(zzz)]
+    glen_    <- sapply(glist.num, length)
+    ng_      <- length(glist.num)
+    
+    clist.num   <- lapply(glist.num, function(x) vn_[-x])  
+    clen_    <- sapply(clist.num,length)
+        
+    gg <- as.integer(unlist(glist.num) - 1)
+    cc <- as.integer(unlist(clist.num) - 1)
+        
+    xxx<-.C("Cggmfit", S=S, n=as.integer(n.obs), K=start, nvar=nvar_, ngen=ng_, 
+            glen=glen_, glist=gg, clen=clen_, clist=cc, 
+            logL=numeric(1), eps=as.numeric(eps),
+            iter=as.integer(iter), converged=as.integer(1),
+            details=as.integer(details),
+            PACKAGE="gRim")
+    xxx <- xxx[c("logL", "K", "iter")]  
+    
+    dimnames(xxx$K) <- dimnames(S)
+    detK  <- det(xxx$K)
+    dev   <- -n.obs * log(det(S %*% xxx$K))            ## deviance to the saturated model  
+    df    <-  sum(xxx$K == 0) / 2
 
-  ## Possibly consider only submatrix of S
-  S <- S[usevar, usevar, drop=FALSE]
-  data.vn <- colnames(S)
-
-  vn <- seq_along(data.vn)
-  nvar <- length(vn)
-  
-  ## Numerical (indices) representation of glist
-  glist.num <- lapply(glist, match, data.vn)
-
-  glen    <- sapply(glist.num, length)
-  ng      <- length(glist.num)
-
-  clist.num   <- lapply(glist.num, function(x) vn[-x])  
-  clen    <- sapply(clist.num,length)
-
-  gg <- as.integer(unlist(glist.num)-1)# print(gg); 
-  cc <- as.integer(unlist(clist.num)-1)# print(cc)    
-
-  if (is.null(start)){
-    start <- diag(1/diag(S))   #print(start)
-  }
-
-  ## dyn.load("ggmfit.dll")
-  xxx<-.C("Cggmfit", S=S, n=as.integer(n.obs), K=start, nvar=nvar, ngen=ng, 
-          glen=glen, glist=gg, clen=clen, clist=cc, 
-          logL=numeric(1), eps=as.numeric(eps),
-          iter=as.integer(iter), converged=as.integer(1),
-          details=as.integer(details),
-          PACKAGE="gRim")
-  ## dyn.unload("ggmfit.dll")
-
-  xxx             <- xxx[c("logL", "K", "iter")]  
-
-  dimnames(xxx$K) <- dimnames(S)
-  detK  <- det(xxx$K)
-  dev   <- -n.obs * log(det(S %*% xxx$K))            ## deviance to the saturated model  
-  df    <-  sum(xxx$K==0) / 2
-
-  ans  <- list(dev=dev, df=df, detK=detK, nvar=nvar,S=S,n.obs=n.obs)
-  ans   <- c(ans, xxx)
-  
-  return(ans)  
+    ## FIXME nvar_ bruges her
+    out  <- list(dev=dev, df=df, detK=detK, nvar=nvar_, S=S, n.obs=n.obs)
+    out   <- c(out, xxx)
+    
+    return(out)  
 }
-
-
-
-
 
 #' @export  
 ggmfitr <- function(S, n.obs, glist, start=NULL, 
                     eps=1e-12, iter=1000, details=0, ...)
 {
-
-    ##
-    ## Calculate logL for N(0,\Sigma) model.
-    ##
-    ## Sigma = Covariance matrix parameter
-    ## K     = Sigma inverse
-    ## S     = sample covariance matrix
-    ## n     = sample size
-    ##
     ell <- function(Sigma, S, n){
         
         shdet <- function(Sigma){
@@ -191,9 +169,9 @@ ggmfitr <- function(S, n.obs, glist, start=NULL,
     }
     
     df <- sum(K[upper.tri(K)] == 0)
-                                        #ans <- list(K=K, logL=logL, converged=converged, itcount=itcount)
-    ans <- list(dev=-2*logL, df=df, logL=logL, K=K, S=S,n.obs=n.obs,
+                                        #out <- list(K=K, logL=logL, converged=converged, itcount=itcount)
+    out <- list(dev=-2*logL, df=df, logL=logL, K=K, S=S,n.obs=n.obs,
                 itcount=itcount, converged=converged, logLvec=logLvec)
-    return(ans)
+    return(out)
 }
 
