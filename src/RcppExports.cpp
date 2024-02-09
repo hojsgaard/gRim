@@ -2,6 +2,7 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <RcppArmadillo.h>
+#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
@@ -33,50 +34,6 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type parms(parmsSEXP);
     rcpp_result_gen = Rcpp::wrap(parm_ghk2pms_(parms));
-    return rcpp_result_gen;
-END_RCPP
-}
-// parm_pms2ghk_
-List parm_pms2ghk_(List parms);
-RcppExport SEXP _gRim_parm_pms2ghk_(SEXP parmsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type parms(parmsSEXP);
-    rcpp_result_gen = Rcpp::wrap(parm_pms2ghk_(parms));
-    return rcpp_result_gen;
-END_RCPP
-}
-// updateA
-arma::mat updateA(arma::mat A, arma::mat E, arma::uvec row, arma::uvec col);
-RcppExport SEXP _gRim_updateA(SEXP ASEXP, SEXP ESEXP, SEXP rowSEXP, SEXP colSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type A(ASEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type E(ESEXP);
-    Rcpp::traits::input_parameter< arma::uvec >::type row(rowSEXP);
-    Rcpp::traits::input_parameter< arma::uvec >::type col(colSEXP);
-    rcpp_result_gen = Rcpp::wrap(updateA(A, E, row, col));
-    return rcpp_result_gen;
-END_RCPP
-}
-// parm_update_ghk_
-List parm_update_ghk_(List Cparms, IntegerVector dgen_idx, IntegerVector cgen_idx, List ghk_obs, List pms_obs, List ghk_fit, List pms_fit, double scale, double details);
-RcppExport SEXP _gRim_parm_update_ghk_(SEXP CparmsSEXP, SEXP dgen_idxSEXP, SEXP cgen_idxSEXP, SEXP ghk_obsSEXP, SEXP pms_obsSEXP, SEXP ghk_fitSEXP, SEXP pms_fitSEXP, SEXP scaleSEXP, SEXP detailsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type Cparms(CparmsSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type dgen_idx(dgen_idxSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type cgen_idx(cgen_idxSEXP);
-    Rcpp::traits::input_parameter< List >::type ghk_obs(ghk_obsSEXP);
-    Rcpp::traits::input_parameter< List >::type pms_obs(pms_obsSEXP);
-    Rcpp::traits::input_parameter< List >::type ghk_fit(ghk_fitSEXP);
-    Rcpp::traits::input_parameter< List >::type pms_fit(pms_fitSEXP);
-    Rcpp::traits::input_parameter< double >::type scale(scaleSEXP);
-    Rcpp::traits::input_parameter< double >::type details(detailsSEXP);
-    rcpp_result_gen = Rcpp::wrap(parm_update_ghk_(Cparms, dgen_idx, cgen_idx, ghk_obs, pms_obs, ghk_fit, pms_fit, scale, details));
     return rcpp_result_gen;
 END_RCPP
 }

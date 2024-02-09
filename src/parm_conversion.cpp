@@ -6,7 +6,9 @@
 using namespace arma;
 using namespace Rcpp;
 
-//[[Rcpp::export]]
+// NOTE: Must be exported
+
+//[[Rcpp::export]] 
 List parm_ghk2pms_ (List parms){
 
   int ii;
@@ -79,7 +81,7 @@ List parm_ghk2pms_ (List parms){
 }
 
 
-//[[Rcpp::export]]
+// //[[Rcpp::export]]
 List parm_pms2ghk_ ( List parms ){
   using namespace arma;
   using namespace Rcpp;
@@ -149,7 +151,7 @@ List parm_pms2ghk_ ( List parms ){
   return out;
 }
 
-//[[Rcpp::export]]
+// //[[Rcpp::export]]
 arma::mat updateA ( arma::mat A, arma::mat E, arma::uvec row, arma::uvec col){
   
   Rf_PrintValue(wrap(A));	Rf_PrintValue(wrap(E));
@@ -161,7 +163,7 @@ arma::mat updateA ( arma::mat A, arma::mat E, arma::uvec row, arma::uvec col){
 }
 
 
-//[[Rcpp::export]]
+// //[[Rcpp::export]]
 List parm_update_ghk_ (List Cparms, IntegerVector dgen_idx, IntegerVector cgen_idx, 
 		       List ghk_obs, List pms_obs, List ghk_fit, List pms_fit, double scale, double details=0) {
   
