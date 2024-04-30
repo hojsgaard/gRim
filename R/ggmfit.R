@@ -83,8 +83,9 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
             iter=as.integer(iter), converged=as.integer(1),
             details=as.integer(details),
             PACKAGE="gRim")
-    xxx <- xxx[c("logL", "K", "iter")]  
-    
+    xxx <- xxx[c("logL", "K", "iter")]  ## Feb 2024: logL is not computed correctly
+
+    xxx$logL <- ggm_logL(S, xxx$K, n.obs)
     dimnames(xxx$K) <- dimnames(S)
     detK  <- det(xxx$K)
     dev   <- -n.obs * log(det(S %*% xxx$K))            ## deviance to the saturated model  
@@ -97,19 +98,24 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
     return(out)  
 }
 
+ggm_logL <- function(S, K, nobs){
+    nobs * (log(det(K)) - sum(S * K)) / 2
+}
+
+
 #' @export  
 ggmfitr <- function(S, n.obs, glist, start=NULL, 
                     eps=1e-12, iter=1000, details=0, ...)
 {
-    ell <- function(Sigma, S, n){
+    ## ell <- function(Sigma, S, n){
         
-        shdet <- function(Sigma){
-            prod(eigen(Sigma)[[1]])
-        }
-        p <- dim(S)[1]
-        const <- -n * p/2 * log(2 * pi)
-        const - n/2 * log(shdet(Sigma)) - n/2 * sum(diag( solve(Sigma) %*% S )) 
-    }
+    ##     shdet <- function(Sigma){
+    ##         prod(eigen(Sigma)[[1]])
+    ##     }
+    ##     p <- dim(S)[1]
+    ##     const <- -n * p/2 * log(2 * pi)
+    ##     const - n/2 * log(shdet(Sigma)) - n/2 * sum(diag( solve(Sigma) %*% S )) 
+    ## }
     
     ellK <- function (K, S, n)
     {
@@ -169,8 +175,9 @@ ggmfitr <- function(S, n.obs, glist, start=NULL,
     }
     
     df <- sum(K[upper.tri(K)] == 0)
-                                        #out <- list(K=K, logL=logL, converged=converged, itcount=itcount)
-    out <- list(dev=-2*logL, df=df, logL=logL, K=K, S=S,n.obs=n.obs,
+
+    dev   <- -n.obs * log(det(S %*% K))            ## deviance to the saturated model      
+    out <- list(dev=dev, df=df, logL=logL, K=K, S=S,n.obs=n.obs,
                 itcount=itcount, converged=converged, logLvec=logLvec)
     return(out)
 }

@@ -9,18 +9,6 @@ parm_ghk2pms_ <- function(parms) {
     .Call('_gRim_parm_ghk2pms_', PACKAGE = 'gRim', parms)
 }
 
-parm_pms2ghk_ <- function(parms) {
-    .Call('_gRim_parm_pms2ghk_', PACKAGE = 'gRim', parms)
-}
-
-updateA <- function(A, E, row, col) {
-    .Call('_gRim_updateA', PACKAGE = 'gRim', A, E, row, col)
-}
-
-parm_update_ghk_ <- function(Cparms, dgen_idx, cgen_idx, ghk_obs, pms_obs, ghk_fit, pms_fit, scale, details = 0) {
-    .Call('_gRim_parm_update_ghk_', PACKAGE = 'gRim', Cparms, dgen_idx, cgen_idx, ghk_obs, pms_obs, ghk_fit, pms_fit, scale, details)
-}
-
 C_pms2ghk <- function(parms_) {
     .Call('_gRim_C_pms2ghk', PACKAGE = 'gRim', parms_)
 }

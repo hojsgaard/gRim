@@ -1,3 +1,10 @@
+gRim 0.3.1 (Release date: 2024-02-09)
+=======================================
+
+  * Inconsistency in computation of logL and deviance for ggm between
+    c and R implementation fixed.
+  
+
 gRim 0.3.0 (Release date: 2023-10-02)
 =======================================
 

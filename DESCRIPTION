@@ -1,5 +1,5 @@
 Package: gRim
-Version: 0.3.0
+Version: 0.3.1
 Title: Graphical Interaction Models
 Author: Søren Højsgaard <sorenh@math.aau.dk>
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
@@ -26,5 +26,5 @@ Imports:
     Rcpp (>= 0.11.1)
 ByteCompile: yes
 LinkingTo: Rcpp (>= 0.11.1), RcppArmadillo, RcppEigen, gRbase (>= 2.0.0)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)

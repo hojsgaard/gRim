@@ -81,7 +81,6 @@ add_func  <- function(criterion){
 }
 
 
-
 #' @export
 #' @rdname stepwise
 stepwise.iModel <- function(object,
@@ -257,133 +256,6 @@ forward <- function(object, criterion="aic", alpha=NULL, type="decomposable", se
 }
 
 
-backfor <- function(object,
-                          criterion="aic",
-                          alpha=NULL,
-                          type="decomposable",
-                          search="all",
-                          steps = 1000,
-                          k = 2,
-                          direction="backward",
-                          fixin=NULL,
-                          fixout=NULL,
-                          details=1,
-                          trace=2, ...)
-{
-
-    direction  <- match.arg(direction, c("backward", "forward"))
-    criterion  <- match.arg(criterion, c("aic",        "test"))
-    search     <- match.arg(search,    c("headlong",   "all"))
-
-    if (is.null(alpha))
-        alpha <- if (criterion=="aic") 0 else 0.05
-    
-    do_back <- identical(direction, "backward") ## Logical
-    
-    if (isGSD_glist(.glist(object))[2]){  
-        type <- match.arg(type,      c("decomposable", "unrestricted"))
-    } else {
-        type <- "unrestricted"
-    }
-    
-    type   <- match.arg(type,   c("decomposable", "unrestricted"))
-    
-    ## discrete is needed because checking for decomposability is special for mixed models.
-    disc <- getmi(object, "disc.names") ## FIXME: Simpler than above
-    vn   <- getmi(object, "varNames")
-    
-    isgsd  <- isGSD_glist(.glist(object), discrete=disc)    
-    if (!all(isgsd))  type <- "unrestricted"
-
-    if (do_back){    ## Backward
-        fmat <- if (!is.null(fixin)) .as_amat(.do_handlefix(fixin), vn=vn)
-        ff  <- drop_func(criterion)
-        testEdges <- .test_in_edges
-    } else {         ## Forward
-        fmat <- if (!is.null(fixout)) .as_amat(.do_handlefix(fixout), vn=vn)
-        ff  <- add_func(criterion)
-        testEdges <- .test_out_edges     
-    }
-
-    itcount <- 1    
-    repeat{
-        ##cat("Iteration", itcount, "\n")
-        amat    <- .as_amat(.glist(object)) ## FIXME generate amat yet another time
-        
-        ingraph <- do_back
-        edgeMAT <- getEdges(amat, type=type, ingraph=ingraph, discrete=disc)
-        
-        if (!is.null(fmat))
-            edgeMAT <- .update_edgeMAT(edgeMAT, fmat, vn)
-        
-        if (nrow(edgeMAT) == 0){
-            if (details >= 1){
-                if (do_back) cat(sprintf("No edges can be removed\n"))
-                else cat(sprintf("No edges can be added\n"))
-            }
-            break
-        } 
-        
-        testMAT   <- testEdges(object, edgeMAT, comp.op=ff$comp.op, crit.str=ff$crit.str,
-                               alpha=alpha, k=k, search=search, amat=amat, ...)
-        statvec   <- testMAT[, ff$crit.str]
-        opt.idx   <- ff$opt.op(statvec)
-        
-        if (details >= 2) print(testMAT, row.names=FALSE, digits=4)
-        
-        if (ff$comp.op(statvec[opt.idx], alpha)) {
-            opt.edge <- as.character(testMAT[opt.idx, c("V1", "V2")])
-            if (do_back){  ## Backward
-                object   <- update(object, list(drop.edge=opt.edge))
-                if (details >= 1)
-                    cat(sprintf("  %s %9.4f Edge deleted: %s\n",
-                                ff$out.str, statvec[opt.idx], .toString(opt.edge)))                
-            } else {        ## Forward
-                object   <- update(object, list(add.edge=opt.edge))
-                if (details >= 1) cat(sprintf("  %s %9.4f Edge added: %s\n",
-                                              ff$out.str, statvec[opt.idx], .toString(opt.edge)))                                                                                     
-            }
-            
-            if (itcount == steps) { break }
-        } else break
-        itcount <- itcount + 1
-    }
-    object 
-}
-
-
-
-
-    ## if(details>=1){
-    ##     cat("STEPWISE: ",
-    ##         "\n criterion:", criterion, if (criterion=="aic") paste("( k =", round(k,2),")"),
-    ##         "\n direction:", direction,
-    ##         "\n type     :", type,
-    ##         "\n search   :", search,
-    ##         "\n steps    :", steps, "\n")
-    ## }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -392,7 +264,6 @@ backfor <- function(object,
 
 
 ### dot-functions below here
-
 
 
 .edge_matrix <- function(amat, duplicates=FALSE, names=FALSE, long=FALSE){
@@ -433,8 +304,6 @@ backfor <- function(object,
     else if (is.list(x)) .handle_list(x)
     else stop("Do not know what to do\n")
 }
-
-
 
 .update_edgeMAT <- function(edgeMAT, fmat, vn){
     .amat_subtract <- function(amat1, amat2){
@@ -577,6 +446,133 @@ backfor <- function(object,
     ##            out.str <- "p.value"
     ##            crit.str  <- "p.value"
     ##        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## backfor <- function(object,
+##                           criterion="aic",
+##                           alpha=NULL,
+##                           type="decomposable",
+##                           search="all",
+##                           steps = 1000,
+##                           k = 2,
+##                           direction="backward",
+##                           fixin=NULL,
+##                           fixout=NULL,
+##                           details=1,
+##                           trace=2, ...)
+## {
+
+##     direction  <- match.arg(direction, c("backward", "forward"))
+##     criterion  <- match.arg(criterion, c("aic",        "test"))
+##     search     <- match.arg(search,    c("headlong",   "all"))
+
+##     if (is.null(alpha))
+##         alpha <- if (criterion=="aic") 0 else 0.05
+    
+##     do_back <- identical(direction, "backward") ## Logical
+    
+##     if (isGSD_glist(.glist(object))[2]){  
+##         type <- match.arg(type,      c("decomposable", "unrestricted"))
+##     } else {
+##         type <- "unrestricted"
+##     }
+    
+##     type   <- match.arg(type,   c("decomposable", "unrestricted"))
+    
+##     ## discrete is needed because checking for decomposability is special for mixed models.
+##     disc <- getmi(object, "disc.names") ## FIXME: Simpler than above
+##     vn   <- getmi(object, "varNames")
+    
+##     isgsd  <- isGSD_glist(.glist(object), discrete=disc)    
+##     if (!all(isgsd))  type <- "unrestricted"
+
+##     if (do_back){    ## Backward
+##         fmat <- if (!is.null(fixin)) .as_amat(.do_handlefix(fixin), vn=vn)
+##         ff  <- drop_func(criterion)
+##         testEdges <- .test_in_edges
+##     } else {         ## Forward
+##         fmat <- if (!is.null(fixout)) .as_amat(.do_handlefix(fixout), vn=vn)
+##         ff  <- add_func(criterion)
+##         testEdges <- .test_out_edges     
+##     }
+
+##     itcount <- 1    
+##     repeat{
+##         ##cat("Iteration", itcount, "\n")
+##         amat    <- .as_amat(.glist(object)) ## FIXME generate amat yet another time
+        
+##         ingraph <- do_back
+##         edgeMAT <- getEdges(amat, type=type, ingraph=ingraph, discrete=disc)
+        
+##         if (!is.null(fmat))
+##             edgeMAT <- .update_edgeMAT(edgeMAT, fmat, vn)
+        
+##         if (nrow(edgeMAT) == 0){
+##             if (details >= 1){
+##                 if (do_back) cat(sprintf("No edges can be removed\n"))
+##                 else cat(sprintf("No edges can be added\n"))
+##             }
+##             break
+##         } 
+        
+##         testMAT   <- testEdges(object, edgeMAT, comp.op=ff$comp.op, crit.str=ff$crit.str,
+##                                alpha=alpha, k=k, search=search, amat=amat, ...)
+##         statvec   <- testMAT[, ff$crit.str]
+##         opt.idx   <- ff$opt.op(statvec)
+        
+##         if (details >= 2) print(testMAT, row.names=FALSE, digits=4)
+        
+##         if (ff$comp.op(statvec[opt.idx], alpha)) {
+##             opt.edge <- as.character(testMAT[opt.idx, c("V1", "V2")])
+##             if (do_back){  ## Backward
+##                 object   <- update(object, list(drop.edge=opt.edge))
+##                 if (details >= 1)
+##                     cat(sprintf("  %s %9.4f Edge deleted: %s\n",
+##                                 ff$out.str, statvec[opt.idx], .toString(opt.edge)))                
+##             } else {        ## Forward
+##                 object   <- update(object, list(add.edge=opt.edge))
+##                 if (details >= 1) cat(sprintf("  %s %9.4f Edge added: %s\n",
+##                                               ff$out.str, statvec[opt.idx], .toString(opt.edge)))                                                                                     
+##             }
+            
+##             if (itcount == steps) { break }
+##         } else break
+##         itcount <- itcount + 1
+##     }
+##     object 
+## }
+
+
+
+
+    ## if(details>=1){
+    ##     cat("STEPWISE: ",
+    ##         "\n criterion:", criterion, if (criterion=="aic") paste("( k =", round(k,2),")"),
+    ##         "\n direction:", direction,
+    ##         "\n type     :", type,
+    ##         "\n search   :", search,
+    ##         "\n steps    :", steps, "\n")
+    ## }
+
+
+
+
+
+
+
 
 
 

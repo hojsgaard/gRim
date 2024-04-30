@@ -163,6 +163,7 @@ summary.citest <- function(object,...){
 #' ciTest_df(milkcomp1, set=~tre + fat + pro)
 
 #' @export 
+
 ciTest_df <- function(x, set=NULL,...){
     
     if (is.null(set)) set <- names(x)

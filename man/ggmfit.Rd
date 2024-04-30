@@ -52,10 +52,10 @@ C-version).
 ## Notice that the output from the two fitting functions is not
 ## entirely identical.
 data(math)
-ddd <- cov.wt(math, method="ML")
 glist <- list(c("al", "st", "an"), c("me", "ve", "al"))
-ggmfit (ddd$cov, ddd$n.obs, glist)
-ggmfitr(ddd$cov, ddd$n.obs, glist)
+d <- cov.wt(math, method="ML")
+ggmfit (d$cov, d$n.obs, glist)
+ggmfitr(d$cov, d$n.obs, glist)
 
 }
 \seealso{
