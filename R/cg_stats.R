@@ -104,10 +104,12 @@ CGstats_internal <- function(object, disc.names=NULL, cont.names=NULL, homogeneo
 }
 
 ## deprecated
-print.CGstats <- function(x, ...){
-    print.default(x[1:3])
-    return(invisible(x))
-}
+
+## #' export
+## print.CGstats <- function(x, ...){
+##     print.default(x[1:3])
+##     return(invisible(x))
+## }
 
 ## This is fine
 .cov.wt <- function(x, method="ML"){

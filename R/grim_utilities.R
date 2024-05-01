@@ -184,38 +184,43 @@ getmi <- function(object, name){
 ### Known issues: The function should check that SS is of the right form
 ### (homogeneous and simplify)
 
-print.MIparms <- function(x,simplify=TRUE,useN=FALSE, ...) {
 
-    cat(sprintf("MIparms: form=%s\n", class(x)[1]))
+
+
+
+## #' export
+## print.MIparms <- function(x,simplify=TRUE,useN=FALSE, ...) {
+
+##     cat(sprintf("MIparms: form=%s\n", class(x)[1]))
     
-    ##   cat(sprintf("MIparms: form=%s, gentype=%s\n", class(x)[1], x$gentype))
-    ##   aaa<-unlist(lapply(x, is.null))
-    ##   cat("MIparms:",class(x)[1], "gentype:", x$gentype, "slots:", names(aaa)[!aaa],"\n")
+##     ##   cat(sprintf("MIparms: form=%s, gentype=%s\n", class(x)[1], x$gentype))
+##     ##   aaa<-unlist(lapply(x, is.null))
+##     ##   cat("MIparms:",class(x)[1], "gentype:", x$gentype, "slots:", names(aaa)[!aaa],"\n")
     
-    xx <- x
-    if (useN)
-        xx[[1]] <- xx[[1]]*xx$N
+##     xx <- x
+##     if (useN)
+##         xx[[1]] <- xx[[1]]*xx$N
     
-    if (x$gentype=="discrete") {
-        if (simplify) {
-            print(as.numeric(xx[[1]]))
-        } else {
-            print(xx[[1]])
-        }
-    } else {
-        if (simplify) {
-            print(rbind(
-                c(as.numeric(xx[[1]]),
-                  rep(NA, ncol(xx[[3]]))),
-                cbind(xx[[2]],xx[[3]]))
-                )
-        } else {
-        print(xx[1:3])
-    }
-    }
-    cat("\n")
-    return(invisible(x))
-}
+##     if (x$gentype=="discrete") {
+##         if (simplify) {
+##             print(as.numeric(xx[[1]]))
+##         } else {
+##             print(xx[[1]])
+##         }
+##     } else {
+##         if (simplify) {
+##             print(rbind(
+##                 c(as.numeric(xx[[1]]),
+##                   rep(NA, ncol(xx[[3]]))),
+##                 cbind(xx[[2]],xx[[3]]))
+##                 )
+##         } else {
+##         print(xx[1:3])
+##     }
+##     }
+##     cat("\n")
+##     return(invisible(x))
+## }
 
 .as.matrix <- .MIparms2matrix <- function(x,...) {
     

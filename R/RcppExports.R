@@ -5,6 +5,30 @@ fit2way_ <- function(tab1, tab2, R, vn) {
     .Call('_gRim_fit2way_', PACKAGE = 'gRim', tab1, tab2, R, vn)
 }
 
+inv_qr_ <- function(X) {
+    .Call('_gRim_inv_qr_', PACKAGE = 'gRim', X)
+}
+
+.c_conips_ggm_ <- function(S, elst, emat, nobs, K, maxit, eps, convcrit, print, aux) {
+    .Call('_gRim_conips_ggm_', PACKAGE = 'gRim', S, elst, emat, nobs, K, maxit, eps, convcrit, print, aux)
+}
+
+.c_covips_ggm_ <- function(S, elst, emat, nobs, K, maxit, eps, convcrit, print, aux) {
+    .Call('_gRim_covips_ggm_', PACKAGE = 'gRim', S, elst, emat, nobs, K, maxit, eps, convcrit, print, aux)
+}
+
+.c_ncd_ggm_ <- function(S, elst, emat, nobs, K, maxit, eps, convcrit, print, aux) {
+    .Call('_gRim_ncd_ggm_', PACKAGE = 'gRim', S, elst, emat, nobs, K, maxit, eps, convcrit, print, aux)
+}
+
+.c_clone <- function(x) {
+    .Call('_gRim_clone_', PACKAGE = 'gRim', x)
+}
+
+ggm_logL_ <- function(S, K, nobs) {
+    .Call('_gRim_ggm_logL_', PACKAGE = 'gRim', S, K, nobs)
+}
+
 parm_ghk2pms_ <- function(parms) {
     .Call('_gRim_parm_ghk2pms_', PACKAGE = 'gRim', parms)
 }
@@ -21,3 +45,7 @@ parm_normalize_ghk_ <- function(parms) {
     .Call('_gRim_parm_normalize_ghk_', PACKAGE = 'gRim', parms)
 }
 
+# Register entry points for exported C++ functions
+methods::setLoadAction(function(ns) {
+    .Call('_gRim_RcppExport_registerCCallable', PACKAGE = 'gRim')
+})

@@ -9,6 +9,7 @@
 ###
 #######################################################################
 
+
 fit.mModel <- function(object, method="general", details=0, eps.parm=1e-10, maxit=100, ...){
   method <- match.arg(method, c("general", "stephalving"))
 
@@ -44,12 +45,13 @@ fit.mModel <- function(object, method="general", details=0, eps.parm=1e-10, maxi
 }
 
 
-print.MIfit <- function(x,...){
-  ##cat("MIfit:\n")
-  cat(sprintf("components: %s \n", toString(names(x))))
-  print(x[c("parms","logL","init.logL","dimension")])
-  return(invisible(x))
-}
+## #' export
+## print.MIfit <- function(x,...){
+##   ##cat("MIfit:\n")
+##   cat(sprintf("components: %s \n", toString(names(x))))
+##   print(x[c("parms","logL","init.logL","dimension")])
+##   return(invisible(x))
+## }
 
 
 .fitmModel <- function(object, method="general", details=0, eps.parm=1e-10, eps.logL=1e-10, maxit=100, ...){

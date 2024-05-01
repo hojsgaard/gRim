@@ -36,7 +36,6 @@
 #' model.
 #' 
 #' @aliases dmod print.dModel fitted.dModel residuals.dModel 
-#'     triangulate.dModel
 #' @param formula Model specification in one of the following forms: 1) a
 #'     right-hand sided formula, 2) as a list of generators, 3) an undirected
 #'     graph (represented either as an igraph object or as an adjacency
