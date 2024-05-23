@@ -26,7 +26,7 @@
 #'     connection with the model specification shortcuts.
 #'
 #' @param fit Should the model be fitted.
-#'
+#' @param maximal_only Should only maximal generators be retained.
 #' @param details Control the amount of output; for debugging
 #'     purposes.
 #' @return An object of class \code{cModel} (a list)
@@ -50,12 +50,12 @@
 #'                  ncol=2))
 #' 
 #' @export cmod 
-cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0) {
+cmod <- function(formula, data, marginal=NULL, fit=TRUE, maximal_only=FALSE, details=0) {
 
     cmod_data    <- extract_cmod_data(data)
     nms_in_data  <- colnames(cmod_data$S)
 
-    model_spec   <- parse_gm_formula(formula, nms_in_data, marginal)
+    model_spec   <- parse_gm_formula(formula, varnames=nms_in_data, marginal=marginal, maximal_only=maximal_only)
     nms_in_model <- model_spec$varNames
     glist        <- model_spec$glist
 
@@ -102,7 +102,9 @@ fit.cModel <- function(object, engine=c("ncd", "covips", "conips"), start=NULL, 
 ## #' @export
 dofit_cModel <- function(object, engine=c("ncd", "covips", "conips"), start=NULL, ...) {
 
-    engine <- match.arg(engine)
+    engine <- match.arg(engine)    
+    ## cat("engine", engine, "\n")
+
     conips <- doBy::section_fun(wrapper_grips, list(method="conips"))
     covips <- doBy::section_fun(wrapper_grips, list(method="covips"))
     ncd    <- doBy::section_fun(wrapper_grips, list(method="ncd"))

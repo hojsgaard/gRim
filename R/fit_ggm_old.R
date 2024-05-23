@@ -149,7 +149,7 @@ ggmfitr <- function(S, n.obs, glist, start=NULL,
             itcount <- itcount+1
             if (itcount>1){
                 if (logL - prevlogL < eps){  
-                    converged=TRUE
+                    converge1d=TRUE
                     break
                 }
             } else {

@@ -5,7 +5,14 @@
 \alias{extract_cmod_data}
 \title{Graphical Gaussian model}
 \usage{
-cmod(formula, data, marginal = NULL, fit = TRUE, details = 0)
+cmod(
+  formula,
+  data,
+  marginal = NULL,
+  fit = TRUE,
+  maximal_only = TRUE,
+  details = 0
+)
 }
 \arguments{
 \item{formula}{Model specification in one of the following forms:
@@ -21,6 +28,8 @@ returned by the \code{cov.wt()} function.)}
 connection with the model specification shortcuts.}
 
 \item{fit}{Should the model be fitted.}
+
+\item{maximal_only}{Should only maximal generators be retained.}
 
 \item{details}{Control the amount of output; for debugging
 purposes.}

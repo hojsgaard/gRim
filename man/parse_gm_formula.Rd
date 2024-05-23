@@ -8,7 +8,8 @@ parse_gm_formula(
   formula,
   varnames = NULL,
   marginal = NULL,
-  interactions = NULL
+  interactions = NULL,
+  maximal_only = TRUE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ shortcuts.}
 
 \item{interactions}{The maximum order of interactions allowed;
 useful in connection with model specification shortcuts.}
+
+\item{maximal_only}{Should only maximal generators be retained.}
 }
 \description{
 Parse graphical model formula to internal representation

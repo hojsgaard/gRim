@@ -11,6 +11,7 @@
 #'     shortcuts.
 #' @param interactions The maximum order of interactions allowed;
 #'     useful in connection with model specification shortcuts.
+#' @param maximal_only Should only maximal generators be retained.
 #'
 #' @examples
 #' vn <- c("me", "ve", "al", "an", "st")
@@ -43,7 +44,7 @@
 
 
 #' @export
-parse_gm_formula <- function(formula, varnames=NULL, marginal=NULL, interactions=NULL) {
+parse_gm_formula <- function(formula, varnames=NULL, marginal=NULL, interactions=NULL, maximal_only=FALSE) {
 
     varnames <- if (length(marginal) > 0)
                     marginal
@@ -66,9 +67,10 @@ parse_gm_formula <- function(formula, varnames=NULL, marginal=NULL, interactions
            "list"={
                glist <- formula
            })
-    
-    #glist <- remove_redundant(glist)
-    glist <- gRbase::filter_maximal_vectors(glist)
+
+    if (maximal_only)
+        glist <- gRbase::filter_maximal_vectors(glist)
+
     glist <- .check.glist.for.valid.varnames(glist, varnames)  
     
     if (!is.null(interactions))
