@@ -9,7 +9,7 @@
 ###
 #######################################################################
 
-
+#' @export
 fit.mModel <- function(object, method="general", details=0, eps.parm=1e-10, maxit=100, ...){
   method <- match.arg(method, c("general", "stephalving"))
 

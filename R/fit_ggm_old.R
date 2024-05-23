@@ -1,8 +1,6 @@
 #################################################################################
 #' @title Iterative proportional fitting of graphical Gaussian model
-#' 
 #' @description Fit graphical Gaussian model by iterative proportional fitting.
-#' 
 #' @details \code{ggmfit} is based on a C implementation.  \code{ggmfitr} is
 #'     implemented purely in R (and is provided mainly as a benchmark for the
 #'     C-version).
@@ -63,7 +61,6 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
         start <- diag(1/diag(S))   #print(start)
     }
         
-
     ## Used for calling c-code
     vn_ <- seq_along(nms_in_data)
     nvar_ <- length(vn_)
@@ -74,11 +71,11 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
     clist.num   <- lapply(glist.num, function(x) vn_[-x])  
     clen_    <- sapply(clist.num,length)
         
-    gg <- as.integer(unlist(glist.num) - 1)
-    cc <- as.integer(unlist(clist.num) - 1)
+    gg_ <- as.integer(unlist(glist.num) - 1)
+    cc_ <- as.integer(unlist(clist.num) - 1)
         
     xxx<-.C("Cggmfit", S=S, n=as.integer(n.obs), K=start, nvar=nvar_, ngen=ng_, 
-            glen=glen_, glist=gg, clen=clen_, clist=cc, 
+            glen=glen_, glist=gg_, clen=clen_, clist=cc_, 
             logL=numeric(1), eps=as.numeric(eps),
             iter=as.integer(iter), converged=as.integer(1),
             details=as.integer(details),
@@ -98,24 +95,15 @@ ggmfit <- function(S, n.obs, glist, start=NULL,
     return(out)  
 }
 
-ggm_logL <- function(S, K, nobs){
-    nobs * (log(det(K)) - sum(S * K)) / 2
-}
+
+## ## FIXME nvar_ bruges her
+## xxx  <- list(dev=dev, df=df, detK=detK, nvar=nvar_, S=S, n.obs=n.obs)
+## xxx   <- c(out, xxx)
 
 
 #' @export  
 ggmfitr <- function(S, n.obs, glist, start=NULL, 
-                    eps=1e-12, iter=1000, details=0, ...)
-{
-    ## ell <- function(Sigma, S, n){
-        
-    ##     shdet <- function(Sigma){
-    ##         prod(eigen(Sigma)[[1]])
-    ##     }
-    ##     p <- dim(S)[1]
-    ##     const <- -n * p/2 * log(2 * pi)
-    ##     const - n/2 * log(shdet(Sigma)) - n/2 * sum(diag( solve(Sigma) %*% S )) 
-    ## }
+                    eps=1e-12, iter=1000, details=0, ...) {
     
     ellK <- function (K, S, n)
     {
@@ -182,3 +170,12 @@ ggmfitr <- function(S, n.obs, glist, start=NULL,
     return(out)
 }
 
+
+
+
+
+
+
+ggm_logL <- function(S, K, nobs){
+    nobs * (log(det(K)) - sum(S * K)) / 2
+}

@@ -6,7 +6,6 @@
 \alias{print.dModel}
 \alias{fitted.dModel}
 \alias{residuals.dModel}
-\alias{triangulate.dModel}
 \title{Discrete interaction model (log-linear model)}
 \usage{
 dmod(

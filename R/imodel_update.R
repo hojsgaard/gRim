@@ -59,7 +59,7 @@ update.iModel <- function(object, items, fit=TRUE, details=0, ...){
 }
 
 
-
+#' @export
 triangulate.dModel <- function(object, ...){
     cl <- getCall(object)
     cq <- getCliques(triangulate(.glist2adjMAT(terms(object))))

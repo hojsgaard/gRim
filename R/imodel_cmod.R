@@ -54,11 +54,11 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0) {
 
     cmod_data    <- extract_cmod_data(data)
     nms_in_data  <- colnames(cmod_data$S)
-    
-    zzz <- parse_gm_formula(formula, nms_in_data, marginal)
-    nms_in_model <- zzz$varNames
-    glist        <- zzz$glist
-    
+
+    model_spec   <- parse_gm_formula(formula, nms_in_data, marginal)
+    nms_in_model <- model_spec$varNames
+    glist        <- model_spec$glist
+
     ## Get varNames in the order matching to the data:
     nms_in_data <- nms_in_data[sort(match(nms_in_model, nms_in_data))]
 
@@ -84,9 +84,8 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0) {
 
 .cModel_finalize <- function(glist, varNames) {
 
-    ## FIXME: Rethink this
     amat  <- ugList(glist, result="matrix")
-    glist <- maxCliqueMAT(amat)[[1]]
+    glist <- maxCliqueMAT(amat)[[1]]     ## FIXME: Rethink this
     isd   <- length(mcsMAT(amat)) > 0   
     
     list(glist       = glist,
@@ -94,40 +93,53 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0) {
          properties  = c(isg=TRUE, issd=isd))                
 }
 
-## FIXME: gRips integration:
-## Styr på glist; formentlig liste af generatorer som variabelnavne
-
 
 #' @export
-fit.cModel <- function(object, engine="ggmfit", start=NULL, ...) {
+fit.cModel <- function(object, engine=c("ncd", "covips", "conips"), start=NULL, ...) {
+    dofit_cModel(object, engine=engine, start=start, ...)
+}
 
-    fitfun <- if (identical(engine, "ggmfit")) ggmfit else ggmfitr
+## #' @export
+dofit_cModel <- function(object, engine=c("ncd", "covips", "conips"), start=NULL, ...) {
 
+    engine <- match.arg(engine)
+    conips <- doBy::section_fun(wrapper_grips, list(method="conips"))
+    covips <- doBy::section_fun(wrapper_grips, list(method="covips"))
+    ncd    <- doBy::section_fun(wrapper_grips, list(method="ncd"))
+
+    fitfun <- switch(engine,
+                     ## "ggmfit"={ggmfit},
+                     ## "ggmfitr"={ggmfitr},
+                     "conips"={conips},
+                     "covips"={covips},
+                     "ncd"={ncd})
+    
     ## Call C or R version of ips
-    ff <- fitfun(object$datainfo$S, n.obs=object$datainfo$n.obs,
-                 glist=object$modelinfo$glist,
-                 start=start, details=0,...)
+    fit <- fitfun(object$datainfo$S,
+                  n.obs = object$datainfo$n.obs,
+                  glist = object$modelinfo$glist,
+                  start = start, details=0,...)
     
     ## ideviance to independence model  
-    idev  <-  ff$n.obs * (log(ff$detK) + sum(log(diag(ff$S))))  
-    idim      <-  ff$nvar 
+    idev  <-  fit$n.obs * (log(fit$detK) + sum(log(diag(fit$S))))  
+    idim      <-  fit$nvar 
     sat.dim   <-  ((idim + 1) * idim) / 2
-    dim.unadj <-  sat.dim - ff$df
+    dim.unadj <-  sat.dim - fit$df
     
     idf       <-  (dim.unadj - idim)
-    logL.sat  <-  ff$logL + ff$dev / 2
+    logL.sat  <-  fit$logL + fit$dev / 2
     
-    aic       <-  -2 * ff$logL + 2 * dim.unadj
-    bic       <-  -2 * ff$logL + log(ff$n.obs) * dim.unadj
+    aic       <-  -2 * fit$logL + 2 * dim.unadj
+    bic       <-  -2 * fit$logL + log(fit$n.obs) * dim.unadj
     
-    dimension <- c(mod.dim=dim.unadj, sat.dim=sat.dim, i.dim=idim, df=ff$df, idf=idf)
+    dimension <- c(mod.dim=dim.unadj, sat.dim=sat.dim, i.dim=idim, df=fit$df, idf=idf)
     
-    ans   <- list(dev=ff$dev, ideviance=idev, logL.sat=logL.sat,
+    ans   <- list(dev=fit$dev, ideviance=idev, logL.sat=logL.sat,
                   aic=aic, bic=bic,
                   dimension=dimension)
     
-    ff$S <- ff$n.obs <- ff$dev <- ff$df <- NULL
-    ans  <- c(ff, ans)
+    fit$S <- fit$n.obs <- fit$dev <- fit$df <- NULL
+    ans  <- c(fit, ans)
     
     object$fitinfo  <- ans
     object$isFitted <- TRUE
@@ -135,28 +147,39 @@ fit.cModel <- function(object, engine="ggmfit", start=NULL, ...) {
     object
 }
 
+wrapper_grips <- function(S, n.obs, glist, start=NULL, 
+                   eps=1e-12, iter=1000, details=0, method="ncd", ...){
 
-#' @export
-extract_cmod_data <- function(data) {
-    if (inherits(data, "data.frame")) {
-        data <- cov.wt(data, method="ML")
-    } else
-        if (inherits(data, "list") && identical(names(data), c("cov", "center", "n.obs"))) {
-            ## OK
-        } else
-            stop("Can not proceed...")
-            
-    names(data)[1] <- "S"
-    data
+    nms_in_data <- colnames(S)
+    
+    ## Numerical (indices) representation of glist
+    glist.num <- lapply(glist, match, nms_in_data)
+    
+    fit   <- fit_ggm_grips(S, formula=glist.num, nobs=n.obs, method=method)
+    detK  <- det(fit$K)
+    dev   <- -n.obs * log(det(S %*% fit$K))            ## deviance to the saturated model  
+    df    <-  sum(fit$K == 0) / 2
+    
+    out <- list(dev=dev, df=df, detK=detK, nvar=nrow(S), ## Pas på her
+                S=S, n.obs=n.obs, logL=fit$details$logL,
+                K=fit$K, iter=fit$details$iter)
+
+    return(out)
 }
 
 
-
-
-
-
-
-
-
-
+#' @export
+extract_cmod_data <- function(data.) {
+    if (inherits(data., c("data.frame", "matrix"))) {
+        data. <- cov.wt(data., method="ML")
+    } else
+        if (inherits(data., "list") &&
+            identical(names(data.), c("cov", "center", "n.obs"))) {
+            ## OK
+        } else
+            stop("Can not proceed...")
+    
+    names(data.)[1] <- "S"
+    data.
+}
 

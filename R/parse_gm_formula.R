@@ -67,7 +67,8 @@ parse_gm_formula <- function(formula, varnames=NULL, marginal=NULL, interactions
                glist <- formula
            })
     
-    glist <- remove_redundant(glist)    
+    #glist <- remove_redundant(glist)
+    glist <- gRbase::filter_maximal_vectors(glist)
     glist <- .check.glist.for.valid.varnames(glist, varnames)  
     
     if (!is.null(interactions))
