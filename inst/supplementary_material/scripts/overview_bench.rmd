@@ -1,0 +1,55 @@
+---
+title: "Overview of benchmarks - Fast iterative proportional scaling for Gaussian graphical models"
+author: "Søren Højsgaard and Steffen Lauritzen"
+date: "2023-04-01"
+output: 
+  html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = !TRUE)
+```
+
+## Generate this overview
+
+To regenerate this overview, run `render("overview_bench.rmd")`.
+
+## Available reports
+
+```{r, echo=FALSE}
+library(pander)
+panderOptions('table.alignment.default', 'left')
+panderOptions('table.alignment.rownames', 'left')
+```
+
+```{r, results='asis'}
+rf<-list.dirs("./reports")[-1]
+
+## rf <- list.dirs(path="^./reports", full.names = T, recursive = T)
+rf
+
+rf <- rev(rf)
+for (i in 1:length(rf)){
+    ff <- rf[i]
+    cat("report: ", ff, "\n")
+    rr <- paste0(ff, "/bench_report.html")
+    dir    <- glue::glue(ff)
+    report <- glue::glue(rr)
+    load(file.path(ff, "settings_used.RData"))
+    cat("### directory name :", ff)
+    cat("\n\n")
+    cat("#### scripts used : \n\n")
+    cat(toString(scripts_used), "\n")
+    pander::pander(scripts_used)
+    cat("\n#### settings : \n\n")
+    ss <- settings_used  |> lapply(paste0, collapse=" ")
+    ss <- as.data.frame(unlist(ss))
+    names(ss) <- "value"
+    cat(pander::pander(ss))    
+    cat("#### [go to directory  ", "](", dir,    ")")
+    cat("\n\n")
+    cat("#### [see report     ", "](", report, ")")
+    cat("<br>", "\n")    
+}
+```
+

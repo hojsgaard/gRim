@@ -10,7 +10,7 @@ cmod(
   data,
   marginal = NULL,
   fit = TRUE,
-  maximal_only = TRUE,
+  maximal_only = FALSE,
   details = 0
 )
 }

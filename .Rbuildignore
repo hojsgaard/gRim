@@ -2,6 +2,7 @@
 .gitignore
 LICENSE
 NAMESPACE_OLD
+cut/
 devel/
 vignettes/*.aux
 vignettes/*.log

@@ -118,7 +118,7 @@ testdelete.iModel <- function(object, edge, k=2, details=1, ...){
 #' 
 #' @aliases testadd testadd.iModel print.testadd testadd.mModel
 #' 
-#' @details Let M0 be the model and e={u,v} be an edge and let M1 be
+#' @details Let M0 be the model and e=(u,v) be an edge and let M1 be
 #'     the model obtained by adding e to M0. If M1 is decomposable AND
 #'     e is contained in one clique C only of M1 then the test is
 #'     carried out in the C-marginal model. In this case, and if the

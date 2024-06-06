@@ -9,7 +9,7 @@ parse_gm_formula(
   varnames = NULL,
   marginal = NULL,
   interactions = NULL,
-  maximal_only = TRUE
+  maximal_only = FALSE
 )
 }
 \arguments{

@@ -1,0 +1,46 @@
+---
+title: Table for paper "On some algorithms for estimation in Gaussian graphical models"
+author: Søren Højsgaard and Steffen Lauritzen
+date: "Created: `r Sys.time()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+---
+
+
+
+```{r, echo=F}
+## rm(list=ls())
+local_bench_settings2 <- file.path(.REPORT_DIR, "bench_settings.r")
+source(local_bench_settings2)
+
+options("width"=200)
+knitr::opts_chunk$set(echo=FALSE)
+```
+
+# Generate tables for paper
+
+## Settings
+
+```{r}
+## Scripts:
+scripts_used
+## Settings
+settings_used |> str()
+```
+
+```{r}
+exists1 <- file.exists(file.path(.REPORT_DIR, "result_table1.RData"))
+exists2 <- file.exists(file.path(.REPORT_DIR, "result_table2.RData"))
+exists3 <- file.exists(file.path(.REPORT_DIR, "result_table3.RData"))
+```
+
+```{r, child="bench1b.rmd", eval=exists1}
+```
+
+```{r, child="bench2b.rmd", eval=exists2}
+```
+
+```{r, child="bench3b.rmd", eval=exists3}
+```

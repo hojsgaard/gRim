@@ -55,7 +55,6 @@ data(math)
 glist <- list(c("al", "st", "an"), c("me", "ve", "al"))
 d <- cov.wt(math, method="ML")
 ggmfit (d$cov, d$n.obs, glist)
-ggmfitr(d$cov, d$n.obs, glist)
 
 }
 \seealso{

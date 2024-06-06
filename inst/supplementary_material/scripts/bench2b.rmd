@@ -1,0 +1,83 @@
+## Table 2
+
+```{r}
+nms <- c("summary", "raw", "design")
+
+list.files(.REPORT_DIR)
+RDFILE <- paste0(RDFILE2, ".RData")
+
+load(file.path(.REPORT_DIR, RDFILE))
+names(out) <- nms
+tab3_lst <- out
+```
+
+
+```{r, results='hide'}
+sum3 <- tab3_lst$summary
+raw3 <- tab3_lst$raw
+des3 <- tab3_lst$design
+sum3 |> dim()
+raw3 |> dim()
+sum3 |> print(n=40)
+
+## Add number of edges, density and grid
+tmp       <- sum3  |> select(nr, nc, nvar)
+tmp$grd   <- tmp  |> with(paste0(nr, "x", nc))
+tmp$nedge <- tmp |> with((nc-1)*nr + (nr-1)*nc)
+tmp$dens  <- tmp |> with(nedge / (nvar*(nvar-1)/2))
+tmp       <- tmp |> select(grd, nedge, dens)
+## tmp |> print(n=40)
+## sum3 <- cbind(sum3, tmp)
+
+sum3 <- merge(sum3, tmp)
+sum3
+
+## Right order of columns 
+sum3 <- sum3 |>
+    select(dat, marg, method, nvar, nr, nc, grd, nedge, dens, time)
+sum3 |> print()
+
+sum3 <- sum3 |>
+    arrange(dat, method, nvar)
+
+## Wide format to table in paper
+sum3_wide <-
+    sum3  |>
+    pivot_wider(id_cols = c(grd, nvar, nedge, dens),
+                names_from = c(method, dat),
+                values_from = time)
+sum3_wide
+```
+
+### Table 2 - as in paper
+
+```{r}
+sum3_wide  |> 
+    kable(full.width=T)  %>%
+    kable_styling(bootstrap_options="hover")
+```
+
+### Table 2 - long format
+
+```{r}
+sum3 |> 
+    kable(full.width=T)  %>%
+    kable_styling(bootstrap_options="hover")
+```
+
+
+### Table 2 - raw data
+
+```{r}
+raw3 |>
+    kable(full.width=T)  %>%
+    kable_styling(bootstrap_options="hover")
+```
+
+### Table 2 - graphics
+
+```{r}
+sum3 |> ggplot(aes(x=log10(nvar), y=log10(time))) + geom_point() +
+    geom_line(aes(group=method, color=method)) +
+    facet_grid(~ dat)
+```

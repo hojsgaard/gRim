@@ -1,0 +1,71 @@
+## Table 3
+```{r}
+nms <- c("summary", "raw", "design")
+
+.REPORT_DIR
+list.files(.REPORT_DIR)
+RDFILE <- paste0(RDFILE3, ".RData")
+
+load(file.path(.REPORT_DIR, RDFILE))
+names(out) <- nms
+tab5_lst <- out
+```
+
+```{r, results='hide'}
+sum2 <- tab5_lst$summary
+raw2 <- tab5_lst$raw
+des2 <- tab5_lst$design
+sum2 |> dim()
+raw2 |> dim()
+
+## Right order of columns 
+sum2 <- sum2 |> select(dat, nvar, method, prob, marg, time)
+sum2 |> print(n=40)
+
+## Wide format to table in paper
+sum2_wide <-
+    sum2  |>
+    arrange(prob, nvar, dat, method)
+sum2_wide
+
+sum2_wide <- 
+    sum2_wide |> 
+    pivot_wider(id_cols = c(marg, nvar, prob),
+                names_from = c(method, dat),
+                values_from = time)
+sum2_wide
+```
+
+### Table 3 - as in paper
+
+```{r}
+sum2_wide  |> 
+    kable(full.width=T)  %>%
+    kable_styling(bootstrap_options="hover")
+```
+
+### Table 3 - long format
+
+```{r}
+sum2 |> 
+    kable(full.width=T)  %>%
+    kable_styling(bootstrap_options="hover")
+```
+
+
+### Table 3 - raw data
+
+```{r}
+raw2 |>
+    kable(full.width=T)  %>%
+    kable_styling(bootstrap_options="hover")
+```
+
+### Table 3 - graphics
+
+```{r, eval=T}
+sum2 |>
+    ggplot(aes(x=nvar, y=log10(time))) + geom_point() +
+    geom_line(aes(group=method, color=method)) +
+    facet_grid(prob ~ dat)
+```

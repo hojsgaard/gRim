@@ -1,5 +1,5 @@
 Package: gRim
-Version: 0.3.2
+Version: 0.3.1
 Title: Graphical Interaction Models
 Author: Søren Højsgaard <sorenh@math.aau.dk>
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
@@ -13,7 +13,7 @@ License: GPL (>= 2)
 URL: https://people.math.aau.dk/~sorenh/software/gR/
 Encoding: UTF-8
 Depends:
-    R (>= 3.6.0),
+    R (>= 4.2.0),
     methods,
     gRbase (>= 2.0.2)
 Suggests:
