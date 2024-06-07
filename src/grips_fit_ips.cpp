@@ -146,7 +146,7 @@ List conips_ggm_(arma::mat& S, List& elst, umat& emat, int& nobs,
   INIT_CONVERGENCE_CHECK;
     
   while(true){  
-    conips_inner_(S, K, elst0, clist0, print=print);
+    conips_inner_(S, K, elst0, clist0, print);
     ++count;          
 
     switch(convcrit){
@@ -210,7 +210,7 @@ List covips_inner_(const mat& S, mat& K, const List& elst0,
   for (int i=0; i < elst0.length(); ++i){
     uvec cc0 = elst0[i];
     covips_update_parm_(cc0, Scc_lst[i], K, Sigma, Scci_lst[i],
-			       print=print);
+			       print);
   }
   return List::create(_["iter"] = 1);
 }
@@ -251,7 +251,7 @@ void covips_inner0_(mat& S, mat& K, List& elst0,
   for (int i=0; i < elst0.length(); ++i){
     uvec cc0 = elst0[i];
     covips_update_parm0_(cc0, Scc_lst[i], K, Sigma, Scci_lst[i],
-			 n_upd=n_upd, eps=eps, print=print);
+			 n_upd, eps, print);
   }
 }
 
@@ -263,9 +263,9 @@ List covips_outer0_(mat& S, mat& K, List& elst0, mat& Sigma,
   int count = 0;
   
   while(true){
-    covips_inner0_(S=S, K=K, elst0=elst0, Sigma=Sigma,
-		   Scc_lst=Scc_lst, Scci_lst=Scci_lst,
-		   n_upd=n_upd, eps=eps, print=print);
+    covips_inner0_(S, K, elst0, Sigma,
+		   Scc_lst, Scci_lst,
+		   n_upd, eps, print);
     n_visits += n_upd; 
     ++count;    
     if (print>=3){
@@ -316,11 +316,11 @@ List covips_ggm_(mat& S, List& elst, umat& emat, int& nobs,
   INIT_CONVERGENCE_CHECK;
 
   double eps1 = 2 * eps / nobs; 
-  res1 = covips_outer0_(S=S, K=K, elst0=elst0, Sigma=Sigma,
-			Scc_lst=Scc_lst, Scci_lst=Scci_lst,
-			nobs=nobs, emat_c=emat_c, n_upd=n_upd,
-			max_visits=max_visits, n_visits=n_visits,
-			eps=eps1, print=print);
+  res1 = covips_outer0_(S, K, elst0, Sigma,
+			Scc_lst, Scci_lst,
+			nobs, emat_c, n_upd,
+			max_visits, n_visits,
+			eps1, print);
   iter1 = res1["iter"];
 
   dif    = S - Sigma;

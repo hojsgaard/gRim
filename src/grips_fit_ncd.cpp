@@ -151,7 +151,7 @@ void ncd_inner1_update_Sigma_(mat& Sigma, mat& amat, int nobs, int print=0){
   }
   
   for (size_t u=0; u<amat.n_rows; u++){
-    update_Sigma_row_(u=u, Sigma=Sigma, amat=amat, nobs=nobs, print=print);
+    update_Sigma_row_(u, Sigma, amat, nobs, print);
   }
 }
 
@@ -167,7 +167,7 @@ List ncd_outer1_(mat& Sigma, mat& K, umat& emat, umat& emat_c, mat& amat,
   int n_vars = Sigma.n_rows, count=0, n_upd = n_vars;
   
   while (true) {
-    ncd_inner1_update_Sigma_(Sigma=Sigma, amat=amat, nobs=nobs, print=print);
+    ncd_inner1_update_Sigma_(Sigma, amat, nobs, print);
     mat Delta = Sigma - Sigma_prev;
     mno       = mnorm_one_(Delta);
     n_visits += n_upd;
@@ -197,10 +197,10 @@ void ncd_inner2_update_Sigma_K_(mat& Sigma, mat& K, mat& amat, int nobs,
    }
 
   for (size_t u=0; u<amat.n_rows; u++){
-    if (shall_update(u=u, K=K, amat=amat, eps=eps)){
+    if (shall_update(u, K, amat, eps)){
       n_upd++;
-      update_Sigma_row_(u=u, Sigma=Sigma,      amat=amat, nobs=nobs, print=print);    
-      update_K_row_    (u=u, Sigma=Sigma, K=K, amat=amat, print=print);
+      update_Sigma_row_(u, Sigma, amat, nobs, print);    
+      update_K_row_    (u, Sigma, K, amat, print);
     }   
   }
 }
@@ -217,8 +217,8 @@ List ncd_outer2_(mat& Sigma, mat& K, umat& emat, umat& emat_c, mat& amat, int no
   double mno, conv_crit;
   while (true){
     n_upd = 0;
-    ncd_inner2_update_Sigma_K_(Sigma=Sigma, K=K, amat=amat, nobs=nobs,
-			       n_upd=n_upd, eps=eps, print=print);
+    ncd_inner2_update_Sigma_K_(Sigma, K, amat, nobs,
+			       n_upd, eps, print);
 
     n_visits += n_upd;
     mat Delta = K - project_onto_G_(K, emat_c);
@@ -268,12 +268,12 @@ List ncd_ggm_(mat& S, List& elst, umat& emat, int& nobs,
   
   switch (version){
   case 0:
-    res1 = ncd_outer1_(Sigma=Sigma, K=K, emat=emat, emat_c=emat_c, amat=amat,
-		       nobs=nobs, eps=eps1, max_visits=max_visits, n_visits=n_visits, print=print);
+    res1 = ncd_outer1_(Sigma, K, emat, emat_c, amat,
+		       nobs, eps1, max_visits, n_visits, print);
     break;
   case 1:
-    res1 = ncd_outer1_(Sigma=Sigma, K=K, emat=emat, emat_c=emat_c, amat=amat,
-		       nobs=nobs, eps=eps2, max_visits=max_visits, n_visits=n_visits, print=print);
+    res1 = ncd_outer1_(Sigma, K, emat, emat_c, amat,
+		       nobs, eps2, max_visits, n_visits, print);
     break;
   }
   
@@ -315,9 +315,9 @@ List ncd_ggm_(mat& S, List& elst, umat& emat, int& nobs,
     case 1: // FULL VERSION
       K = inv_qr_(Sigma);
       n_visits = 0;
-      res2 = ncd_outer2_(Sigma=Sigma, K=K, emat=emat, emat_c=emat_c, amat=amat, nobs=nobs, eps=eps2,
-			 max_visits=max_visits, n_visits=n_visits, 
-			 n_upd=n_upd, print=print);
+      res2 = ncd_outer2_(Sigma, K, emat, emat_c, amat, nobs, eps2,
+			 max_visits, n_visits, 
+			 n_upd, print);
       iter2 = res2["iter"];
       if (print>=2)
 	Rprintf(">> ncd_outer2 visits: %d\n", iter2);
