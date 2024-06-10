@@ -13,7 +13,7 @@ fit_ggm_grips(
   eps = 0.01,
   convcrit = 1,
   aux = list(),
-  method = "covips",
+  method = "ncd",
   print = 0
 )
 }
@@ -35,7 +35,7 @@ x p matrix of integers.}
 
 \item{aux}{A list of form name=value.}
 
-\item{method}{Either \code{"ips"} or \code{"fips"}.}
+\item{method}{Either \code{"ncd"} (default), \code{"covips"} or \code{"conips"}.}
 
 \item{print}{Should output from fitting be printed?}
 }
@@ -53,7 +53,17 @@ iterations.
 This still provides upper bound on error of likelihood function.
 }
 
-R-based / c++-based in combination with con / cov.
+Methods:
+\itemize{
+\item "ncd": Neighbour coordinate descent.
+\item "covips": IPS based on working with the covariance matrix.
+\item "conips": IPS based on working with the concentration matrix.
+}
+
+ncd is very fast but may fail to converge in rare cases. Both
+covips and conips are guaranteed to converge provided the maximum
+likelihood estimate exists, and covips are considerably faster than
+conips.
 }
 \examples{
 options("digits"=3)

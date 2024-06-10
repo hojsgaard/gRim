@@ -12,7 +12,7 @@
 #' @param eps Convergence criterion.
 #' @param convcrit Convergence criterions. See section `details`.
 #' @param aux A list of form name=value.
-#' @param method Either `"ips"` or `"fips"`.
+#' @param method Either `"ncd"` (default), `"covips"` or `"conips"`.
 #' @param print Should output from fitting be printed?
 #' 
 #' @details
@@ -27,9 +27,17 @@
 #' 
 #' * 3: computed duality gap may turn negative due to rounding error, so its absolute value is returned. 
 #' This still provides upper bound on error of likelihood function.
-#' 
-#' R-based / c++-based in combination with con / cov.
 #'
+#' Methods:
+#' * "ncd": Neighbour coordinate descent.
+#' * "covips": IPS based on working with the covariance matrix.
+#' * "conips": IPS based on working with the concentration matrix.
+#'
+#' ncd is very fast but may fail to converge in rare cases. Both
+#' covips and conips are guaranteed to converge provided the maximum
+#' likelihood estimate exists, and covips are considerably faster than
+#' conips.
+#' 
 #' @examples
 #' options("digits"=3)
 #' data(math, package="gRbase")
@@ -67,10 +75,13 @@ get_col_number <- function(emat, d, nobs){
 #' @export
 
 fit_ggm_grips <- function(S, formula=NULL, nobs, K=NULL, maxit=10000L, eps=1e-2, convcrit=1, aux=list(),
-                    method="covips", print=0) {
+                    method="ncd", print=0) {
     t0 <- .get.time() 
     method <- match.arg(tolower(method),
-                        c("covips", "conips", "ncd", "sncd"))
+                        c("ncd", "covips", "conips"))
+                                        #c("covips", "conips", "ncd", "sncd"))
+
+                        
 
     method_str <- method
     
@@ -109,7 +120,7 @@ fit_ggm_grips <- function(S, formula=NULL, nobs, K=NULL, maxit=10000L, eps=1e-2,
  
     
     switch(method,
-           "sncd" = {ver=0; method="ncd"},
+           ## "sncd" = {ver=0; method="ncd"},
            "ncd"  = {ver=1},
            "covips"={ver=0},
            "conips"={ver=0}
