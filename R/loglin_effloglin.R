@@ -46,114 +46,119 @@
 #' @export effloglin
 effloglin <- function(table, margin, fit=FALSE, eps=0.01, iter=20, print=TRUE){
 
+    ## margin is a list of generators
+    xlogy <- function(x,y){
+        i <- y > 0
+        out <- rep(0, length(x))
+        out[i] <- x[i] * log(y[i])
+        out
+    }
+    
     amat <- ugList(margin, result="matrix")
     vn   <- colnames(amat)
     tri  <- triangulateMAT(amat)
     rip  <- ripMAT(tri)
-
+    
     cliq     <- rip$cliques
     len.cliq <- length(cliq)
-
+    
     ## get "host clique" for each generator
     ## FIXME: (effloglin) use general "get.host.clique" function.
-    ghost   <- rep(NA, length(margin))
-    seqcliq <- seq_along(cliq)
+    margin_host   <- rep(NA, length(margin))
     for (kk in 1:length(margin)){
-        ##cat("kk:", kk,"\n")
         gg <- margin[[kk]]
-        for (ii in seqcliq){
-            ##cat ("ii", ii, "\n")
+        for (ii in seq_along(cliq)){
             zz <- match(gg, cliq[[ii]])
             if (!any(is.na(zz))){
-                ghost[kk] <- ii
+                margin_host[kk] <- ii
                 break
             }
         }
     }
-
+    
     if (is.array(table)){
         Nobs   <- sum(table)
-        ##stlist <- lapply(margin, function(xx) {tabMarg(table, xx)})
-        stlist <- lapply(margin, function(xx) tabMarg(table, xx))
+        suff_stat_list <-
+            lapply(margin,
+                   function(xx) {
+                       tabMarg(table, xx)
+                   })
     } else {
         Nobs   <- sum(table[[1]])
-        stlist <- table
+        suff_stat_list <- table
     }
-
-    zzz       <- unlist(lapply(stlist, dimnames), recursive=FALSE)
+    
+    zzz       <- unlist(lapply(suff_stat_list, dimnames), recursive=FALSE)
     vl        <- zzz[unique.default(names(zzz))]
-    pot.list  <- lapply(cliq, function(cq)
-                        parray(cq, levels=vl[cq], values=1, normalize="all"))
 
-    ##cat("effloglin\n")
-    ##   print(as.data.frame.table(pot.list[[1]]))
-
-    ## ## Potential list over cliques
-    ## Clique marginals
-
-    prob.list  <- propagateLS(pot.list, rip, initialize=TRUE)
-
+    cliq_pot  <- lapply(cliq, function(cq){
+      gRain::cpt(cq, levels=vl[cq], values=1, normalize="all") 
+    })
+    
+    ## Clique marginal probabilities
+    cliq_prob  <- propagateLS(cliq_pot, rip, initialize=TRUE)    
+        
     itcount  <- 1L
     logL     <- 0
     max.dif  <- vector("numeric", length(margin))
     repeat{
-        ##cat(sprintf("---------- iteration: %i -----------\n", itcount))
-        for (ss in seq_along(margin)){
-            gg      <- margin[[ss]]
-            st      <- stlist[[ss]]
-            cq      <- cliq[[ghost[ss]]]
-            cq.idx  <- ghost[ss]
-            cpot    <- prob.list[[cq.idx]]
-            ##adjust  <- tableOp(st, tabMarg(cpot, gg)*Nobs, "/")
+        for (ii in seq_along(margin)){        
+            gg      <- margin[[ii]]
+            cq      <- cliq[[margin_host[ii]]]
+            cq.idx  <- margin_host[ii]
+            cq_prob    <- cliq_prob[[cq.idx]]            
+            st      <- suff_stat_list[[ii]]        ## Numerator in update
+            tm      <- tabMarg(cq_prob, gg) * Nobs ## Denominator in update
+            adjust2 <- tabDiv0(st, tm)             ## Adjustment
+            max.dif[ii] <- max(abs(log(adjust2)))
 
-            ##tm      <- tabMarg(cpot, gg)*Nobs
-            tm      <- tabMarg(cpot, gg) * Nobs
-            adjust  <- st / tm
-            max.dif[ss] <- max(abs(log(adjust)))
-            ##max.dif[ss] <- max(abs(st-tm))
-            logL    <- logL + sum(st * log(adjust))
-            ##pot.list[[cq.idx]] <- tableOp(pot.list[[cq.idx]], adjust, "*")
-            ##pot.list[[cq.idx]] <- tableOp2(pot.list[[cq.idx]], adjust, `*`)
-            pot.list[[cq.idx]] <- tabProd(pot.list[[cq.idx]], adjust)
-            prob.list          <- propagateLS(pot.list, rip, initialize=TRUE)
+            xly <- tabMult(st, log(adjust2))
+            logL.adjust <- sum(xly, na.rm=TRUE)
+            
+            logL    <- logL + logL.adjust
+            cat(glue("loop over margins. logL: {logL} \n\n"))
+            
+           cliq_pot[[cq.idx]] <- tabProd(cliq_pot[[cq.idx]], adjust2)
+           cliq_prob          <- propagateLS(cliq_pot, rip, initialize=TRUE)
         }
-
+      
+        ## cat("iteration: ", itcount, "\n"); print(max.dif)
         if (print)
             cat("max deviation (obs-fitted):", max(max.dif), "\n")
         if ((max(max.dif) < eps) || (itcount >= iter))
             break()
         itcount <- itcount + 1L
     }
-
-    vl    <- unlist(lapply(stlist, dimnames), recursive=FALSE)[vn]
-    nlev  <- unlistPrim(lapply(vl, length))
+    
+    vl    <- unlist(lapply(suff_stat_list, dimnames), recursive=FALSE)[vn]
+    nlev  <- unlist(lapply(vl, length))
     gn    <- lapply(margin, match, vn)
     nparm <- .dim_loglin(gn, nlev)
     df    <- prod(nlev) - 1 - nparm
     
-    ans <- list(potlist=pot.list, margin=margin, vn=vn, rip=rip, ghost=ghost,
-                stlist=stlist, logL=logL, nparm=nparm, df=df)
+    ans <- list(potlist=cliq_pot, margin=margin, vn=vn, rip=rip, margin_host=margin_host,
+                suff_stat_list=suff_stat_list, logL=logL, nparm=nparm, df=df)
     
 ### Create full joint:
+    ##    print(cliq_prob)
     if (fit){
-        pjoint <- prob.list[[1]]
-        if (length(prob.list) > 1){
-            for (ii in 2:length(prob.list)){
-                pjoint <- tableOp(pjoint,
-                                  tableOp(prob.list[[ii]],
-                                          tabMarg(prob.list[[ii]], rip$sep[[ii]]), "/"),
-                                  "*")
+        pjoint <- cliq_prob[[1]]
+        if (length(cliq_prob) > 1){
+            for (ii in 2:length(cliq_prob)){
+                sp <- rip$sep[[ii]]
+                if (length(sp) > 0){              
+                    mm <- tabMarg(cliq_prob[[ii]], sp)
+                    cc <- tableOp(cliq_prob[[ii]], mm, "/")
+                    pjoint <- tableOp(pjoint, cc, "*")
+                } else {
+                    pjoint <- tableOp(pjoint, cliq_prob[[ii]], "*")
+                }
             }
         }
-        ##pjoint <- tablePerm(pjoint, vn)*Nobs
         pjoint <- tabPerm(pjoint, vn) * Nobs
         ans <- c(ans, list(fit=pjoint))
     }
     ## class(ans) <- "effloglin"
     return(ans)
 }
-
-
-
-
 

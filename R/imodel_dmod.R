@@ -1,6 +1,6 @@
 ##FIXME: Delete df from loglin() output.
 
-##########################################################
+#######################################################################
 ##
 #' @title Discrete interaction model (log-linear model)
 #'
@@ -10,7 +10,7 @@
 #' 
 #' @name imodel-dmod
 ##
-##########################################################
+######################################################################
 
 #' @details The independence model can be specified as \code{~.^1} and
 #'     \code{~.^.} specifies the saturated model.  Setting
@@ -108,7 +108,7 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
         datainfo  = list(data=data),
         fitinfo   = NULL,
         isFitted  = FALSE,
-        .call     = .call
+        call      = .call
         
     )
     
@@ -123,11 +123,9 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
 .dModel_finalize<- function(glist, varNames) {
     list(glist      = glist,
          glistNUM   = .glistNUM(glist, varNames),
+           ug = ug(glist),         
          properties = isGSD_glist(glist))
 }
-
-
-
 
 
 #' @export
@@ -156,17 +154,15 @@ get_model_dimensions <- function(object) {
         dim.unadj <- .dim_loglin(glistNUM, dim(getmi(object, "data")))
     }
 
-    list(dim.unadj=dim.unadj, dim.adj=dim.adj)
-    
+    list(dim.unadj=dim.unadj, dim.adj=dim.adj)    
 }
 
+## FIXME: At some point we should allow for data in the form of a dataframe
+
 #' @export
-fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
+fit.dModel <- function(object, engine="loglin", print=FALSE, ...) {
 
-    ## FIXME: At some point we should allow for data in the form of a dataframe
-
-    vn <- getmi(object, "varNames")
-    
+    vn <- getmi(object, "varNames")    
     sat.dim.unadj   <- prod(dim(getmi(object, "data"))) - 1
     sat.dim.adj     <- sum(getmi(object, "data") > 0) - 1
     ind.dim.unadj   <- sum(dim(getmi(object, "data")) - 1)
@@ -174,12 +170,13 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
     mod_dims <- get_model_dimensions(object)
     
     switch(engine,
-           "loglin"={llfit <- loglin(getmi(object, "data"), getmi(object, "glist"),
-                                     fit=TRUE, ## Needed to compute deviance
-                                     print=print, eps=0.10, ...)
-                                     
-                                     names(llfit)[1] <- 'dev'      ## loglin() calls this slot 'lrt'
-                                     llfit
+           "loglin"={
+               llfit <- loglin(getmi(object, "data"), getmi(object, "glist"),
+                               fit=TRUE, ## Needed to compute deviance
+                               print=print, eps=0.10, ...)
+               
+               names(llfit)[1] <- 'dev'      ## loglin() calls this slot 'lrt'
+               llfit
            })
 
     indep.stat   <- loglin(getmi(object, "data"), as.list(vn), iter=1, print=FALSE)[c("lrt", "df")]
@@ -188,10 +185,12 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
 
     Nobs <- sum(getmi(object, "data"))
     llfit$logL      <- sum(getmi(object, "data") * log(llfit$fit), na.rm=TRUE) - Nobs * log(Nobs)
+
+    ## print(llfit$fit)
     
     llfit$df        <- NULL
-    llfit$fit       <- NULL
-
+    ## llfit$fit       <- NULL
+    
     llfit$ideviance <- ideviance
     llfit$aic       <- -2 * llfit$logL + 2 * mod_dims$dim.unadj
     llfit$bic       <- -2 * llfit$logL + log(sum(getmi(object, "data"))) * mod_dims$dim.unadj
@@ -223,18 +222,12 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
     object
 }
 
-
-
-
-
     ## extra1 <- list(dim.unadj = mod_dims$dim.unadj,
                    ## dim.adj   = mod_dims$dim.adj,
                    ## df.unadj  = df.unadj,
                    ## df.adj    = df.adj,
                    ## idf       = idf,
                    ## ideviance = ideviance)
-
-
 
     ## FIXME: SILLY to call loglin to fit independence model, but it is faster than
     ## a simple R implementation.
@@ -325,7 +318,7 @@ fit.dModel <- function(object, engine="loglin", print=FALSE, ...){
 #' @method residuals "dModel"
 #' @export
 residuals.dModel <-
-    function (object, type = c("deviance", "pearson", "response"),
+    function (object, type = c("working", "deviance", "pearson", "response"),
               ...)
 {
     type <- match.arg(type)
@@ -335,10 +328,13 @@ residuals.dModel <-
     nz <- mu > 0
     y  <- y[nz]
     mu <- mu[nz]
-    res[nz] <- switch(type,
-                      deviance = sign(y - mu) * sqrt(2 *
-                                                     abs(y * log((y + (y == 0))/mu) - (y - mu))),
-                      pearson = (y - mu)/sqrt(mu), response = y - mu)
+    res[nz] <-
+        switch(type,
+               deviance = sign(y - mu) * sqrt(2 *
+                                              abs(y * log((y + (y == 0))/mu) - (y - mu))),
+               pearson  = (y - mu)/sqrt(mu),
+               response =, working = y - mu
+               )
     res
 }
 

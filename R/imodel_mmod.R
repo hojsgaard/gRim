@@ -68,13 +68,14 @@ mmod <- function(formula, data, marginal=NULL, fit=TRUE, details=0)
 
 .mModel_finalize <- function(glist, varNames, datainfo){
 
-    properties <- isGSD_glist(glist, discrete=datainfo$disc.names)
-    glistNUM <- .glistNUM(glist, varNames)    
     modelinfo <- .mModelinfo(glist, datainfo)
 
-
     ##print("mModel_finalize"); print(glist); print(glistNUM)
-    c(list(glist=glist, glistNUM=glistNUM, properties=properties), modelinfo)
+    c(list(glist=glist,
+           glistNUM=.glistNUM(glist, varNames),
+           ug = ug(glist),
+           properties=isGSD_glist(glist, discrete=datainfo$disc.names)),
+      modelinfo)
 }
 
 .mModelinfo <- function(glist, datainfo){

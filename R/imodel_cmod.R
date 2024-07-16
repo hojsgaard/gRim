@@ -84,13 +84,16 @@ cmod <- function(formula, data, marginal=NULL, fit=TRUE, maximal_only=FALSE, det
 
 .cModel_finalize <- function(glist, varNames) {
 
-    amat  <- ugList(glist, result="matrix")
-    glist <- maxCliqueMAT(amat)[[1]]     ## FIXME: Rethink this
-    isd   <- length(mcsMAT(amat)) > 0   
+    ## amat  <- ugList(glist, result="matrix")
+    ## glist <- maxCliqueMAT(amat)[[1]]     ## FIXME: Rethink this
+    ## isd   <- length(mcsMAT(amat)) > 0   
     
     list(glist       = glist,
-         glistNUM    = .glistNUM(glist, varNames), 
-         properties  = c(isg=TRUE, issd=isd))                
+         glistNUM    = .glistNUM(glist, varNames),
+         ug = ug(glist),         
+         properties  = isGSD_glist(glist))
+
+    ## c(isg=TRUE, issd=isd))                
 }
 
 
