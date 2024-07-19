@@ -123,7 +123,7 @@ dmod <- function(formula, data, marginal=NULL, interactions=NULL, fit=TRUE, deta
 .dModel_finalize<- function(glist, varNames) {
     list(glist      = glist,
          glistNUM   = .glistNUM(glist, varNames),
-           ug = ug(glist),         
+         ug = ug(glist),         
          properties = isGSD_glist(glist))
 }
 
