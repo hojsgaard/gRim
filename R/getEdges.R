@@ -42,7 +42,7 @@
 #' @note These functions work on undirected graphs. The behaviour is
 #'     undocumented for directed graphs.
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{edgeList}}, \code{\link{nonEdgeList}}.
+#' @seealso \code{\link[gRbase]{edgeList}}, \code{\link[gRbase]{nonEdgeList}}.
 #' @keywords utilities
 #' @examples
 #' 
