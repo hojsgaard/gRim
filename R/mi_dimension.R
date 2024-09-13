@@ -95,7 +95,7 @@ mmod_dimension <- function(object){
         y[-1]
     }
     
-    max.g.size <- max(unlistPrim(lapply(glistNUM, length)))
+    max.g.size <- max(unlist(lapply(glistNUM, length)))
     ##max.g.size <- 1000
     ## cat("max.g.size:", max.g.size, "\n")
     
@@ -107,11 +107,11 @@ mmod_dimension <- function(object){
     else 
     {
         unzz     <- .subsets(glistNUM[[1]])
-        base.idx <- unlistPrim(lapply(unzz, function(terms) sum(2^(terms - 1)) ))  
+        base.idx <- unlist(lapply(unzz, function(terms) sum(2^(terms - 1)) ))  
         if (length(glistNUM) > 1){
             for (ii in 2:length(glistNUM)){
                 tmp      <- .subsets(glistNUM[[ii]])
-                tmp.idx  <- unlistPrim(lapply(tmp, function(terms) sum(2^(terms - 1)) ))    
+                tmp.idx  <- unlist(lapply(tmp, function(terms) sum(2^(terms - 1)) ))    
                 unzz     <- c(unzz,tmp[!(tmp.idx %in% base.idx)])
                 base.idx <- c(base.idx, tmp.idx[!(tmp.idx %in% base.idx)])
             }

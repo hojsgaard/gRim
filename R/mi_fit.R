@@ -30,7 +30,7 @@ fit.mModel <- function(object, method="general", details=0, eps.parm=1e-10, maxi
 
   ## Independence model
   i.model    <- loglin(n.obs, as.list(seq_along(dim(n.obs))),iter=1, print=FALSE, fit=TRUE)
-  grand.mean <- rowSumsPrim(colwiseProd(n.obs/NN, cg$center))
+  grand.mean <- rowSums(colwiseProd(n.obs/NN, cg$center))
   SS.ind     <- (cg$SS - NN*grand.mean %*% t(grand.mean))/NN
   logL.ind   <- sum(n.obs * log(i.model$fit / NN))- NN * qq / 2 * log(2 * pi) - NN / 2 * sum(log(diag(SS.ind))) - NN * qq / 2
 
@@ -509,13 +509,13 @@ fit.mModel <- function(object, method="general", details=0, eps.parm=1e-10, maxi
     ## mu
     mu.i  <- CGstats$center
     ##mu    <- rowSums(.colmult(n.i, mu.i)) / sum(n.i)
-    mu    <- rowSumsPrim(.colmult(n.i, mu.i)) / sum(n.i)
+    mu    <- rowSums(.colmult(n.i, mu.i)) / sum(n.i)
 
     ## Sigma (total variance when discrete variables are ignored)
     S.i     <- CGstats$cov
     SSD.i   <- .colmult(n.i, S.i)
     ##SSD     <- matrix(rowSums(SSD.i), nrow=nrow(CGstats$center))
-    SSD     <- matrix(rowSumsPrim(SSD.i), nrow=nrow(CGstats$center))
+    SSD     <- matrix(rowSums(SSD.i), nrow=nrow(CGstats$center))
     d.mu.i  <- mu.i - mu
 
     quad    <- .colmult(n.i, d.mu.i) %*% t(d.mu.i)
@@ -528,7 +528,7 @@ fit.mModel <- function(object, method="general", details=0, eps.parm=1e-10, maxi
 
     ## Create uniform means
     MMM   <- CGstats$center
-    MMM[] <- rowSumsPrim(MMM)/ncol(MMM)
+    MMM[] <- rowSums(MMM)/ncol(MMM)
 
     CCC <- Sigma
     if (nrow(CCC) > 1)  CCC <- diag(diag(CCC))

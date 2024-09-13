@@ -101,12 +101,12 @@ weak_marginal_data <- function(cgdata, disc=NULL, cont=NULL, type="pms", details
         
         ## means \bar y (ia)
         mu.jia <- mu.A[,jia, drop=FALSE]
-        mu.ia    <- rowSumsPrim(.colmult(n.jia/n.ia, mu.jia))
+        mu.ia    <- rowSums(.colmult(n.jia/n.ia, mu.jia))
         mu.A.marg[,ii] <- mu.ia
         
         ## SSD(ia) 
         S.jia  <- Sigma.A[,jia,drop=FALSE]
-        vvv1   <- rowSumsPrim(.colmult(n.jia , S.jia))
+        vvv1   <- rowSums(.colmult(n.jia , S.jia))
         sum.ssd.j  <- matrix(vvv1, nrow=length(Ac.idx)) ## sum_{j:ja=ia} SSD(j)
         
         mu.dif  <- mu.jia - mu.ia
@@ -138,9 +138,9 @@ weak_marginal_data <- function(cgdata, disc=NULL, cont=NULL, type="pms", details
   p.i      <- n.i / sum(n.i)
 
   ssdA.i   <- .colmult(n.i, Sigma.i)
-  sum.ssdA <- matrix(rowSumsPrim(ssdA.i), nrow=length(Ac.idx))
+  sum.ssdA <- matrix(rowSums(ssdA.i), nrow=length(Ac.idx))
 
-  mu.A     <- rowSumsPrim(.colmult(p.i, mu.i))
+  mu.A     <- rowSums(.colmult(p.i, mu.i))
   mu.dif   <- mu.i - mu.A
   quad     <- .vMMt(n.i, mu.dif)
   Sigma.A  <- (sum.ssdA + quad) / N

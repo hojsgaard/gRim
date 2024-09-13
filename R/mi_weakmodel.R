@@ -76,7 +76,7 @@ weak_marginal_model<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=
     p.jia          <- ppp[jia]
                                         #    cat(sprintf("ia: %s, jia: %s\n", .toString(ia), .toString(jia)))
     mu.j           <- mu.tmp[,jia,drop=FALSE]
-    mu.iA2         <- rowSumsPrim(.colmult(p.jia, mu.j)) / sum(p.jia)
+    mu.iA2         <- rowSums(.colmult(p.jia, mu.j)) / sum(p.jia)
     mu.dif2        <- mu.j - mu.iA2
     quad2          <- .vMMt(p.jia, mu.dif2) #.colmult(p.j, mu.dif) %*% t(mu.dif)
     QQ             <- QQ + quad2 
@@ -108,7 +108,7 @@ weak_marginal_model<- function(Mparms, disc=NULL,cont=NULL, type="pms", details=
   p.i       <- as.numeric(Mparms[['p']])
   mu.i      <- Mparms[['mu']][Ac.idx,,drop=FALSE]
   Sigma.tmp <- Mparms[['Sigma']][Ac.idx,Ac.idx,drop=FALSE]
-  mu.A      <- rowSumsPrim(.colmult(p.i, mu.i))
+  mu.A      <- rowSums(.colmult(p.i, mu.i))
   mu.dif    <- mu.i - mu.A
   quad      <- .vMMt(p.i, mu.dif)
   Sigma.A   <- Sigma.tmp + quad

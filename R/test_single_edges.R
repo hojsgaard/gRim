@@ -302,7 +302,7 @@ print.testadd <- function(x,  ...){
 
 .test_in_one_clique <- function(object, edge, hostcq, details=1, ...){
     model.type <- class(object)[1]
-    set <- c(edge, setdiffPrim(hostcq, edge))
+    set <- c(edge, setdiff(hostcq, edge))
     
     ans <- switch(model.type,
                   "cModel"={ 

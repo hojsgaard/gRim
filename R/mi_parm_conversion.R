@@ -72,7 +72,7 @@ parm_phk2ghk <- function(parms){
            detSig <- 1/det(KK)
            hh     <- parms[["h"]]
            mu     <- solveSPD(KK) %*% hh # K.inv %*% h
-           quad   <- colSumsPrim(hh * mu)
+           quad   <- colSums(hh * mu)
 
            gg     <- log(parms[["p"]]) + (- log(detSig) - Q*log(2*pi) - quad) / 2
            res    <- list(g=gg, h=hh, K=KK, gentype="mixed")
@@ -82,7 +82,7 @@ parm_phk2ghk <- function(parms){
            Q      <- nrow(KK)
            detSig <- 1/det(KK)
            mu     <- solveSPD(KK) %*% hh # K.inv %*% h
-           quad   <- colSumsPrim(hh * mu)
+           quad   <- colSums(hh * mu)
 
            gg     <- (- log(detSig) - Q*log(2*pi) - quad) / 2
            res    <-list(g=gg, h=hh, K=KK, gentype="continuous")
@@ -131,7 +131,7 @@ parm_ghk2phk <- function(parms){
            Sigma     <- solveSPD(parms[['K']])
            hh        <- parms[['h']]
            mu        <- Sigma %*% hh # Kinv %*% h
-           g.quad    <- parms[['g']] + colSumsPrim(hh * mu)/2
+           g.quad    <- parms[['g']] + colSums(hh * mu)/2
            pp        <- exp(g.quad - mean.default(g.quad))           
            res       <- list(p=pp / sum(pp), h=hh, K=parms[['K']], gentype="mixed")  
          },
@@ -189,7 +189,7 @@ parm_moment2pms <- function(SS){
 
            mu     <- parms[["mu"]]
            hh     <- KK %*% mu # h = Sigma.inv %*% mu
-           quad   <- colSumsPrim(hh * mu)
+           quad   <- colSums(hh * mu)
            gg     <- log(parms[["p"]]) + (- .logdetSig - Q*log(2*pi) - quad) / 2
            res    <- list(g=gg, h=hh, K=KK, gentype="mixed")
          },
@@ -200,7 +200,7 @@ parm_moment2pms <- function(SS){
            detSig <- 1/c(determinant.matrix(KK, logarithm=FALSE)[['modulus']])
            mu     <- parms[["mu"]]           
            hh     <- KK %*% mu # h = Sigma.inv %*% mu
-           quad   <- colSumsPrim(hh * mu)
+           quad   <- colSums(hh * mu)
            gg     <- (- log(detSig) - Q*log(2*pi) - quad) / 2
            res    <- list(g=gg, h=hh, K=KK,gentype="continuous")
          })
@@ -223,7 +223,7 @@ parm_moment2pms <- function(SS){
            Sigma     <- solveSPD(parms[['K']])
            hh        <- parms[['h']]
            mu        <- Sigma %*% hh        # Kinv %*% h
-           g.quad    <- parms[['g']] + colSumsPrim(hh * mu)/2
+           g.quad    <- parms[['g']] + colSums(hh * mu)/2
            pp        <- exp( g.quad - mean.default(g.quad) )           
            res       <- list(p=pp/sum(pp), mu=mu, Sigma=Sigma, gentype="mixed")  
          },
@@ -249,7 +249,7 @@ parm_moment2pms <- function(SS){
   logdetK   <- .logdet(parms[[K.idx]])
   Q         <- nrow(parms[[K.idx]])
 
-  quad   <- colSumsPrim(hh * mu)
+  quad   <- colSums(hh * mu)
   zzz    <- parms[['g']] + quad / 2
   ppp    <- exp( zzz - mean.default(zzz))
   normconst <- sum(ppp)
@@ -274,7 +274,7 @@ parm_moment2pms <- function(SS){
   #print(list(dimh=dim(hh), dimK=dim(parms[[K.idx]])))
   
   #print(hh * mu)
-  quad   <- colSumsPrim(hh * mu)
+  quad   <- colSums(hh * mu)
   #print(list(dimh=dim(hh), dimK=dim(parms[[K.idx]]), dimq=dim(quad)))
 
   zzz    <- parms[['g']] + quad / 2

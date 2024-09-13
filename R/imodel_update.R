@@ -185,7 +185,7 @@ modify_glist <- function(glist, items, details=0){
         if (ee[1] %in% glist[[i]]){
             for (j in ss){
                 if (ee[2] %in% glist[[ j ]]){
-                    zz <- intersectPrim(glist[[ i ]], glist[[ j ]])
+                    zz <- intersect(glist[[ i ]], glist[[ j ]])
                     extra[[ count ]] <- unique.default(c(ee, zz))
                     count <- count + 1
                 }

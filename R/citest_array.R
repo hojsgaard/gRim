@@ -269,7 +269,7 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     for (ii in seq_len(dim.R)){
         r.sum    <- t1R[ii, ]
         c.sum    <- t2R[ii, ]
-        expected <- outerPrim(r.sum, c.sum) / sum(r.sum)
+        expected <- outer(r.sum, c.sum) / sum(r.sum)
         mm       <- xmat[ii, ]
         dim(mm)  <- dim12
         tobs.slice[ii] <- .statFun(mm, expected)
@@ -281,7 +281,7 @@ ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq", adjust.df
     for (ii in seq_len(nrow(t1R))){
         r.sum    <- t1R[ii,]
         c.sum    <- t2R[ii,]
-        expected <- outerPrim(r.sum, c.sum) / sum(r.sum)
+        expected <- outer(r.sum, c.sum) / sum(r.sum)
         zzz      <- r2dtable(B, r.sum, c.sum)
         for (kk in seq_len(B))
             tref.slice[ii, kk] <- .statFun(zzz[[kk]],expected)
