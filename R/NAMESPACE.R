@@ -14,7 +14,7 @@
 #'
 #' @importFrom gRain propagateLS
 #' @importFrom igraph
-#'     get.adjacency V "V<-" E "E<-" is.directed layout.lgl
+#'     as_adjacency_matrix V "V<-" E "E<-" is.directed layout.lgl
 #'     plot.igraph graph.adjacency is.dag
 #' 
 #' @importFrom Rcpp evalCpp
