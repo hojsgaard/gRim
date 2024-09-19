@@ -112,7 +112,7 @@ getEdges(UG, type="decomposable", discrete=c("a","b"))
 
 }
 \seealso{
-\code{\link{edgeList}}, \code{\link{nonEdgeList}}.
+\code{\link[gRbase]{edgeList}}, \code{\link[gRbase]{nonEdgeList}}.
 }
 \author{
 Søren Højsgaard, \email{sorenh@math.aau.dk}

@@ -29,7 +29,7 @@
 #'
 #' @importFrom MASS ginv
 #' @importFrom Matrix solve
-#' @importFrom igraph erdos.renyi.game get.edgelist coreness graph_from_edgelist as_adjacency_matrix
+#' @importFrom igraph sample_gnp get.edgelist coreness graph_from_edgelist as_adjacency_matrix
 #' @importFrom glue glue
 #' @importFrom doBy section_fun 
 
