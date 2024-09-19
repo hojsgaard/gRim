@@ -15,7 +15,7 @@
 #' @importFrom gRain propagateLS
 #' @importFrom igraph
 #'     as_adjacency_matrix V "V<-" E "E<-" is_directed layout.lgl
-#'     plot.igraph graph_from_adjacency_matrix is.dag
+#'     plot.igraph graph_from_adjacency_matrix is_dag
 #' 
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats cov cov2cor logLik cov.wt AIC BIC coef nobs rnorm sigma
