@@ -310,8 +310,8 @@ model_loop <- function(index, prob=0, type="emat",nms=NULL){
 
 emat_random_model <- function(index, prob=0.1){
     N <- max(index)
-    g     <- igraph::erdos.renyi.game(N, prob)
-    emat  <- t(igraph::get.edgelist(g))
+    g     <- igraph::sample_gnp(N, prob)
+    emat  <- t(igraph::as_edgelist(g))
     emat    
 }
 

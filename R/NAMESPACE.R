@@ -14,8 +14,8 @@
 #'
 #' @importFrom gRain propagateLS
 #' @importFrom igraph
-#'     get.adjacency V "V<-" E "E<-" is.directed layout.lgl
-#'     plot.igraph graph.adjacency is.dag
+#'     as_adjacency_matrix V "V<-" E "E<-" is_directed layout.lgl
+#'     plot.igraph graph_from_adjacency_matrix is_dag
 #' 
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats cov cov2cor logLik cov.wt AIC BIC coef nobs rnorm sigma
@@ -29,7 +29,7 @@
 #'
 #' @importFrom MASS ginv
 #' @importFrom Matrix solve
-#' @importFrom igraph erdos.renyi.game get.edgelist coreness graph_from_edgelist as_adjacency_matrix
+#' @importFrom igraph sample_gnp as_edgelist coreness graph_from_edgelist as_adjacency_matrix
 #' @importFrom glue glue
 #' @importFrom doBy section_fun 
 
