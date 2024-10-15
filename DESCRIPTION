@@ -1,7 +1,10 @@
 Package: gRim
 Version: 0.3.4
 Title: Graphical Interaction Models
-Author: Søren Højsgaard <sorenh@math.aau.dk>
+Authors@R: person(given = "Søren",
+	   	    family = "Højsgaard",
+                    role = c("aut", "cre"),
+                    email = "sorenh@math.aau.dk")
 Maintainer: Søren Højsgaard <sorenh@math.aau.dk>
 Description: Provides the following types of models: Models for contingency
     tables (i.e. log-linear models) Graphical Gaussian models for multivariate
