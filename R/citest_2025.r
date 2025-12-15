@@ -1,51 +1,35 @@
-## FIXME: citest_array: Clean up code; use modern tabXXX functions; add parametric bootstrap
-
-###################################################################################
+#' @title Test for conditional independence in contingecy table.
 #'
-#' @title Test for conditional independence in a contingency table
-#' @description Test for conditional independence in a contingency table
-#'     represented as an array.
-#' @name citest-array
+#' @name citest-generic
 #' 
-###################################################################################
-#'
-#' @param x An array of counts with named dimnames.
-#' @param set A specification of the test to be made. The tests are of the form u
-#'     and v are independent condionally on S where u and v are variables and S
-#'     is a set of variables. See 'details' for details about specification of
+#' @param x An array / table.
+#' 
+#' @param set A specification of the test to be made. The tests are of the form
+#'     u and v are independent condionally on S where u and v are variables and
+#'     S is a set of variables. See 'details' for details about specification of
 #'     \code{set}.
-#' @param statistic Possible choices of the test statistic are \code{"dev"} for
-#'     deviance and \code{"x2"} for Pearsons X2 statistic.
-#' @param method Method of evaluating the test statistic. Possible choices are
-#'     \code{"chisq"} and \code{"mc"} (for Monte Carlo).
 #' 
-#' @param adjust.df Logical. Should degrees of freedom be adjusted for
-#'     sparsity?
-#' @param slice.info Logical. Should slice info be stored in the
-#'     output?
-## ' @param L Number of extreme cases as stop criterion if method is
-## '     \code{"smc"} (sequential Monte Carlo test); ignored otherwise.
-#' @param B Number of simulations to make if method is
-#'     \code{"mc"}. Ignored otherwise.
-#' @param ...  Additional arguments.
-
-#' @details \code{set} can be 1) a vector or 2) a right-hand sided formula in
-#'     which variables are separated by '+'. In either case, it is tested if the
-#'     first two variables in the \code{set} are conditionally independent given
-#'     the remaining variables in \code{set}.  (Notice an abuse of the '+'
-#'     operator in the right-hand sided formula: The order of the variables does
-#'     matter.)
-#' 
-#' If \code{set} is \code{NULL} then it is tested whether the first two
-#' variables are conditionally independent given the remaining variables.
-#' 
+#' @param \dots Additional arguments to be passed on to other methods.
+#'
 #' @return An object of class `citest` (which is a list).
+#'
+#' @details
+#'  \code{set} can be
+#'  1. a vector,
+#'  1. a right-hand sided
+#'     formula in which variables are separated by '+'.
+#'
+#' In either case, it is tested if the first two variables in the
+#' \code{set} are conditionally independent given the remaining
+#' variables in \code{set}.  (Notice an abuse of the '+' operator in
+#' the right-hand sided formula: The order of the variables does
+#' matter.)
+#'
 #' @author Søren Højsgaard, \email{sorenh@@math.aau.dk}
-#' @seealso \code{\link{ciTest}}, \code{\link{ciTest_df}},
-#'     \code{\link{ciTest_mvn}}, \code{\link{chisq.test}}
+#' @seealso \code{\link{chisq.test}}
 #' @keywords htest
 #' @examples
-#'
+#' 
 #' data(lizard)
 #'
 #' ## lizard is has named dimnames
@@ -72,8 +56,56 @@
 #'
 #' ciTest(lizard, set=c("diam", "height", "species"), method="mc", B=400)
 
+
+
+
+#' @export ciTest
+ci_test <- function(x, set=NULL, ...){
+  UseMethod("ci_test")
+}
+
+#' @export
+ci_test.table <- function(x, set=NULL, ...){
+  ci_test_table(x, set, ...)
+}
+
+#' @export
+ci_test.array <- function(x, set=NULL, ...){
+  ci_test_table(x, set, ...)
+}
+
+#' @export
+print.ci_test_class <- function(x, ...){
+    if (length(x$varNames) > 2){
+        cat("Testing", x$varNames[1], "_|_", x$varNames[2], "|",x$varNames[-(1:2)],"\n")
+    } else {
+        cat("Testing", x$varNames[1], "_|_", x$varNames[2], "\n")
+    }
+    cat(sprintf("Statistic (%s): %8.3f df: %s p-value: %6.4f method: %s\n",
+                x$statname, x$statistic, x$df, x$p.value, x$method))
+
+    if ( !is.null(x$slice) ){
+        cat("Slice information:\n")
+        print( x$slice, digits=4 )
+    }
+
+    invisible( x )
+}
+
+#' @export
+summary.ci_test_class <- function(object,...){
+    print( object )
+    if ( !is.null(object$slice) ){
+        cat("Slice information:\n")
+        print( object$slice, digits=4 )
+    }
+    invisible( object )
+}
+
+
+
 #' @rdname citest-array
-ciTest_table <- function(x, set=NULL, statistic="dev", method="chisq",
+ci_test_table <- function(x, set=NULL, statistic="dev", method="chisq",
                          adjust.df=TRUE, slice.info=TRUE, L=20, B=200, ...){
 
     statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
@@ -178,7 +210,7 @@ ci_test_x2_worker <- function(x, statistic="DEV", adjust.df=TRUE, slice.info=TRU
     ans <- list(statistic=tobs_global, p.value=p_global, df=df_global, statname=statistic,
                 method="CHISQ", adjust.df=adjust.df, varNames=vn, slice=slice)
 
-    class(ans) <- "citest"
+    class(ans) <- "ci_test_class"
     ans
 }
 
@@ -187,20 +219,8 @@ ci_test_x2_worker <- function(x, statistic="DEV", adjust.df=TRUE, slice.info=TRU
 ### CIP test; exact, based on sequential monte carlo
 ###
 
-ci_test_mc_worker <- function(x, statistic="DEV", method="SMC", L=50, B=200, slice.info=FALSE){
+ci_test_mc_worker <- function(x, statistic="DEV", method="SMC", B=200, slice.info=FALSE){
     
-    statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
-    zzz <- ci_test_mc_workhorse(x, statistic=statistic, B=10 * B, slice.info=slice.info)
-    return(zzz)
-}
-
-
-
-###
-### CIP test; exact, based on monte carlo
-###
-ci_test_mc_workhorse <- function(x, statistic="DEV", B=100, slice.info=FALSE){
-
     statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
 
 
@@ -264,7 +284,7 @@ ci_test_mc_workhorse <- function(x, statistic="DEV", B=100, slice.info=FALSE){
     
     ans <- list(statistic=tobs.total, p.value=p.value.total, df=NA, statname=statistic,
                 method="MC", varNames=names(dimnames(x)), n.extreme=n.extreme, B=B, slice=slice)
-    class(ans) <- "citest"
+    class(ans) <- "ci_test_class"
     ans
 }
 
@@ -283,77 +303,3 @@ ci_test_mc_workhorse <- function(x, statistic="DEV", B=100, slice.info=FALSE){
     a   <- (obs - fit)^2 / fit
     sum(a[ii])
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## FIXME Note to self: Checked this in March, 2025. Seems that it goes
-## into infinite loop (or perhaps it is just very slow). Deprecated.
-
-
-## ci_test_mc_worker <- function(x, statistic="DEV", method="SMC", L=50, B=200, slice.info=FALSE){
-    
-##     statistic <- match.arg(toupper(statistic), c("DEV",   "X2"))
-##     switch(method,
-##            "MC"={
-##                zzz <- ci_test_mc_workhorse(x, statistic=statistic, B=10 * B, slice.info=slice.info)
-##            },
-##            "SMC"={
-##                zzz <- ci_test_mc_workhorse(x, statistic=statistic, B=B,    slice.info=slice.info)
-##                tot <- as.numeric(zzz[c("n.extreme","B")])
-##                if (slice.info){
-##                    slice <- zzz$slice
-##                }
-##                repeat{
-##                    if (tot[1] > L) break
-##                    zzz <- ci_test_mc_workhorse(x, statistic=statistic, B=B, slice.info=slice.info)
-##                    tot <- tot + as.numeric(zzz[c("n.extreme","B")])
-##                    if (slice.info){
-##                        slice[,"n.extreme"] <- slice[,"n.extreme"] +
-##                            zzz$slice[,"n.extreme"]
-##                    }
-##                }
-               
-##                zzz[c("p.value", "n.extreme", "B")] <- c(tot[1] / tot[2], tot)
-##                zzz["method"] <- "SMC"
-               
-##                if (slice.info){
-##                    slice[,"p.value"] <- slice[,"n.extreme"] / tot[2]
-##                    zzz[["slice"]]    <- slice
-##                }
-##            })
-##     zzz
-## }
-
-
-
-## ' # 2) Do at most B*10 simulations divided equally over each slice, but stop
-## ' # when at most L extreme values are found
-## ' ciTest(lizard, set=c("diam", "height", "species"), method="smc", B=400)

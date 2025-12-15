@@ -166,21 +166,29 @@ summary.citest <- function(object,...){
 
 ciTest_df <- function(x, set=NULL,...){
     
-    if (is.null(set)) set <- names(x)
+    if (is.null(set)) {
+        set <- names(x)
+    }
     else {
         if (inherits(set, c("formula", "character"))){
             set <- unlist(rhsFormula2list(set), use.names = FALSE)
+            set
             set <- names(x)[pmatch(set, names(x))] 
-        }
+            set
+            }
     }
-
     wdata       <- x[ , set]
+    wdata <- lapply(wdata, function(x) if(is.character(x)) factor(x) else x)
+    summary(wdata)
     varTypes    <- unique.default(unlist(lapply(wdata, class), use.names=FALSE))
+varTypes
 
     has.factor  <- "factor" %in% varTypes
     has.numeric <- any(c("integer", "numeric") %in% varTypes)
     switch.code <- as.character(1 * has.factor + 2 * has.numeric)
 
+#    print(has.factor); print(has.numeric)
+#    cat(switch.code)
     switch(switch.code,
            "0"={ ## F & F
                stop("Strange error...\n")},

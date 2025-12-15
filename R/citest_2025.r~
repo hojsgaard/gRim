@@ -1,0 +1,14 @@
+#' @export ciTest
+ciTest <- function(x, set=NULL, ...){
+  UseMethod("ciTest")
+}
+
+#' @export
+ciTest.table <- function(x, set=NULL, ...){
+  ciTest_table(x, set, ...)
+}
+
+#' @export
+ciTest.array <- function(x, set=NULL, ...){
+  ciTest_table(x, set, ...)
+}
